@@ -1,6 +1,7 @@
-# 🐾 VetScan
+# 🐾 Vetpras
 
-**VetScan** is a crowdsourced veterinary cost comparison tool built to help pet owners make informed decisions about care — and take the mystery out of vet bills.
+**Vetpras** is a crowdsourced veterinary cost comparison tool built to help pet owners make informed decisions about care — and take the mystery out of vet bills.  
+Currently in active development as a solo project and product design case study.
 
 ---
 
@@ -53,6 +54,14 @@
 
 ---
 
+## 🔄 Recent Updates
+
+- ✅ Styled the search page drawer component
+- ✅ Refined landing page layout across devices
+- ✅ Prepped Hero and Header for responsive polish
+- 🔄 In-progress: service search bar with dynamic filtering
+
+---
+
 ## 🧠 Built by @jonny  
 Built for curious pet owners. Powered by caffeine and ChatGPT.
-
