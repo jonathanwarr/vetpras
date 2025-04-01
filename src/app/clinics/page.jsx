@@ -29,13 +29,16 @@ export default function ClinicsPage() {
     <div className="pt-24 pb-12">
       <ContainerConstrained>
         <div className="mb-16">
-          <h2 className="text-4xl mb-6" style={{ fontFamily: 'Amiri, serif', color: '#2563eb' }}>
+          <h2 className="text-4xl font-heading text-heading-1 mb-6">
             Search for a Service
           </h2>
-          <p className="text-base text-gray-600">
-            Use the search to find clinics that offer the care your pet needs. The list will filter and only show clinics that have listed the service you're looking for :)
+          <p className="text-body-lg text-body-medium">
+            Use the search to find clinics that offer the care your pet needs.
+            The list will filter and only show clinics that have listed the
+            service you're looking for.
           </p>
         </div>
+
         <div className="mb-10">
           <SearchService
             value={searchQuery}

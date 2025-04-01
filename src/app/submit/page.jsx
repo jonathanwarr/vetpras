@@ -49,14 +49,15 @@ export default function SubmitFormPage() {
 
   return (
     <div className="max-w-xl mx-auto p-6">
-      <h1 className="text-2xl font-bold mb-4">Submit a Vet Bill</h1>
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <h1 className="text-h2 font-playfair font-semibold mb-4 text-heading-1">Submit a Vet Bill</h1>
+
+      <form onSubmit={handleSubmit} className="space-y-6">
         <div>
-          <label className="block font-medium">Clinic</label>
+          <label className="block text-body-md font-medium text-heading-2 mb-1">Clinic</label>
           <select
             value={clinicId}
             onChange={(e) => setClinicId(e.target.value)}
-            className="w-full border rounded p-2"
+            className="w-full border border-gray-300 rounded px-3 py-2 text-body-md"
             required
           >
             <option value="">Select a clinic</option>
@@ -69,11 +70,11 @@ export default function SubmitFormPage() {
         </div>
 
         <div>
-          <label className="block font-medium">Service</label>
+          <label className="block text-body-md font-medium text-heading-2 mb-1">Service</label>
           <select
             value={serviceId}
             onChange={(e) => setServiceId(e.target.value)}
-            className="w-full border rounded p-2"
+            className="w-full border border-gray-300 rounded px-3 py-2 text-body-md"
             required
           >
             <option value="">Select a service</option>
@@ -86,14 +87,14 @@ export default function SubmitFormPage() {
         </div>
 
         <div>
-          <label className="block font-medium">Price (CAD)</label>
+          <label className="block text-body-md font-medium text-heading-2 mb-1">Price (CAD)</label>
           <input
             type="number"
             step="0.01"
             min="0"
             value={price}
             onChange={(e) => setPrice(e.target.value)}
-            className="w-full border rounded p-2"
+            className="w-full border border-gray-300 rounded px-3 py-2 text-body-md"
             placeholder="Enter price"
             required
           />
@@ -101,13 +102,13 @@ export default function SubmitFormPage() {
 
         <button
           type="submit"
-          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+          className="bg-button-primary-bg text-button-primary-text text-btn-md font-bold px-6 py-2 rounded hover:bg-button-primary-bg/90 transition"
         >
           Submit
         </button>
 
-        {success && <p className="text-green-600">Submission successful!</p>}
-        {error && <p className="text-red-600">Error: {error}</p>}
+        {success && <p className="text-green-600 text-sm mt-2">Submission successful!</p>}
+        {error && <p className="text-red-600 text-sm mt-2">Error: {error}</p>}
       </form>
     </div>
   )

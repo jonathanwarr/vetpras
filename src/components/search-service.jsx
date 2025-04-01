@@ -7,9 +7,10 @@ export default function SearchService({ value, onChange, services }) {
   const [highlightedIndex, setHighlightedIndex] = useState(-1)
   const listRef = useRef(null)
 
-  const filteredSuggestions = services?.filter((service) =>
-    service.name.toLowerCase().includes(value.toLowerCase())
-  ) || []
+  const filteredSuggestions =
+    services?.filter((service) =>
+      service.name.toLowerCase().includes(value.toLowerCase())
+    ) || []
 
   const handleSelect = (service) => {
     onChange(service.name)
@@ -35,11 +36,11 @@ export default function SearchService({ value, onChange, services }) {
       if (highlightedIndex >= 0) {
         handleSelect(filteredSuggestions[highlightedIndex])
       } else if (filteredSuggestions.length > 0) {
-        // fallback: use first suggestion
         handleSelect(filteredSuggestions[0])
       }
     }
-  } 
+  }
+
   useEffect(() => {
     if (highlightedIndex >= 0 && listRef.current) {
       const listItem = listRef.current.children[highlightedIndex]
@@ -49,7 +50,10 @@ export default function SearchService({ value, onChange, services }) {
 
   return (
     <div className="w-full sm:w-80 relative">
-      <label htmlFor="search" className="block text-sm font-medium text-gray-900">
+      <label
+        htmlFor="search"
+        className="block text-sm font-medium text-secondary-text"
+      >
         Search by Service
       </label>
       <div className="mt-2 relative">
@@ -67,7 +71,7 @@ export default function SearchService({ value, onChange, services }) {
           }}
           onBlur={() => setTimeout(() => setShowSuggestions(false), 150)}
           onKeyDown={handleKeyDown}
-          className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:outline-indigo-600 sm:text-sm"
+          className="block w-full rounded-md bg-white px-3 py-2 text-base text-secondary-text placeholder:text-gray-400 border border-gray-300 focus:border-indigo-600 focus:ring-1 focus:ring-indigo-600 sm:text-sm"
         />
 
         {showSuggestions && filteredSuggestions.length > 0 && (
@@ -80,7 +84,9 @@ export default function SearchService({ value, onChange, services }) {
                 key={service.code}
                 onClick={() => handleSelect(service)}
                 className={`cursor-pointer px-3 py-2 ${
-                  index === highlightedIndex ? 'bg-indigo-600 text-white' : 'hover:bg-indigo-50'
+                  index === highlightedIndex
+                    ? 'bg-primary text-white'
+                    : 'hover:bg-gray-100'
                 }`}
               >
                 {service.name}

@@ -37,8 +37,6 @@ export default function TableClinic({ onSelectClinic, searchQuery }) {
     setCurrentPage(1)
   }, [searchQuery])
 
-  // Match search query to service code
-  console.log('searchQuery:', searchQuery)
   const matchingServiceCodes = searchQuery
     ? services
         .filter((service) =>
@@ -47,18 +45,15 @@ export default function TableClinic({ onSelectClinic, searchQuery }) {
         .map((service) => service.code.replace(/\.0$/, ''))
     : []
 
-  // Filter by matching service
   const filteredClinics = searchQuery
     ? clinics.filter((clinic) => {
         const codes = clinic.service_codes
         if (!codes) return false
         const clinicCodes = typeof codes === 'string' ? [codes] : codes
-        console.log('clinicCodes:', clinicCodes)
         return matchingServiceCodes.some((code) => clinicCodes.includes(code))
       })
     : clinics
 
-  // Paginate filtered results
   const totalPages = Math.ceil(filteredClinics.length / CLINICS_PER_PAGE)
   const startIdx = (currentPage - 1) * CLINICS_PER_PAGE
   const paginatedClinics = filteredClinics.slice(startIdx, startIdx + CLINICS_PER_PAGE)
@@ -67,48 +62,46 @@ export default function TableClinic({ onSelectClinic, searchQuery }) {
     if (page >= 1 && page <= totalPages) setCurrentPage(page)
   }
 
-  console.log('matching codes:', matchingServiceCodes)
-
-  if (loading) return <div className="p-4 text-sm text-gray-600">Loading clinics...</div>
+  if (loading) return <div className="p-4 text-body-sm text-body-medium">Loading clinics...</div>
 
   return (
     <div className="w-full overflow-x-auto">
-      <table className="w-full table-auto divide-y divide-gray-300">
+      <table className="w-full table-auto divide-y divide-table-header-bg">
         <thead>
           <tr>
-            <th className="py-3.5 pr-3 pl-4 text-left text-sm font-semibold text-gray-900 sm:pl-0">
+            <th className="py-[14px] pr-3 pl-4 text-left text-table-header text-heading-2 sm:pl-0">
               Name
             </th>
-            <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+            <th className="px-3 py-[14px] text-left text-table-header text-heading-2">
               Address
             </th>
-            <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+            <th className="px-3 py-[14px] text-left text-table-header text-heading-2">
               Phone
             </th>
-            <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+            <th className="px-3 py-[14px] text-left text-table-header text-heading-2">
               Website
             </th>
-            <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+            <th className="px-3 py-[14px] text-left text-table-header text-heading-2">
               Rating
             </th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-gray-200">
+        <tbody className="divide-y divide-table-header-bg">
           {paginatedClinics.map((clinic) => (
             <tr key={clinic.clinic_id}>
               <td
                 onClick={() => onSelectClinic(clinic)}
-                className="cursor-pointer text-sky-600 hover:underline py-4 pr-3 pl-4 text-sm font-medium whitespace-nowrap sm:pl-0"
+                className="cursor-pointer text-button-secondary-text hover:underline py-4 pr-3 pl-4 text-table-cell font-medium whitespace-nowrap sm:pl-0"
               >
                 {clinic.name}
               </td>
-              <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">
+              <td className="px-3 py-4 text-table-cell whitespace-nowrap text-body-medium">
                 {clinic.address}
               </td>
-              <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">
+              <td className="px-3 py-4 text-table-cell whitespace-nowrap text-body-medium">
                 {clinic.phone}
               </td>
-              <td className="px-3 py-4 text-sm max-w-[200px] truncate text-sky-600">
+              <td className="px-3 py-4 text-table-cell max-w-[200px] truncate text-button-secondary-text">
                 {clinic.website ? (
                   <a
                     href={clinic.website}
@@ -120,7 +113,7 @@ export default function TableClinic({ onSelectClinic, searchQuery }) {
                   </a>
                 ) : '—'}
               </td>
-              <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">
+              <td className="px-3 py-4 text-table-cell whitespace-nowrap text-body-medium">
                 {clinic.google_rating ?? '—'}
               </td>
             </tr>
@@ -129,7 +122,7 @@ export default function TableClinic({ onSelectClinic, searchQuery }) {
       </table>
 
       {filteredClinics.length === 0 && (
-        <div className="text-center text-sm text-gray-500 mt-6">
+        <div className="text-center text-body-sm text-body-medium mt-6">
           No clinics found for that service.
         </div>
       )}
@@ -139,7 +132,7 @@ export default function TableClinic({ onSelectClinic, searchQuery }) {
           <button
             onClick={() => handlePageChange(currentPage - 1)}
             disabled={currentPage === 1}
-            className="px-3 py-1 rounded bg-gray-100 hover:bg-gray-200 text-sm"
+            className="px-3 py-1 rounded bg-table-row-even hover:bg-table-row-odd text-body-sm"
           >
             Prev
           </button>
@@ -147,10 +140,10 @@ export default function TableClinic({ onSelectClinic, searchQuery }) {
             <button
               key={i}
               onClick={() => handlePageChange(i + 1)}
-              className={`px-3 py-1 rounded text-sm ${
+              className={`px-3 py-1 rounded text-body-sm ${
                 currentPage === i + 1
-                  ? 'bg-indigo-600 text-white'
-                  : 'bg-gray-100 hover:bg-gray-200'
+                  ? 'bg-button-primary-bg text-button-primary-text'
+                  : 'bg-table-row-even hover:bg-table-row-odd'
               }`}
             >
               {i + 1}
@@ -159,7 +152,7 @@ export default function TableClinic({ onSelectClinic, searchQuery }) {
           <button
             onClick={() => handlePageChange(currentPage + 1)}
             disabled={currentPage === totalPages}
-            className="px-3 py-1 rounded bg-gray-100 hover:bg-gray-200 text-sm"
+            className="px-3 py-1 rounded bg-table-row-even hover:bg-table-row-odd text-body-sm"
           >
             Next
           </button>
