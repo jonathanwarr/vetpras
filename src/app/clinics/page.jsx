@@ -1,11 +1,11 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import TableClinic from '@/components/table-clinic'
-import DrawerClinic from '@/components/drawer-clinic'
-import ContainerConstrained from '@/components/container-constrained'
-import SearchService from '@/components/search-service'
-import { supabase } from '@/lib/supabase-client'
+import TableClinic from '@/components/sections/table-clinic'
+import DrawerClinic from '@/components/sections/drawer-clinic'
+import ContainerConstrained from '@/components/layout/container-constrained'
+import SearchService from '@/components/ui/search-service'
+import { supabase } from '@/lib/supabase'
 
 export default function ClinicsPage() {
   const [selectedClinic, setSelectedClinic] = useState(null)
@@ -29,7 +29,7 @@ export default function ClinicsPage() {
     <div className="pt-24 pb-12">
       <ContainerConstrained>
         <div className="mb-16">
-          <h2 className="text-4xl font-heading text-heading-1 mb-6">
+          <h2 className="font-heading text-heading-1 mb-6 text-4xl">
             Search for a Service
           </h2>
           <p className="text-body-lg text-body-medium">
