@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
 
-const CLINICS_PER_PAGE = 10
+const CLINICS_PER_PAGE = 14
 
 export default function TableClinic({ onSelectClinic, searchQuery }) {
   const [clinics, setClinics] = useState([])
@@ -51,7 +51,10 @@ export default function TableClinic({ onSelectClinic, searchQuery }) {
     ? clinics.filter((clinic) => {
         const codes = clinic.service_codes
         if (!codes) return false
-        const clinicCodes = typeof codes === 'string' ? [codes] : codes
+        const clinicCodes =
+          typeof codes === 'string'
+            ? codes.split(',').map((code) => code.trim())
+            : codes
         return matchingServiceCodes.some((code) => clinicCodes.includes(code))
       })
     : clinics
@@ -101,17 +104,17 @@ export default function TableClinic({ onSelectClinic, searchQuery }) {
             <tr key={clinic.clinic_id}>
               <td
                 onClick={() => onSelectClinic(clinic)}
-                className="text-button-secondary-text text-table-cell cursor-pointer py-4 pr-3 pl-4 font-medium whitespace-nowrap hover:underline sm:pl-0"
+                className="text-table-cell cursor-pointer py-4 pr-3 pl-4 text-xs font-medium whitespace-nowrap hover:underline sm:pl-0"
               >
-                {clinic.name}
+                {clinic.clinic_name}
               </td>
-              <td className="text-table-cell text-body-medium px-3 py-4 whitespace-nowrap">
-                {clinic.address}
+              <td className="text-table-cell px-3 py-4 text-xs whitespace-nowrap">
+                {clinic.street_address}
               </td>
-              <td className="text-table-cell text-body-medium px-3 py-4 whitespace-nowrap">
-                {clinic.phone}
+              <td className="text-table-cell px-3 py-4 text-xs whitespace-nowrap">
+                {clinic.phone_number}
               </td>
-              <td className="text-table-cell text-button-secondary-text max-w-[200px] truncate px-3 py-4">
+              <td className="text-table-cell max-w-[200px] truncate px-3 py-4 text-xs">
                 {clinic.website ? (
                   <a
                     href={clinic.website}
@@ -125,8 +128,8 @@ export default function TableClinic({ onSelectClinic, searchQuery }) {
                   '—'
                 )}
               </td>
-              <td className="text-table-cell text-body-medium px-3 py-4 whitespace-nowrap">
-                {clinic.google_rating ?? '—'}
+              <td className="text-table-cell px-3 py-4 text-xs whitespace-nowrap">
+                {clinic.rating ?? '—'}
               </td>
             </tr>
           ))}
