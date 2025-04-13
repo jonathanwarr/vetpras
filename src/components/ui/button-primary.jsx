@@ -5,15 +5,15 @@ export default function ButtonPrimary({ children, size = 'md', className = '', .
     md: 'px-2.5 py-1.5 text-sm',
     lg: 'px-3 py-2 text-sm',
     xl: 'px-3.5 py-2.5 text-sm',
-  }
+  };
 
   return (
     <button
       type="button"
-      className={`rounded-md bg-button-primary-bg text-button-primary-text font-semibold shadow-sm hover:bg-button-primary-bg/90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-button-primary-bg ${sizeStyles[size]} ${className}`}
+      className={`bg-button-primary-bg text-button-primary-text hover:bg-button-primary-bg/90 focus-visible:outline-button-primary-bg rounded-md font-semibold shadow-sm focus-visible:outline-2 focus-visible:outline-offset-2 ${sizeStyles[size]} ${className}`}
       {...props}
     >
       {children}
     </button>
-  )
+  );
 }

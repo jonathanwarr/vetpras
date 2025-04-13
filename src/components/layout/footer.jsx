@@ -23,12 +23,12 @@ const navigation = {
     },
     // ... (rest unchanged for brevity)
   ],
-}
+};
 
 export default function Footer() {
   return (
-    <footer className="bg-white text-body-sm text-secondary-text border-t border-zinc-100">
-      <div className="max-w-7xl mx-auto px-6 py-20 sm:py-24 lg:px-8">
+    <footer className="text-body-sm text-secondary-text border-t border-zinc-100 bg-white">
+      <div className="mx-auto max-w-7xl px-6 py-20 sm:py-24 lg:px-8">
         <nav
           className="flex flex-wrap justify-center gap-x-12 gap-y-3 text-sm font-medium"
           aria-label="Footer"
@@ -47,10 +47,10 @@ export default function Footer() {
             </a>
           ))}
         </div>
-        <p className="mt-10 text-center text-sm text-secondary-text">
+        <p className="text-secondary-text mt-10 text-center text-sm">
           &copy; 2024 Vetpras. All rights reserved.
         </p>
       </div>
     </footer>
-  )
+  );
 }

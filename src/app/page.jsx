@@ -1,17 +1,16 @@
-import React from 'react'
-import Hero from '@/components/sections/hero'
+import React from 'react';
+import Hero from '@/components/sections/hero';
 import {
   ArrowPathIcon,
   ChartBarIcon,
   CheckCircleIcon,
   CameraIcon,
-} from '@heroicons/react/24/outline'
+} from '@heroicons/react/24/outline';
 
 const features = [
   {
     name: 'Search for Veterinary Clinics',
-    description:
-      'Use our search tool to find clinics based on the services your pet requires.',
+    description: 'Use our search tool to find clinics based on the services your pet requires.',
     icon: ArrowPathIcon,
   },
   {
@@ -32,7 +31,7 @@ const features = [
       'Help fellow pet owners by submitting your vet bill. We verify and aggregate prices for transparency.',
     icon: CameraIcon,
   },
-]
+];
 
 export default function Page() {
   return (
@@ -53,37 +52,31 @@ export default function Page() {
             />
           </div>
           <div>
-            <h2 className="text-h2 font-playfair text-heading-2 mb-2">
-              OUR STORY
-            </h2>
+            <h2 className="text-h2 font-playfair text-heading-2 mb-2">OUR STORY</h2>
             <p className="text-body-lg text-body-medium mb-6">
               Finding the right Vet shouldn’t be hard.
             </p>
             <div className="text-body-md space-y-4">
               <p>
-                When we needed progesterone testing for our beloved pup, we
-                turned to our usual vet, only to find out they didn’t offer the
-                service.
+                When we needed progesterone testing for our beloved pup, we turned to our usual vet,
+                only to find out they didn’t offer the service.
               </p>
               <p>
-                What followed was a frustrating journey of searching for clinics
-                online, sifting through inconsistent information on websites,
-                and making countless phone calls just to get basic quotes and
-                clarify available tests. We were stunned by how few
-                veterinarians offered the services we needed and how drastically
-                prices and service details varied from one clinic to another.
+                What followed was a frustrating journey of searching for clinics online, sifting
+                through inconsistent information on websites, and making countless phone calls just
+                to get basic quotes and clarify available tests. We were stunned by how few
+                veterinarians offered the services we needed and how drastically prices and service
+                details varied from one clinic to another.
               </p>
               <p>
-                The process was <strong>confusing</strong>,{' '}
-                <strong>time-consuming</strong>, and <strong>stressful</strong>.
+                The process was <strong>confusing</strong>, <strong>time-consuming</strong>, and{' '}
+                <strong>stressful</strong>.
               </p>
               <p>
-                That’s why we built <strong>Vetpras</strong>—to take the
-                guesswork out of finding the right vet. By bringing all the
-                information together in one place, we’re helping pet owners make
-                informed choices with ease and confidence, because no one should
-                have to navigate this level of uncertainty when it comes to
-                their pet’s care.
+                That’s why we built <strong>Vetpras</strong>—to take the guesswork out of finding
+                the right vet. By bringing all the information together in one place, we’re helping
+                pet owners make informed choices with ease and confidence, because no one should
+                have to navigate this level of uncertainty when it comes to their pet’s care.
               </p>
             </div>
           </div>
@@ -95,9 +88,7 @@ export default function Page() {
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="mx-auto max-w-2xl lg:text-center">
             <h2 className="mb-2">HOW IT WORKS</h2>
-            <p className="mb-6">
-              Empowering pet owners with trusted information.
-            </p>
+            <p className="mb-6">Empowering pet owners with trusted information.</p>
           </div>
           <div className="mx-auto mt-16 max-w-2xl sm:mt-20 lg:mt-24 lg:max-w-4xl">
             <dl className="grid max-w-xl grid-cols-1 gap-x-8 gap-y-10 lg:max-w-none lg:grid-cols-2 lg:gap-y-16">
@@ -112,9 +103,7 @@ export default function Page() {
                     </div>
                     <span className="text-base font-bold">{feature.name}</span>
                   </dt>
-                  <dd className="text-secondary-text mt-2 text-base">
-                    {feature.description}
-                  </dd>
+                  <dd className="text-secondary-text mt-2 text-base">{feature.description}</dd>
                 </div>
               ))}
             </dl>
@@ -122,5 +111,5 @@ export default function Page() {
         </div>
       </section>
     </div>
-  )
+  );
 }

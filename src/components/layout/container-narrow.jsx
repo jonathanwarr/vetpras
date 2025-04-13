@@ -5,5 +5,5 @@ export default function ContainerNarrow({ children, className = '', style = {} }
         {children}
       </div>
     </div>
-  )
+  );
 }

@@ -1,10 +1,10 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import TableClinic from '@/components/sections/table-clinic'
-import DrawerClinic from '@/components/sections/drawer-clinic'
+import TableClinic from '@/components/clinics/table-clinic'
+import DrawerClinic from '@/components/clinics/drawer-clinic'
 import ContainerConstrained from '@/components/layout/container-constrained'
-import SearchService from '@/components/ui/search-service'
+import SearchService from '@/components/forms/search-service'
 import { supabase } from '@/lib/supabase'
 
 export default function ClinicsPage() {
@@ -14,16 +14,21 @@ export default function ClinicsPage() {
 
   useEffect(() => {
     const fetchServices = async () => {
-      const { data, error } = await supabase.from('services').select('*')
+      const { data: serviceList, error } = await supabase
+        .from('services')
+        .select('*')
+
       if (error) {
-        console.error('Error loading services:', error)
+        console.error('[Supabase] Error loading services:', error)
       } else {
-        setServices(data)
+        setServices(serviceList)
       }
     }
 
     fetchServices()
   }, [])
+
+  const handleCloseDrawer = () => setSelectedClinic(null)
 
   return (
     <div className="pt-24 pb-12">
@@ -57,7 +62,7 @@ export default function ClinicsPage() {
 
       <DrawerClinic
         clinic={selectedClinic}
-        onClose={() => setSelectedClinic(null)}
+        onClose={handleCloseDrawer}
         services={services}
       />
     </div>

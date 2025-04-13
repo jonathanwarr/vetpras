@@ -1,11 +1,11 @@
-import '@/styles/tailwind.css'
-import Header from '@/components/layout/header'
-import Footer from '@/components/layout/footer'
+import '@/styles/tailwind.css';
+import Header from '@/components/layout/header';
+import Footer from '@/components/layout/footer';
 
 export const metadata = {
   title: 'Vetpras',
   description: 'Crowdsourced vet pricing & clinic comparison',
-}
+};
 
 export default function RootLayout({ children }) {
   return (
@@ -16,5 +16,5 @@ export default function RootLayout({ children }) {
         <Footer />
       </body>
     </html>
-  )
+  );
 }

@@ -1,49 +1,47 @@
-'use client'
+'use client';
 
-import { Dialog, DialogPanel, DialogTitle } from '@headlessui/react'
-import { XMarkIcon } from '@heroicons/react/24/outline'
-import { useState } from 'react'
+import { Dialog, DialogPanel, DialogTitle } from '@headlessui/react';
+import { XMarkIcon } from '@heroicons/react/24/outline';
+import { useState } from 'react';
 
 export default function DrawerClinic({ clinic, onClose, services }) {
-  const [showAllServices, setShowAllServices] = useState(false)
+  const [showAllServices, setShowAllServices] = useState(false);
 
-  if (!clinic) return null
+  if (!clinic) return null;
 
   const getCategoryServices = () => {
-    if (!clinic.service_codes || !services) return []
+    if (!clinic.service_codes || !services) return [];
 
     const codes = Array.isArray(clinic.service_codes)
       ? clinic.service_codes
-      : [clinic.service_codes]
+      : [clinic.service_codes];
 
     const categoryCodes = new Set(
       codes
         .filter((code) => code.endsWith('.0'))
-        .filter((cat) => services.find((s) => s.code === cat)),
-    )
+        .filter((cat) => services.find((s) => s.code === cat))
+    );
 
     return [...categoryCodes]
       .map((code) => services.find((s) => s.code === code)?.name)
-      .filter(Boolean)
-  }
+      .filter(Boolean);
+  };
 
   const getAllServiceNames = () => {
-    if (!clinic.service_codes || !services) return []
+    if (!clinic.service_codes || !services) return [];
 
     const codes = Array.isArray(clinic.service_codes)
       ? clinic.service_codes
-      : [clinic.service_codes]
+      : [clinic.service_codes];
 
-    return codes
-      .map((code) => services.find((s) => s.code === code)?.name)
-      .filter(Boolean)
-  }
+    return codes.map((code) => services.find((s) => s.code === code)?.name).filter(Boolean);
+  };
 
   const mapsUrl = clinic.place_id
     ? `https://www.google.com/maps/place/?q=place_id:${clinic.place_id}`
     : clinic.latitude && clinic.longitude
       ? `https://www.google.com/maps?q=${clinic.latitude},${clinic.longitude}`
-      : null
+      : null;
 
   return (
     <Dialog open={!!clinic} onClose={onClose} className="relative z-10">
@@ -68,9 +66,7 @@ export default function DrawerClinic({ clinic, onClose, services }) {
 
               <div className="text-body-md mt-6 flex-1 space-y-6 px-6">
                 <div>
-                  <h3 className="text-heading-3 mb-2 text-sm font-semibold">
-                    📍 Contact Info
-                  </h3>
+                  <h3 className="text-heading-3 mb-2 text-sm font-semibold">📍 Contact Info</h3>
                   <p>
                     <strong>Address:</strong> {clinic.street_address}
                   </p>
@@ -119,19 +115,15 @@ export default function DrawerClinic({ clinic, onClose, services }) {
                 </div>
 
                 <div>
-                  <h3 className="text-heading-3 mb-2 text-sm font-semibold">
-                    📊 Quick Stats
-                  </h3>
+                  <h3 className="text-heading-3 mb-2 text-sm font-semibold">📊 Quick Stats</h3>
                   <p>
                     <strong>Google Rating:</strong> {clinic.rating ?? '—'}
                   </p>
                   <p>
-                    <strong>Total Reviews:</strong>{' '}
-                    {clinic.total_reviews ?? '—'}
+                    <strong>Total Reviews:</strong> {clinic.total_reviews ?? '—'}
                   </p>
                   <p>
-                    <strong>Exam Fee:</strong>{' '}
-                    {clinic.exam_fee ? `$${clinic.exam_fee}` : '—'}
+                    <strong>Exam Fee:</strong> {clinic.exam_fee ? `$${clinic.exam_fee}` : '—'}
                   </p>
                 </div>
 
@@ -151,16 +143,13 @@ export default function DrawerClinic({ clinic, onClose, services }) {
                       ))}
                     </div>
 
-                    {getAllServiceNames().length >
-                      getCategoryServices().length && (
+                    {getAllServiceNames().length > getCategoryServices().length && (
                       <div className="mt-3">
                         <button
                           onClick={() => setShowAllServices(!showAllServices)}
                           className="text-primary text-sm hover:underline"
                         >
-                          {showAllServices
-                            ? 'Hide Full List'
-                            : 'Show All Services'}
+                          {showAllServices ? 'Hide Full List' : 'Show All Services'}
                         </button>
                         {showAllServices && (
                           <ul className="text-body-sm mt-2 list-inside list-disc space-y-1 text-xs">
@@ -183,5 +172,5 @@ export default function DrawerClinic({ clinic, onClose, services }) {
         </div>
       </div>
     </Dialog>
-  )
+  );
 }

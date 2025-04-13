@@ -1,19 +1,19 @@
-'use client'
+'use client';
 
-import { useState } from 'react'
-import Link from 'next/link'
-import { Dialog, DialogPanel } from '@headlessui/react'
-import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
+import { useState } from 'react';
+import Link from 'next/link';
+import { Dialog, DialogPanel } from '@headlessui/react';
+import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 
 const navigation = [
-  { name: 'Submit Bill', href: '/submit' },
+  { name: 'Submit Bill', href: '/submit-bill' },
   { name: 'Submit Feedback', href: '/feedback' },
   { name: 'Disclaimer', href: '/disclaimer' },
   { name: 'About Us', href: '/about' },
-]
+];
 
 export default function Header() {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
     <header className="absolute top-0 left-0 z-50 w-full">
@@ -25,11 +25,7 @@ export default function Header() {
         <div className="flex items-center gap-x-12">
           <Link href="/" className="-m-1.5 p-1.5">
             <span className="sr-only">Vetpras</span>
-            <img
-              src="/images/vetpras-icon.png"
-              alt="Vetpras icon"
-              className="h-10 w-auto"
-            />
+            <img src="/images/vetpras-icon.png" alt="Vetpras icon" className="h-10 w-auto" />
           </Link>
           <div className="hidden lg:flex lg:gap-x-8">
             {navigation.map((item) => (
@@ -46,10 +42,7 @@ export default function Header() {
 
         {/* CTA */}
         <div className="hidden lg:flex">
-          <Link
-            href="/clinics"
-            className="text-sm font-semibold text-zinc-700 hover:text-blue-800"
-          >
+          <Link href="/clinics" className="text-sm font-semibold text-zinc-700 hover:text-blue-800">
             Search Vets <span aria-hidden="true">&rarr;</span>
           </Link>
         </div>
@@ -68,20 +61,12 @@ export default function Header() {
       </nav>
 
       {/* Mobile Menu */}
-      <Dialog
-        open={mobileMenuOpen}
-        onClose={setMobileMenuOpen}
-        className="lg:hidden"
-      >
+      <Dialog open={mobileMenuOpen} onClose={setMobileMenuOpen} className="lg:hidden">
         <div className="fixed inset-0 z-10" />
         <DialogPanel className="fixed inset-y-0 right-0 z-10 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm">
           <div className="flex items-center justify-between">
             <Link href="/" className="-m-1.5 p-1.5">
-              <img
-                src="/images/vetpras-icon.png"
-                alt="Vetpras icon"
-                className="h-8 w-auto"
-              />
+              <img src="/images/vetpras-icon.png" alt="Vetpras icon" className="h-8 w-auto" />
             </Link>
             <button
               type="button"
@@ -117,5 +102,5 @@ export default function Header() {
         </DialogPanel>
       </Dialog>
     </header>
-  )
+  );
 }

@@ -23,10 +23,12 @@ export default function TableClinic({ onSelectClinic, searchQuery }) {
         supabase.from('services').select('*'),
       ])
 
-      if (clinicError) console.error('Error loading clinics:', clinicError)
+      if (clinicError)
+        console.error('[Supabase] Clinic fetch error:', clinicError)
       else setClinics(clinicData)
 
-      if (serviceError) console.error('Error loading services:', serviceError)
+      if (serviceError)
+        console.error('[Supabase] Service fetch error:', serviceError)
       else setServices(serviceData)
 
       setLoading(false)
@@ -41,20 +43,20 @@ export default function TableClinic({ onSelectClinic, searchQuery }) {
 
   const matchingServiceCodes = searchQuery
     ? services
-        .filter((service) =>
-          service.name.toLowerCase().includes(searchQuery.toLowerCase()),
-        )
-        .map((service) => service.code.replace(/\.0$/, ''))
+        .filter((s) => s.name.toLowerCase().includes(searchQuery.toLowerCase()))
+        .map((s) => s.code.replace(/\.0$/, ''))
     : []
 
   const filteredClinics = searchQuery
     ? clinics.filter((clinic) => {
         const codes = clinic.service_codes
         if (!codes) return false
+
         const clinicCodes =
           typeof codes === 'string'
-            ? codes.split(',').map((code) => code.trim())
+            ? codes.split(',').map((c) => c.trim())
             : codes
+
         return matchingServiceCodes.some((code) => clinicCodes.includes(code))
       })
     : clinics
@@ -66,37 +68,27 @@ export default function TableClinic({ onSelectClinic, searchQuery }) {
     startIdx + CLINICS_PER_PAGE,
   )
 
-  const handlePageChange = (page) => {
-    if (page >= 1 && page <= totalPages) setCurrentPage(page)
-  }
-
-  if (loading)
+  if (loading) {
     return (
       <div className="text-body-sm text-body-medium p-4">
         Loading clinics...
       </div>
     )
+  }
 
   return (
     <div className="w-full overflow-x-auto">
       <table className="divide-table-header-bg w-full table-auto divide-y">
         <thead>
           <tr>
-            <th className="text-table-header text-heading-2 py-[14px] pr-3 pl-4 text-left sm:pl-0">
-              Name
-            </th>
-            <th className="text-table-header text-heading-2 px-3 py-[14px] text-left">
-              Address
-            </th>
-            <th className="text-table-header text-heading-2 px-3 py-[14px] text-left">
-              Phone
-            </th>
-            <th className="text-table-header text-heading-2 px-3 py-[14px] text-left">
-              Website
-            </th>
-            <th className="text-table-header text-heading-2 px-3 py-[14px] text-left">
-              Rating
-            </th>
+            {['Name', 'Address', 'Phone', 'Website', 'Rating'].map((label) => (
+              <th
+                key={label}
+                className="text-table-header text-heading-2 px-3 py-[14px] text-left first:pl-4 last:pr-4 sm:first:pl-0"
+              >
+                {label}
+              </th>
+            ))}
           </tr>
         </thead>
         <tbody className="divide-table-header-bg divide-y">
@@ -145,7 +137,7 @@ export default function TableClinic({ onSelectClinic, searchQuery }) {
       {totalPages > 1 && (
         <div className="mt-6 flex justify-center space-x-2">
           <button
-            onClick={() => handlePageChange(currentPage - 1)}
+            onClick={() => setCurrentPage(currentPage - 1)}
             disabled={currentPage === 1}
             className="bg-table-row-even hover:bg-table-row-odd text-body-sm rounded px-3 py-1"
           >
@@ -154,7 +146,7 @@ export default function TableClinic({ onSelectClinic, searchQuery }) {
           {Array.from({ length: totalPages }, (_, i) => (
             <button
               key={i}
-              onClick={() => handlePageChange(i + 1)}
+              onClick={() => setCurrentPage(i + 1)}
               className={`text-body-sm rounded px-3 py-1 ${
                 currentPage === i + 1
                   ? 'bg-button-primary-bg text-button-primary-text'
@@ -165,7 +157,7 @@ export default function TableClinic({ onSelectClinic, searchQuery }) {
             </button>
           ))}
           <button
-            onClick={() => handlePageChange(currentPage + 1)}
+            onClick={() => setCurrentPage(currentPage + 1)}
             disabled={currentPage === totalPages}
             className="bg-table-row-even hover:bg-table-row-odd text-body-sm rounded px-3 py-1"
           >

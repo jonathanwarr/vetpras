@@ -1,129 +1,157 @@
-'use client'
+'use client';
 
-import { useState, useEffect } from 'react'
-import { supabase } from '@/lib/supabase'
+import { useState, useEffect } from 'react';
+import { supabase } from '@/lib/supabase';
+import InputClinic from '@/components/forms/input-clinic';
+import SelectService from '@/components/forms/select-service';
+import InputPrice from '@/components/forms/input-price';
+import UploadReceipt from '@/components/forms/upload-receipt';
+import SubmissionNotes from '@/components/forms/submission-notes';
+import ButtonPrimary from '@/components/ui/button-primary';
+import FormError from '@/components/forms/form-error';
+import ModalSuccess from '@/components/ui/modal-success';
+import ServiceNavigation from '@/components/sections/service-navigation';
 
-export default function SubmitFormPage() {
-  const [clinics, setClinics] = useState([])
-  const [services, setServices] = useState([])
-  const [clinicId, setClinicId] = useState('')
-  const [serviceId, setServiceId] = useState('')
-  const [price, setPrice] = useState('')
-  const [success, setSuccess] = useState(false)
-  const [error, setError] = useState(null)
+export default function SubmitBillPage() {
+  const [clinicId, setClinicId] = useState('');
+  const [serviceId, setServiceId] = useState('');
+  const [price, setPrice] = useState('');
+  const [notes, setNotes] = useState('');
+  const [file, setFile] = useState(null);
+  const [services, setServices] = useState([]);
+  const [clinics, setClinics] = useState([]);
+  const [success, setSuccess] = useState(false);
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [missingFields, setMissingFields] = useState([]);
+
+  // Scroll to top on modal open
+  useEffect(() => {
+    if (success) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }, [success]);
+
+  // Fetch clinics and services
+  useEffect(() => {
+    const fetchClinics = async () => {
+      const { data, error } = await supabase.from('clinics').select('clinic_id, clinic_name');
+      if (error) console.error('Error fetching clinics:', error);
+      else setClinics(data);
+    };
+    fetchClinics();
+  }, []);
 
   useEffect(() => {
-    const fetchData = async () => {
-      const { data: clinicData } = await supabase
-        .from('clinics')
-        .select('clinic_id, name')
-      const { data: serviceData } = await supabase
-        .from('services')
-        .select('id, name')
-      setClinics(clinicData || [])
-      setServices(serviceData || [])
-    }
-    fetchData()
-  }, [])
+    const fetchServices = async () => {
+      const { data, error } = await supabase.from('services').select('id, name, code');
+      if (error) console.error('Error fetching services:', error);
+      else setServices(data);
+    };
+    fetchServices();
+  }, []);
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
-    setSuccess(false)
-    setError(null)
+    e.preventDefault();
+    setError(null);
+    setSuccess(false);
 
-    const { error } = await supabase.from('submissions').insert([
+    const missing = [];
+    if (!clinicId) missing.push('Clinic Name');
+    if (!serviceId) missing.push('Service');
+    if (!price.trim()) missing.push('Price');
+    if (!file) missing.push('Receipt');
+
+    if (missing.length > 0) {
+      setMissingFields(missing);
+      setError('Please fill out all required fields.');
+      return;
+    }
+
+    setMissingFields([]);
+    setLoading(true);
+
+    const filename = `${Date.now()}_${file.name}`;
+    const { data: fileData, error: fileError } = await supabase.storage
+      .from('receipts')
+      .upload(filename, file);
+
+    if (fileError || !fileData?.path) {
+      setError('File upload failed. Please try again.');
+      setLoading(false);
+      return;
+    }
+
+    const { error: submitError } = await supabase.from('submissions').insert([
       {
         clinic_id: clinicId,
         service_id: serviceId,
         price: parseFloat(price),
+        image_url: fileData.path,
         approved: false,
+        notes,
         submitted_at: new Date().toISOString(),
       },
-    ])
+    ]);
 
-    if (error) {
-      setError(error.message)
+    if (submitError) {
+      setError('Submission failed. Please try again.');
     } else {
-      setSuccess(true)
-      setClinicId('')
-      setServiceId('')
-      setPrice('')
+      console.log('✅ Submission succeeded – showing modal');
+      setSuccess(true);
+      setClinicId('');
+      setServiceId('');
+      setPrice('');
+      setNotes('');
+      setFile(null);
     }
-  }
+
+    setLoading(false);
+  };
 
   return (
-    <div className="mx-auto max-w-xl p-6">
-      <h1 className="text-h2 font-playfair text-heading-1 mb-4 font-semibold">
-        Submit a Vet Bill
-      </h1>
+    <div className="mx-auto max-w-7xl px-4 py-12">
+      <h1 className="text-h2 font-playfair text-heading-1 mb-4">Submit a Vet Bill</h1>
 
-      <form onSubmit={handleSubmit} className="space-y-6">
-        <div>
-          <label className="text-body-md text-heading-2 mb-1 block font-medium">
-            Clinic
-          </label>
-          <select
-            value={clinicId}
-            onChange={(e) => setClinicId(e.target.value)}
-            className="text-body-md w-full rounded border border-gray-300 px-3 py-2"
-            required
-          >
-            <option value="">Select a clinic</option>
-            {clinics.map((clinic) => (
-              <option key={clinic.clinic_id} value={clinic.clinic_id}>
-                {clinic.name}
-              </option>
-            ))}
-          </select>
+      <p className="mb-6 text-sm text-gray-700">
+        Use the left-hand menu or start typing to find your service. If you don’t see your exact
+        service listed, select the general category and describe the specific service in the comment
+        section. We’ll look into adding it!
+      </p>
+
+      <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
+        <div className="md:col-span-1">
+          <ServiceNavigation services={services} onSelect={(code) => setServiceId(code)} />
         </div>
 
-        <div>
-          <label className="text-body-md text-heading-2 mb-1 block font-medium">
-            Service
-          </label>
-          <select
-            value={serviceId}
-            onChange={(e) => setServiceId(e.target.value)}
-            className="text-body-md w-full rounded border border-gray-300 px-3 py-2"
-            required
-          >
-            <option value="">Select a service</option>
-            {services.map((service) => (
-              <option key={service.id} value={service.id}>
-                {service.name}
-              </option>
-            ))}
-          </select>
-        </div>
+        <div className="md:col-span-2">
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <InputClinic value={clinicId} onChange={setClinicId} clinics={clinics} />
+            <SelectService value={serviceId} onChange={setServiceId} services={services} />
+            <InputPrice value={price} onChange={setPrice} />
+            <SubmissionNotes value={notes} onChange={setNotes} />
+            <UploadReceipt file={file} setFile={setFile} />
 
-        <div>
-          <label className="text-body-md text-heading-2 mb-1 block font-medium">
-            Price (CAD)
-          </label>
-          <input
-            type="number"
-            step="0.01"
-            min="0"
-            value={price}
-            onChange={(e) => setPrice(e.target.value)}
-            className="text-body-md w-full rounded border border-gray-300 px-3 py-2"
-            placeholder="Enter price"
-            required
+            {error && missingFields.length > 0 && (
+              <FormError
+                message="Please complete the following before submitting:"
+                missingFields={missingFields}
+              />
+            )}
+
+            <ButtonPrimary type="submit" disabled={loading}>
+              {loading ? 'Submitting...' : 'Submit'}
+            </ButtonPrimary>
+          </form>
+
+          <ModalSuccess
+            isOpen={success}
+            onClose={() => setSuccess(false)}
+            title="Thank you!"
+            message="Your submission was received and will be reviewed shortly."
           />
         </div>
-
-        <button
-          type="submit"
-          className="bg-button-primary-bg text-button-primary-text text-btn-md hover:bg-button-primary-bg/90 rounded px-6 py-2 font-bold transition"
-        >
-          Submit
-        </button>
-
-        {success && (
-          <p className="mt-2 text-sm text-green-600">Submission successful!</p>
-        )}
-        {error && <p className="mt-2 text-sm text-red-600">Error: {error}</p>}
-      </form>
+      </div>
     </div>
-  )
+  );
 }

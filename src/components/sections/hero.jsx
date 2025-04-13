@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 export default function Hero() {
   return (
@@ -12,9 +12,8 @@ export default function Hero() {
             FOR YOUR PET
           </h1>
           <p className="text-body-lg text-body-medium mb-6">
-            Quickly search and compare veterinarian clinics by services,
-            location, ratings, and cost to make the best choice for your beloved
-            pet
+            Quickly search and compare veterinarian clinics by services, location, ratings, and cost
+            to make the best choice for your beloved pet
           </p>
           <p className="text-body-md mb-6 font-semibold">
             Finding the right Vet is only a click away!
@@ -36,5 +35,5 @@ export default function Hero() {
         </div>
       </div>
     </section>
-  )
+  );
 }

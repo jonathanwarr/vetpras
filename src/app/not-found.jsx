@@ -1,7 +1,7 @@
-'use client'
+'use client';
 
-import NotFound from '@/components/ui/not-found'
+import NotFound from '@/components/ui/not-found';
 
 export default function NotFoundPage() {
-  return <NotFound />
+  return <NotFound />;
 }
