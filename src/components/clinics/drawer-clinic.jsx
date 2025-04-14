@@ -7,36 +7,44 @@ import { useState } from 'react';
 export default function DrawerClinic({ clinic, onClose, services }) {
   const [showAllServices, setShowAllServices] = useState(false);
 
-  if (!clinic) return null;
+  if (!clinic) return null; // Don’t render drawer if no clinic is selected
 
+  // Normalize clinic.service_codes into a clean array of strings
+  const clinicServiceCodes = (() => {
+    if (!clinic?.service_codes) return [];
+    if (Array.isArray(clinic.service_codes)) return clinic.service_codes.map((c) => c.trim());
+    if (typeof clinic.service_codes === 'string')
+      return clinic.service_codes.split(',').map((c) => c.trim());
+    return [];
+  })();
+
+  console.log('📦 clinic.service_codes:', clinic.service_codes);
+  console.log('📦 normalized clinicServiceCodes:', clinicServiceCodes);
+
+  // Get top-level services (i.e. categories) matched to this clinic
   const getCategoryServices = () => {
-    if (!clinic.service_codes || !services) return [];
+    if (!services || !clinicServiceCodes.length) return [];
 
-    const codes = Array.isArray(clinic.service_codes)
-      ? clinic.service_codes
-      : [clinic.service_codes];
+    const matched = services
+      .filter((s) => clinicServiceCodes.includes(s.service_code))
+      .filter((s) => s.parent_code === null)
+      .sort((a, b) => a.sort_order - b.sort_order); // 🔥 Sort by numeric sort_order
 
-    const categoryCodes = new Set(
-      codes
-        .filter((code) => code.endsWith('.0'))
-        .filter((cat) => services.find((s) => s.code === cat))
-    );
+    console.log('🔍 getCategoryServices - sorted:', matched);
 
-    return [...categoryCodes]
-      .map((code) => services.find((s) => s.code === code)?.name)
+    return matched.map((s) => s.service);
+  };
+
+  // Get all services mapped to this clinic, including sub-services
+  const getAllServiceNames = () => {
+    if (!services || !clinicServiceCodes.length) return [];
+
+    return clinicServiceCodes
+      .map((code) => services.find((s) => s.service_code === code)?.service)
       .filter(Boolean);
   };
 
-  const getAllServiceNames = () => {
-    if (!clinic.service_codes || !services) return [];
-
-    const codes = Array.isArray(clinic.service_codes)
-      ? clinic.service_codes
-      : [clinic.service_codes];
-
-    return codes.map((code) => services.find((s) => s.code === code)?.name).filter(Boolean);
-  };
-
+  // Use Google Maps Place ID or lat/lng for location link
   const mapsUrl = clinic.place_id
     ? `https://www.google.com/maps/place/?q=place_id:${clinic.place_id}`
     : clinic.latitude && clinic.longitude
@@ -50,6 +58,7 @@ export default function DrawerClinic({ clinic, onClose, services }) {
         <div className="absolute inset-0 flex justify-end pl-10">
           <DialogPanel className="w-screen max-w-md bg-white shadow-xl">
             <div className="flex h-full flex-col overflow-y-scroll py-6">
+              {/* 🔹 Header with close button */}
               <div className="flex items-start justify-between px-6">
                 <DialogTitle className="text-heading-2 text-lg font-semibold">
                   {clinic.name}
@@ -64,7 +73,9 @@ export default function DrawerClinic({ clinic, onClose, services }) {
                 </button>
               </div>
 
+              {/* 🔹 Clinic details and service info */}
               <div className="text-body-md mt-6 flex-1 space-y-6 px-6">
+                {/* 📍 Contact Info */}
                 <div>
                   <h3 className="text-heading-3 mb-2 text-sm font-semibold">📍 Contact Info</h3>
                   <p>
@@ -114,6 +125,7 @@ export default function DrawerClinic({ clinic, onClose, services }) {
                   )}
                 </div>
 
+                {/* 📊 Quick Stats */}
                 <div>
                   <h3 className="text-heading-3 mb-2 text-sm font-semibold">📊 Quick Stats</h3>
                   <p>
@@ -127,11 +139,14 @@ export default function DrawerClinic({ clinic, onClose, services }) {
                   </p>
                 </div>
 
-                {services && clinic.service_codes && (
+                {/* 🧾 Service Categories */}
+                {services && clinicServiceCodes.length > 0 && (
                   <div>
                     <h3 className="text-heading-3 mb-2 text-sm font-semibold">
                       🧾 Service Categories
                     </h3>
+
+                    {/* Top-level service categories as tags */}
                     <div className="flex flex-wrap gap-2">
                       {getCategoryServices().map((name) => (
                         <span
@@ -143,6 +158,7 @@ export default function DrawerClinic({ clinic, onClose, services }) {
                       ))}
                     </div>
 
+                    {/* Expandable full list of all matched services */}
                     {getAllServiceNames().length > getCategoryServices().length && (
                       <div className="mt-3">
                         <button
@@ -163,6 +179,7 @@ export default function DrawerClinic({ clinic, onClose, services }) {
                   </div>
                 )}
 
+                {/* 💡 Coming Soon */}
                 <div className="border-t border-zinc-200 pt-4 text-xs text-zinc-400">
                   💡 Coming Soon: AI Powered Symptom Search
                 </div>

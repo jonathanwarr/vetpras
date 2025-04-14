@@ -1,68 +1,66 @@
-'use client'
+'use client';
 
-import { useState, useEffect, useRef, useMemo } from 'react'
+import { useState, useEffect, useRef, useMemo } from 'react';
 
+// This component provides a search input with live suggestions from a list of vet services.
+// As the user types, matching services are shown. They can select using keyboard or mouse.
 export default function SearchService({ value, onChange, services }) {
-  const [showSuggestions, setShowSuggestions] = useState(false)
-  const [highlightedIndex, setHighlightedIndex] = useState(-1)
-  const listRef = useRef(null)
+  const [showSuggestions, setShowSuggestions] = useState(false); // Controls if suggestions list is visible
+  const [highlightedIndex, setHighlightedIndex] = useState(-1); // Tracks which item is focused (for arrow key nav)
+  const listRef = useRef(null); // Used to scroll selected item into view
 
+  // Filter the list of services based on what the user types
   const filteredSuggestions = useMemo(() => {
     return (
-      services?.filter((service) =>
-        service.name.toLowerCase().includes(value.toLowerCase()),
-      ) || []
-    )
-  }, [value, services])
+      services?.filter((service) => service.service.toLowerCase().includes(value.toLowerCase())) ||
+      []
+    );
+  }, [value, services]);
 
+  // Called when the user selects a service from the list
   const handleSelect = (service) => {
-    onChange(service.name)
-    setShowSuggestions(false)
-    setHighlightedIndex(-1)
-  }
+    onChange(service.service); // Updates the search input value
+    setShowSuggestions(false); // Close the dropdown
+    setHighlightedIndex(-1);
+  };
 
+  // Handle arrow keys and enter to navigate and select items
   const handleKeyDown = (e) => {
-    if (!showSuggestions || filteredSuggestions.length === 0) return
+    if (!showSuggestions || filteredSuggestions.length === 0) return;
 
     switch (e.key) {
       case 'ArrowDown':
-        e.preventDefault()
-        setHighlightedIndex((prev) =>
-          prev < filteredSuggestions.length - 1 ? prev + 1 : 0,
-        )
-        break
+        e.preventDefault();
+        setHighlightedIndex((prev) => (prev < filteredSuggestions.length - 1 ? prev + 1 : 0));
+        break;
       case 'ArrowUp':
-        e.preventDefault()
-        setHighlightedIndex((prev) =>
-          prev > 0 ? prev - 1 : filteredSuggestions.length - 1,
-        )
-        break
+        e.preventDefault();
+        setHighlightedIndex((prev) => (prev > 0 ? prev - 1 : filteredSuggestions.length - 1));
+        break;
       case 'Enter':
-        e.preventDefault()
+        e.preventDefault();
         if (highlightedIndex >= 0) {
-          handleSelect(filteredSuggestions[highlightedIndex])
+          handleSelect(filteredSuggestions[highlightedIndex]);
         } else if (filteredSuggestions.length > 0) {
-          handleSelect(filteredSuggestions[0])
+          handleSelect(filteredSuggestions[0]);
         }
-        break
+        break;
       default:
-        break
+        break;
     }
-  }
+  };
 
+  // Scroll to the highlighted item as you move with arrows
   useEffect(() => {
     if (highlightedIndex >= 0 && listRef.current) {
-      const listItem = listRef.current.children[highlightedIndex]
-      listItem?.scrollIntoView({ block: 'nearest' })
+      const listItem = listRef.current.children[highlightedIndex];
+      listItem?.scrollIntoView({ block: 'nearest' });
     }
-  }, [highlightedIndex])
+  }, [highlightedIndex]);
 
   return (
     <div className="relative w-full sm:w-80">
-      <label
-        htmlFor="search"
-        className="block text-sm font-medium text-gray-700"
-      >
+      <label htmlFor="search" className="block text-sm font-medium text-gray-700">
         Search by Service
       </label>
       <div className="relative mt-2">
@@ -74,15 +72,16 @@ export default function SearchService({ value, onChange, services }) {
           placeholder="e.g. Vaccination"
           value={value}
           onChange={(e) => {
-            onChange(e.target.value)
-            setShowSuggestions(true)
-            setHighlightedIndex(-1)
+            onChange(e.target.value);
+            setShowSuggestions(true);
+            setHighlightedIndex(-1);
           }}
           onBlur={() => setTimeout(() => setShowSuggestions(false), 150)}
           onKeyDown={handleKeyDown}
           className="block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-base text-gray-900 placeholder:text-gray-400 focus:border-indigo-600 focus:ring-1 focus:ring-indigo-600 sm:text-sm"
         />
 
+        {/* Suggestion dropdown list */}
         {showSuggestions && filteredSuggestions.length > 0 && (
           <ul
             ref={listRef}
@@ -90,20 +89,18 @@ export default function SearchService({ value, onChange, services }) {
           >
             {filteredSuggestions.map((service, index) => (
               <li
-                key={service.code}
+                key={service.service_code}
                 onClick={() => handleSelect(service)}
                 className={`cursor-pointer px-3 py-2 ${
-                  index === highlightedIndex
-                    ? 'bg-indigo-600 text-white'
-                    : 'hover:bg-gray-100'
+                  index === highlightedIndex ? 'bg-indigo-600 text-white' : 'hover:bg-gray-100'
                 }`}
               >
-                {service.name}
+                {service.service}
               </li>
             ))}
           </ul>
         )}
       </div>
     </div>
-  )
+  );
 }

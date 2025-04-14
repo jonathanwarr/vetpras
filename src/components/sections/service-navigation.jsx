@@ -2,44 +2,53 @@
 
 import { useState } from 'react';
 
+// Sidebar component used on the Submit Bill page to browse service categories
+// Expands parent categories to show child services, and triggers onSelect with a service_code
 export default function ServiceNavigation({ services = [], onSelect }) {
-  const [expandedCategory, setExpandedCategory] = useState(null);
+  const [expandedCategory, setExpandedCategory] = useState(null); // Tracks which category is open
 
-  // Group services by category (e.g. 1.0, 2.0)
-  const grouped = services.reduce((acc, service) => {
-    const [category] = service.code.split('.');
-    const catCode = `${category}.0`;
-    if (!acc[catCode]) acc[catCode] = [];
-    acc[catCode].push(service);
+  // Filter all services to get top-level categories (i.e. parent_code === null)
+  const parentCategories = services.filter((s) => s.parent_code === null);
+
+  // Group sub-services under their parent_code
+  // Example: { '1.0': [{ service: 'Wellness Exam', service_code: '1.1' }, ...] }
+  const childMap = services.reduce((acc, service) => {
+    if (!service.parent_code) return acc;
+    if (!acc[service.parent_code]) acc[service.parent_code] = [];
+    acc[service.parent_code].push(service);
     return acc;
   }, {});
 
-  const toggleCategory = (catCode) => {
-    setExpandedCategory((prev) => (prev === catCode ? null : catCode));
+  // Toggle category open/closed
+  const toggleCategory = (code) => {
+    setExpandedCategory((prev) => (prev === code ? null : code));
   };
 
   return (
     <div className="w-full max-w-xs rounded-md border bg-white p-4 text-sm">
       <h2 className="text-heading-3 mb-4 font-semibold">Browse Services</h2>
       <ul className="space-y-2">
-        {Object.entries(grouped).map(([catCode, subServices]) => (
-          <li key={catCode}>
+        {/* Loop through each parent category (e.g., Exams, Surgery) */}
+        {parentCategories.map((category) => (
+          <li key={category.service_code}>
+            {/* Clicking toggles the visibility of that category's sub-services */}
             <button
-              onClick={() => toggleCategory(catCode)}
+              onClick={() => toggleCategory(category.service_code)}
               className="w-full text-left font-medium text-indigo-700 hover:underline"
             >
-              {subServices[0]?.name.split(':')[0]}{' '}
-              {/* Assume name has format "Diagnostics: Blood Work" */}
+              {category.service}
             </button>
-            {expandedCategory === catCode && (
+
+            {/* Show sub-services if this category is currently expanded */}
+            {expandedCategory === category.service_code && (
               <ul className="mt-2 ml-4 space-y-1">
-                {subServices.map((s) => (
+                {(childMap[category.service_code] || []).map((service) => (
                   <li
-                    key={s.code}
+                    key={service.service_code}
+                    onClick={() => onSelect(service.service_code)}
                     className="cursor-pointer text-gray-700 hover:text-indigo-600"
-                    onClick={() => onSelect(s.code)}
                   >
-                    {s.name}
+                    {service.service}
                   </li>
                 ))}
               </ul>
