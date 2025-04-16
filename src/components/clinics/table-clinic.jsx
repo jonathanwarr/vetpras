@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase';
 
-const CLINICS_PER_PAGE = 14; // Number of clinics to show per page
+const CLINICS_PER_PAGE = 14;
 
 export default function TableClinic({ onSelectClinic, searchQuery }) {
   const [clinics, setClinics] = useState([]);
@@ -11,7 +11,6 @@ export default function TableClinic({ onSelectClinic, searchQuery }) {
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
 
-  // Fetch clinic and service data from Supabase on mount
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
@@ -21,7 +20,7 @@ export default function TableClinic({ onSelectClinic, searchQuery }) {
           supabase.from('clinics').select('*'),
           supabase
             .from('services')
-            .select('service, service_code, sort_order')
+            .select('service, service_code, parent_code, sort_order')
             .order('sort_order', { ascending: true }),
         ]);
 
@@ -37,22 +36,34 @@ export default function TableClinic({ onSelectClinic, searchQuery }) {
     fetchData();
   }, []);
 
-  // Reset to page 1 if search query changes
   useEffect(() => {
     setCurrentPage(1);
   }, [searchQuery]);
 
-  // Find matching service codes based on searchQuery
-  const matchingServiceCodes = services
-    .filter((s) => s.service.toLowerCase().includes(searchQuery.toLowerCase()))
-    .sort(
-      (a, b) =>
-        a.service.toLowerCase().indexOf(searchQuery.toLowerCase()) -
-        b.service.toLowerCase().indexOf(searchQuery.toLowerCase())
-    )
-    .map((s) => s.service_code.replace(/\.0$/, '')); // Trim off trailing .0 if present
+  // 🔍 Enhanced: Match query and collect both direct and child service codes
+  const matchingServiceCodes = (() => {
+    if (!searchQuery.trim()) return [];
 
-  // Filter clinics that offer at least one of the matched service codes
+    const query = searchQuery.toLowerCase();
+
+    // Services that match the text directly (name contains the query)
+    const matchedServices = services.filter((s) => s.service.toLowerCase().includes(query));
+
+    // Include sub-services if a parent category is matched
+    const parentCodes = matchedServices
+      .filter((s) => s.parent_code === null)
+      .map((s) => s.service_code);
+
+    const childCodes = services
+      .filter((s) => parentCodes.includes(s.parent_code))
+      .map((s) => s.service_code);
+
+    // Final result: direct matches + children of matched categories
+    const allCodes = new Set([...matchedServices.map((s) => s.service_code), ...childCodes]);
+
+    return Array.from(allCodes); // keep full code like 1.0, 2.1, etc
+  })();
+
   const filteredClinics = searchQuery
     ? clinics.filter((clinic) => {
         const codes = clinic.service_codes;
@@ -68,7 +79,6 @@ export default function TableClinic({ onSelectClinic, searchQuery }) {
       })
     : clinics;
 
-  // Pagination calculations
   const totalPages = Math.ceil(filteredClinics.length / CLINICS_PER_PAGE);
   const startIdx = (currentPage - 1) * CLINICS_PER_PAGE;
   const paginatedClinics = filteredClinics.slice(startIdx, startIdx + CLINICS_PER_PAGE);
@@ -129,14 +139,12 @@ export default function TableClinic({ onSelectClinic, searchQuery }) {
         </tbody>
       </table>
 
-      {/* Empty state if no matching clinics */}
       {filteredClinics.length === 0 && (
         <div className="text-body-sm text-body-medium mt-6 text-center">
           No clinics found for that service.
         </div>
       )}
 
-      {/* Pagination UI */}
       {totalPages > 1 && (
         <div className="mt-6 flex justify-center space-x-2">
           <button

@@ -2,9 +2,9 @@
 
 import { useState } from 'react';
 import { supabase } from '@/lib/supabase';
-import UploadReceipt from './upload-receipt'; // Reuse this for image proof
+import UploadReceipt from './upload-receipt'; // reused for image upload
 
-// Category options – should match your workflow exactly
+// These match our official feedback categories
 const CATEGORY_OPTIONS = [
   'Add Service to Clinic',
   'Add Service to Vetpras',
@@ -22,7 +22,7 @@ export default function FormFeedback() {
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState('');
 
-  // Dynamically update a specific field inside formData
+  // Helper to update a key in formData
   const updateField = (key, value) => {
     setFormData((prev) => ({ ...prev, [key]: value }));
   };
@@ -34,7 +34,7 @@ export default function FormFeedback() {
 
     let imagePath = null;
 
-    // Upload optional image (if file was added)
+    // Upload file if provided
     if (file) {
       const filename = `${Date.now()}_${file.name}`;
       const { data, error: uploadError } = await supabase.storage
@@ -48,13 +48,15 @@ export default function FormFeedback() {
       imagePath = data.path;
     }
 
+    // Insert into feedback_submissions
     const { error: insertError } = await supabase.from('feedback_submissions').insert([
       {
         category,
         message,
+        email: formData.email || null, // top-level email field
         context_data: { ...formData, image_url: imagePath },
         submitted_at: new Date().toISOString(),
-        status: 'submission-complete',
+        status: 'pending',
       },
     ]);
 
@@ -73,7 +75,7 @@ export default function FormFeedback() {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      {/* 1. Category Dropdown */}
+      {/* 1. Category */}
       <div>
         <label className="text-sm font-medium">Feedback Type</label>
         <select
@@ -88,7 +90,18 @@ export default function FormFeedback() {
         </select>
       </div>
 
-      {/* 2. Dynamic Fields */}
+      {/* 2. Optional Email Field */}
+      <div>
+        <input
+          type="email"
+          placeholder="Your email (optional)"
+          className="input"
+          value={formData.email || ''}
+          onChange={(e) => updateField('email', e.target.value)}
+        />
+      </div>
+
+      {/* 3. Dynamic Inputs by Category */}
       {category === 'Add Service to Clinic' && (
         <>
           <input
@@ -168,7 +181,7 @@ export default function FormFeedback() {
         </>
       )}
 
-      {/* Optional top-level message */}
+      {/* 4. Optional Final Message */}
       <textarea
         placeholder="Additional comments (optional)"
         className="input"
@@ -176,10 +189,11 @@ export default function FormFeedback() {
         onChange={(e) => setMessage(e.target.value)}
       />
 
-      {/* Errors or success */}
+      {/* 5. Error and Confirmation */}
       {error && <p className="text-sm text-red-600">{error}</p>}
       {submitted && <div className="text-sm text-green-600">Thanks! We got your submission.</div>}
 
+      {/* 6. Submit */}
       <button
         type="submit"
         disabled={submitting || !category}

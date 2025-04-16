@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import TableClinic from '@/components/clinics/table-clinic';
 import DrawerClinic from '@/components/clinics/drawer-clinic';
 import ContainerConstrained from '@/components/layout/container-constrained';
+import SearchCategory from '@/components/forms/search-category';
 import SearchService from '@/components/forms/search-service';
 import { supabase } from '@/lib/supabase';
 
@@ -40,6 +41,7 @@ export default function ClinicsPage() {
         </div>
 
         <div className="mb-10">
+          <SearchCategory services={services} onSelect={setSearchQuery} />
           <SearchService value={searchQuery} onChange={setSearchQuery} services={services} />
         </div>
       </ContainerConstrained>
