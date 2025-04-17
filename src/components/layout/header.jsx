@@ -19,7 +19,7 @@ export default function Header() {
   return (
     <header className="absolute top-0 left-0 z-50 w-full">
       <nav
-        className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 lg:px-8"
+        className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8"
         aria-label="Global"
       >
         {/* Logo + Nav */}
@@ -67,7 +67,7 @@ export default function Header() {
         <DialogPanel className="fixed inset-y-0 right-0 z-10 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm">
           <div className="flex items-center justify-between">
             <Link href="/" className="-m-1.5 p-1.5">
-              <img src="/images/vetpras-icon.png" alt="Vetpras icon" className="h-10 w-auto" />
+              <img src="/images/vetpras-icon.png" alt="Vetpras icon" className="h-16 w-auto" />
             </Link>
             <button
               type="button"
