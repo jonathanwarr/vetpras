@@ -5,6 +5,13 @@ import { supabase } from '@/lib/supabase';
 import ContainerConstrained from '@/components/layout/container-constrained';
 import Pagination from '@/components/clinics/pagination';
 
+export const metadata = {
+  robots: {
+    index: false,
+    follow: false,
+  },
+};
+
 export default function AdminBillSubmissions() {
   const [submissions, setSubmissions] = useState([]);
   const [clinics, setClinics] = useState([]);
