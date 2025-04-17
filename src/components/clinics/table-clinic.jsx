@@ -1,3 +1,4 @@
+// unchanged imports
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -40,28 +41,20 @@ export default function TableClinic({ onSelectClinic, searchQuery }) {
     setCurrentPage(1);
   }, [searchQuery]);
 
-  // 🔍 Enhanced: Match query and collect both direct and child service codes
   const matchingServiceCodes = (() => {
     if (!searchQuery.trim()) return [];
 
     const query = searchQuery.toLowerCase();
-
-    // Services that match the text directly (name contains the query)
     const matchedServices = services.filter((s) => s.service.toLowerCase().includes(query));
-
-    // Include sub-services if a parent category is matched
     const parentCodes = matchedServices
       .filter((s) => s.parent_code === null)
       .map((s) => s.service_code);
-
     const childCodes = services
       .filter((s) => parentCodes.includes(s.parent_code))
       .map((s) => s.service_code);
-
-    // Final result: direct matches + children of matched categories
     const allCodes = new Set([...matchedServices.map((s) => s.service_code), ...childCodes]);
 
-    return Array.from(allCodes); // keep full code like 1.0, 2.1, etc
+    return Array.from(allCodes);
   })();
 
   const filteredClinics = searchQuery
@@ -88,56 +81,75 @@ export default function TableClinic({ onSelectClinic, searchQuery }) {
   }
 
   return (
-    <div className="w-full overflow-x-auto">
-      <table className="divide-table-header-bg w-full table-auto divide-y">
-        <thead>
-          <tr>
-            {['Name', 'Address', 'Phone', 'Website', 'Rating'].map((label) => (
-              <th
-                key={label}
-                className="text-table-header text-heading-2 px-3 py-[14px] text-left first:pl-4 last:pr-4 sm:first:pl-0"
-              >
-                {label}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody className="divide-table-header-bg divide-y">
-          {paginatedClinics.map((clinic) => (
-            <tr key={clinic.clinic_id}>
-              <td
-                onClick={() => onSelectClinic(clinic)}
-                className="text-table-cell cursor-pointer py-4 pr-3 pl-4 text-xs font-medium whitespace-nowrap hover:underline sm:pl-0"
-              >
-                {clinic.clinic_name}
-              </td>
-              <td className="text-table-cell px-3 py-4 text-xs whitespace-nowrap">
-                {clinic.street_address}
-              </td>
-              <td className="text-table-cell px-3 py-4 text-xs whitespace-nowrap">
-                {clinic.phone_number}
-              </td>
-              <td className="text-table-cell max-w-[200px] truncate px-3 py-4 text-xs">
-                {clinic.website ? (
-                  <a
-                    href={clinic.website}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="hover:underline"
-                  >
-                    {clinic.website}
-                  </a>
-                ) : (
-                  '—'
-                )}
-              </td>
-              <td className="text-table-cell px-3 py-4 text-xs whitespace-nowrap">
-                {clinic.rating ?? '—'}
-              </td>
+    <div className="w-full">
+      {/* 🖥 Full table for desktop */}
+      <div className="hidden overflow-x-auto lg:block">
+        <table className="divide-table-header-bg w-full table-auto divide-y">
+          <thead>
+            <tr>
+              {['Name', 'Address', 'Phone', 'Website', 'Rating'].map((label) => (
+                <th
+                  key={label}
+                  className="text-table-header text-heading-2 px-3 py-[14px] text-left first:pl-4 last:pr-4 sm:first:pl-0"
+                >
+                  {label}
+                </th>
+              ))}
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody className="divide-table-header-bg divide-y">
+            {paginatedClinics.map((clinic) => (
+              <tr key={clinic.clinic_id}>
+                <td
+                  onClick={() => onSelectClinic(clinic)}
+                  className="text-table-cell cursor-pointer py-4 pr-3 pl-4 text-xs font-medium whitespace-nowrap hover:underline sm:pl-0"
+                >
+                  {clinic.clinic_name}
+                </td>
+                <td className="text-table-cell px-3 py-4 text-xs whitespace-nowrap">
+                  {clinic.street_address}
+                </td>
+                <td className="text-table-cell px-3 py-4 text-xs whitespace-nowrap">
+                  {clinic.phone_number}
+                </td>
+                <td className="text-table-cell max-w-[200px] truncate px-3 py-4 text-xs">
+                  {clinic.website ? (
+                    <a
+                      href={clinic.website}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="hover:underline"
+                    >
+                      {clinic.website}
+                    </a>
+                  ) : (
+                    '—'
+                  )}
+                </td>
+                <td className="text-table-cell px-3 py-4 text-xs whitespace-nowrap">
+                  {clinic.rating ?? '—'}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      {/* 📱 Mobile-friendly stacked rows */}
+      <div className="space-y-4 lg:hidden">
+        {paginatedClinics.map((clinic) => (
+          <div
+            key={clinic.clinic_id}
+            onClick={() => onSelectClinic(clinic)}
+            className="cursor-pointer rounded border border-gray-200 px-4 py-3 shadow-sm hover:bg-gray-50"
+          >
+            <p className="mb-1 text-sm font-semibold text-gray-900">{clinic.clinic_name}</p>
+            <p className="text-xs text-gray-600">
+              <strong>Rating:</strong> {clinic.rating ?? '—'}
+            </p>
+          </div>
+        ))}
+      </div>
 
       {filteredClinics.length === 0 && (
         <div className="text-body-sm text-body-medium mt-6 text-center">

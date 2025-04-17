@@ -12,6 +12,7 @@ export default function Footer() {
           &copy; {new Date().getFullYear()} Amwarr Consulting LTD.
         </p>
       </div>
+      <p className="text-right text-xs text-gray-400">v0.1.1</p>
     </footer>
   );
 }

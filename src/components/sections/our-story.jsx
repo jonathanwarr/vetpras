@@ -4,7 +4,7 @@ import { ourStory } from '@/content/our-story';
 
 export default function OurStorySection() {
   return (
-    <section className="flex min-h-screen items-center bg-gray-50 px-6 sm:px-10 md:px-16">
+    <section className="mt-20 flex min-h-screen items-center bg-gray-50 px-6 sm:px-10 md:px-16">
       <div className="mx-auto grid w-full max-w-7xl grid-cols-1 gap-16 md:grid-cols-2">
         {/* Left: Image centered */}
         <div className="flex justify-center">

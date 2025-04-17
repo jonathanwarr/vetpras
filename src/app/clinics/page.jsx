@@ -30,17 +30,26 @@ export default function ClinicsPage() {
   const handleCloseDrawer = () => setSelectedClinic(null);
 
   return (
-    <div className="pt-24 pb-12">
-      <ContainerConstrained>
+    <div className="pt-20 pb-24">
+      <ContainerConstrained className="mt-8">
         <div className="mb-16">
-          <h2 className="font-heading text-heading-1 mb-6 text-4xl">Search for a Service</h2>
-          <p className="text-body-lg text-body-medium">
-            Use the search to find clinics that offer the care your pet needs. The list will filter
-            and only show clinics that have listed the service you're looking for.
+          {/* Match section heading style: font-playfair, tracking, and balance */}
+          <p className="text-primary mb-4 text-sm font-semibold tracking-widest uppercase">
+            Search for a Service
           </p>
+
+          {/* Standardized paragraph style */}
+          <div className="mb-6 space-y-5 text-sm text-gray-700">
+            <p>
+              Use the search to find clinics that offer the care your pet needs. The list will
+              update in real time based on the services you select. We’re working to include both
+              user-submitted and clinic-submitted pricing. Keep in mind, some services may still be
+              missing as the data grows.
+            </p>
+          </div>
         </div>
 
-        <div className="mb-10">
+        <div className="mb-10 space-y-6">
           <SearchCategory services={services} onSelect={setSearchQuery} />
           <SearchService value={searchQuery} onChange={setSearchQuery} services={services} />
         </div>
