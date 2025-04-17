@@ -1,36 +1,33 @@
 'use client';
 
+import { hero } from '@/content/hero';
+import ButtonPrimary from '@/components/ui/button-primary';
+
 export default function Hero() {
   return (
-    <section className="flex h-screen items-center overflow-hidden bg-white">
-      <div className="grid max-h-screen w-full items-center md:grid-cols-2">
-        {/* Left Text Content */}
-        <div className="px-6 text-left sm:pl-12 md:pl-[150px] lg:pl-[200px] xl:pl-[250px] 2xl:pl-[300px]">
-          <h1 className="text-h1 font-playfair text-heading-1 mb-4">
-            FIND THE RIGHT VET
-            <br />
-            FOR YOUR PET
+    <section className="relative -mt-[40px] min-h-screen w-full bg-white">
+      <div className="grid h-full w-full grid-cols-1 items-end gap-16 md:grid-cols-2">
+        {/* Left: Text block */}
+        <div className="pt-[80px] pr-6 pb-30 pl-6 text-left sm:pl-10 md:pl-30">
+          <p className="text-primary mb-4 text-sm font-semibold tracking-widest uppercase">
+            {hero.eyebrow}
+          </p>
+          <h1 className="font-playfair mb-6 text-4xl font-semibold tracking-tight text-gray-900 sm:text-5xl lg:text-balance">
+            {hero.headline}
           </h1>
-          <p className="text-body-lg text-body-medium mb-6">
-            Quickly search and compare veterinarian clinics by services, location, ratings, and cost
-            to make the best choice for your beloved pet
-          </p>
-          <p className="text-body-md mb-6 font-semibold">
-            Finding the right Vet is only a click away!
-          </p>
-          <a
-            href="/clinics"
-            className="rounded-md bg-slate-500 px-3.5 py-2.5 text-sm font-semibold text-white shadow-xs hover:bg-slate-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-600"
-          >
-            Get started
-          </a>
+          <p className="text-md mb-6 space-y-5 text-gray-700">{hero.description}</p>
+          <p className="text-md mb-6 space-y-5 text-gray-700">{hero.supporting}</p>
+          <ButtonPrimary href={hero.cta.href} className="mt-10">
+            {hero.cta.label}
+          </ButtonPrimary>
         </div>
-        {/* Doggo Image */}
-        <div className="flex items-end justify-end">
+
+        {/* Right: Puppers full bleed */}
+        <div className="relative -mb-[1px] h-full w-full">
           <img
             src="/images/hero-image.png"
-            alt="Happy dog representing vet care"
-            className="h-auto w-[300px] object-contain sm:w-[500px] md:w-[650px] lg:w-[800px] xl:w-[900px]"
+            alt="Happy husky with blue background"
+            className="h-full w-full object-cover object-right"
           />
         </div>
       </div>

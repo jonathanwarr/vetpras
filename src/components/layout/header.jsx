@@ -4,12 +4,13 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { Dialog, DialogPanel } from '@headlessui/react';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
+import ButtonSecondary from '@/components/ui/button-secondary';
 
 const navigation = [
   { name: 'Submit Bill', href: '/submit-bill' },
   { name: 'Submit Feedback', href: '/submit-feedback' },
-  { name: 'Disclaimer', href: '/disclaimer' },
-  { name: 'About Us', href: '/about' },
+  //{ name: 'Disclaimer', href: '/disclaimer' },
+  //{ name: 'About Us', href: '/about' },
 ];
 
 export default function Header() {
@@ -25,14 +26,14 @@ export default function Header() {
         <div className="flex items-center gap-x-12">
           <Link href="/" className="-m-1.5 p-1.5">
             <span className="sr-only">Vetpras</span>
-            <img src="/images/vetpras-icon.png" alt="Vetpras icon" className="h-10 w-auto" />
+            <img src="/images/vetpras-icon.png" alt="Vetpras icon" className="h-16 w-auto" />
           </Link>
           <div className="hidden lg:flex lg:gap-x-8">
             {navigation.map((item) => (
               <Link
                 key={item.name}
                 href={item.href}
-                className="text-sm font-medium text-zinc-700 hover:text-blue-800"
+                className="text-sm font-semibold text-slate-700 hover:text-blue-900"
               >
                 {item.name}
               </Link>
@@ -42,9 +43,9 @@ export default function Header() {
 
         {/* CTA */}
         <div className="hidden lg:flex">
-          <Link href="/clinics" className="text-sm font-semibold text-zinc-700 hover:text-blue-800">
-            Search Vets <span aria-hidden="true">&rarr;</span>
-          </Link>
+          <ButtonSecondary href="/clinics" size="xs">
+            Search Vets →
+          </ButtonSecondary>
         </div>
 
         {/* Mobile Menu Toggle */}
@@ -66,7 +67,7 @@ export default function Header() {
         <DialogPanel className="fixed inset-y-0 right-0 z-10 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm">
           <div className="flex items-center justify-between">
             <Link href="/" className="-m-1.5 p-1.5">
-              <img src="/images/vetpras-icon.png" alt="Vetpras icon" className="h-8 w-auto" />
+              <img src="/images/vetpras-icon.png" alt="Vetpras icon" className="h-10 w-auto" />
             </Link>
             <button
               type="button"
@@ -90,12 +91,9 @@ export default function Header() {
                 ))}
               </div>
               <div className="py-6">
-                <Link
-                  href="/clinics"
-                  className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold text-blue-600 hover:bg-gray-100"
-                >
-                  Search Vets
-                </Link>
+                <ButtonSecondary href="/clinics" size="md" className="w-full">
+                  Search Vets →
+                </ButtonSecondary>
               </div>
             </div>
           </div>
