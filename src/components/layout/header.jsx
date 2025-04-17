@@ -19,14 +19,14 @@ export default function Header() {
       {/* 👇 Hide entire nav bar while mobile menu is open to prevent icon overlap */}
       {!mobileMenuOpen && (
         <nav
-          className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 lg:px-8"
+          className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8"
           aria-label="Global"
         >
           {/* Logo + Desktop Nav */}
           <div className="flex items-center gap-x-12">
             <Link href="/" className="-m-1.5 p-1.5">
               <span className="sr-only">Vetpras</span>
-              <img src="/images/vetpras-icon.png" alt="Vetpras icon" className="h-16 w-auto" />
+              <img src="/images/vetpras-icon.png" alt="Vetpras icon" className="h-14 w-auto" />
             </Link>
             <div className="hidden lg:flex lg:gap-x-8">
               {navigation.map((item) => (
@@ -69,14 +69,14 @@ export default function Header() {
           <div className="flex items-center justify-between">
             {/* Drawer Logo */}
             <Link href="/" className="-m-1.5 p-1.5" onClick={() => setMobileMenuOpen(false)}>
-              <img src="/images/vetpras-icon.png" alt="Vetpras icon" className="h-10 w-auto" />
+              <img src="/images/vetpras-icon.png" alt="Vetpras icon" className="h-14 w-auto" />
             </Link>
 
             {/* Close Button */}
             <button
               type="button"
               onClick={() => setMobileMenuOpen(false)}
-              className="-m-2.5 rounded-md p-2.5 text-gray-700"
+              className="-m-2.5 cursor-pointer rounded-md p-2.5 text-gray-700"
             >
               <XMarkIcon className="h-6 w-6" aria-hidden="true" />
             </button>
