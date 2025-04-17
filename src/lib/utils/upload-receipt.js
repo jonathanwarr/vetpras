@@ -1,6 +1,6 @@
 // src/lib/utils/upload-receipt.js
 
-import { supabase } from '@/lib/supabase/index.js'; // adjust if you renamed this
+import { supabase } from '@/lib/supabase'; // adjust if you renamed this
 
 /**
  * Uploads a receipt or screenshot to Supabase storage and returns its public URL.
