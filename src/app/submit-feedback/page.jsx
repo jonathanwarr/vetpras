@@ -1,16 +1,22 @@
 'use client';
 
+import ContainerNarrow from '@/components/layout/container-narrow';
 import FormFeedback from '@/components/forms/form-feedback';
+import { submitFeedback } from '@/content/submit-feedback';
 
 export default function SubmitFeedbackPage() {
   return (
-    <div className="mx-auto max-w-3xl px-4 py-12">
-      <h1 className="text-h2 font-playfair text-heading-1 mb-4">Submit Feedback</h1>
-      <p className="mb-6 text-sm text-gray-700">
-        Have something to report or suggest? Whether it’s a new service, clinic correction, or a
-        bug—your feedback helps make Vetpras better for everyone.
-      </p>
-      <FormFeedback />
-    </div>
+    <section className="px-6 py-24 sm:px-10 md:px-16">
+      <ContainerNarrow className="mt-8">
+        <p className="text-primary mb-2 text-sm font-semibold tracking-widest uppercase">
+          Submit Feedback
+        </p>
+        <p className={submitFeedback.introClass}>{submitFeedback.intro}</p>
+
+        <div className="mt-12">
+          <FormFeedback />
+        </div>
+      </ContainerNarrow>
+    </section>
   );
 }
