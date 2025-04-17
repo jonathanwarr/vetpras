@@ -38,17 +38,13 @@ export default [
 
       // Airbnb-style tweaks
       'react/prop-types': 'off',
-      'react/react-in-jsx-scope': 'off', // Next.js doesn't need React in scope
+      'react/react-in-jsx-scope': 'off',
       'react/jsx-filename-extension': [1, { extensions: ['.jsx'] }],
-      'import/extensions': [
-        'error',
-        'ignorePackages',
-        {
-          js: 'never',
-          jsx: 'never',
-        },
-      ],
-      'import/no-unresolved': 'off', // We use @ alias in jsconfig
+
+      // 🔧 Disable this nightmare
+      'import/extensions': 'off',
+
+      'import/no-unresolved': 'off',
     },
   },
 ];
