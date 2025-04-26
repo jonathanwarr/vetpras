@@ -146,7 +146,7 @@ export default function SubmitBillPage() {
   };
 
   return (
-    <section className="mt-10 px-6 py-24 sm:px-10 md:px-16">
+    <section className="mt-12 px-6 pt-8 pb-20 sm:px-10 sm:pt-24 sm:pb-24 md:px-16">
       <ContainerNarrow className="mt-8">
         <p className="mb-6 font-serif text-4xl font-semibold tracking-tight text-slate-900 sm:text-5xl lg:text-balance">
           Submit a Bill
