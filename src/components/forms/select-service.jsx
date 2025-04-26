@@ -61,22 +61,25 @@ export default function SelectService({ values = [], onChange, services = [] }) 
 
   return (
     <div className="relative">
-      <label htmlFor="services" className="block text-sm font-medium text-gray-900">
+      <label
+        htmlFor="services"
+        className="block space-y-5 font-sans text-sm font-bold text-slate-900"
+      >
         Services
       </label>
 
-      <div className="mt-2 mb-2 flex flex-wrap gap-2">
+      <div className="mt-0 mb-2 flex flex-wrap gap-2">
         {values.map((code) => {
           const svc = services.find((s) => s.service_code === code);
           return (
             <span
               key={code}
-              className="flex items-center gap-1 rounded-full bg-indigo-100 px-2 py-1 text-xs text-indigo-800"
+              className="flex items-center gap-1 rounded-full bg-blue-100 px-2 py-1 text-xs text-blue-800"
             >
               {svc?.service || code}
               <button
                 onClick={() => removeService(code)}
-                className="ml-1 text-indigo-600 hover:text-red-600"
+                className="ml-1 text-blue-600 hover:text-red-600"
               >
                 ×
               </button>
@@ -97,7 +100,7 @@ export default function SelectService({ values = [], onChange, services = [] }) 
           setHighlightedIndex(-1);
         }}
         onKeyDown={handleKeyDown}
-        className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:outline-indigo-600 sm:text-sm"
+        className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:outline-blue-600 sm:text-sm"
       />
 
       {showDropdown && filtered.length > 0 && (
@@ -110,7 +113,7 @@ export default function SelectService({ values = [], onChange, services = [] }) 
               key={service.service_code}
               onClick={() => handleSelect(service)}
               className={`cursor-pointer px-3 py-2 hover:bg-gray-100 ${
-                highlightedIndex === index ? 'bg-indigo-600 text-white' : ''
+                highlightedIndex === index ? 'bg-blue-600 text-white' : ''
               }`}
             >
               {service.service}

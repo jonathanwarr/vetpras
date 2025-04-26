@@ -48,7 +48,10 @@ export default function InputClinic({ value, onChange, clinics = [] }) {
 
   return (
     <div className="relative">
-      <label htmlFor="clinic" className="block text-sm font-medium text-gray-900">
+      <label
+        htmlFor="clinic"
+        className="block space-y-5 font-sans text-sm font-bold text-slate-900"
+      >
         Clinic Name
       </label>
       <div className="mt-2">
@@ -64,7 +67,7 @@ export default function InputClinic({ value, onChange, clinics = [] }) {
             setHighlightedIndex(-1);
           }}
           onKeyDown={handleKeyDown}
-          className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:outline-indigo-600 sm:text-sm"
+          className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:outline-blue-600 sm:text-sm"
         />
 
         {showDropdown && filtered.length > 0 && (
@@ -77,7 +80,7 @@ export default function InputClinic({ value, onChange, clinics = [] }) {
                 key={clinic.clinic_id}
                 onClick={() => handleSelect(clinic)}
                 className={`cursor-pointer px-3 py-2 hover:bg-gray-100 ${
-                  highlightedIndex === index ? 'bg-indigo-600 text-white' : ''
+                  highlightedIndex === index ? 'bg-blue-600 text-white' : ''
                 }`}
               >
                 {clinic.clinic_name}

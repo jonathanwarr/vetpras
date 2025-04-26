@@ -18,14 +18,14 @@ export default function Pagination({ current = 1, total = 20, perPage = 10, onPr
         <button
           onClick={onPrev}
           disabled={current === 1}
-          className="bg-button-secondary-bg text-button-secondary-text hover:bg-button-secondary-bg/90 relative inline-flex items-center rounded-md px-3 py-2 text-sm font-semibold ring-1 ring-gray-300 ring-inset disabled:opacity-50"
+          className="bg-button-secondary-bg text-button-secondary-text hover:bg-button-secondary-bg/90 relative inline-flex items-center rounded-md px-3 py-2 text-sm font-semibold ring-1 ring-gray-300 ring-inset hover:cursor-pointer disabled:opacity-50"
         >
           Previous
         </button>
         <button
           onClick={onNext}
           disabled={end === total}
-          className="bg-button-secondary-bg text-button-secondary-text hover:bg-button-secondary-bg/90 relative ml-3 inline-flex items-center rounded-md px-3 py-2 text-sm font-semibold ring-1 ring-gray-300 ring-inset disabled:opacity-50"
+          className="bg-button-secondary-bg text-button-secondary-text hover:bg-button-secondary-bg/90 relative ml-3 inline-flex items-center rounded-md px-3 py-2 text-sm font-semibold ring-1 ring-gray-300 ring-inset hover:cursor-pointer disabled:opacity-50"
         >
           Next
         </button>

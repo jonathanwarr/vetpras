@@ -7,7 +7,10 @@ export default function SubmissionNotes({ value, onChange }) {
 
   return (
     <div>
-      <label htmlFor="notes" className="mb-1 block text-sm font-medium text-gray-900">
+      <label
+        htmlFor="notes"
+        className="mb-1 block space-y-5 font-sans text-sm font-bold text-slate-900"
+      >
         Notes (optional)
       </label>
       <textarea
