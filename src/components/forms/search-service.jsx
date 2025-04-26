@@ -60,7 +60,10 @@ export default function SearchService({ value, onChange, services }) {
 
   return (
     <div className="relative w-full sm:w-80">
-      <label htmlFor="search" className="block text-sm font-medium text-gray-700">
+      <label
+        htmlFor="search"
+        className="mt-5 mb-3 block font-sans text-sm font-bold text-slate-900"
+      >
         Search by Service
       </label>
       <div className="relative mt-2">
@@ -78,7 +81,7 @@ export default function SearchService({ value, onChange, services }) {
           }}
           onBlur={() => setTimeout(() => setShowSuggestions(false), 150)}
           onKeyDown={handleKeyDown}
-          className="block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-base text-gray-900 placeholder:text-gray-400 focus:border-indigo-600 focus:ring-1 focus:ring-indigo-600 sm:text-sm"
+          className="text-sans block w-full rounded-sm border border-gray-300 bg-white px-3 py-2 text-gray-900 placeholder:font-sans placeholder:text-slate-400 focus:border-blue-600 focus:ring-1 focus:ring-blue-600 sm:text-sm"
         />
 
         {/* Suggestion dropdown list */}
@@ -92,7 +95,7 @@ export default function SearchService({ value, onChange, services }) {
                 key={service.service_code}
                 onClick={() => handleSelect(service)}
                 className={`cursor-pointer px-3 py-2 ${
-                  index === highlightedIndex ? 'bg-indigo-600 text-white' : 'hover:bg-gray-100'
+                  index === highlightedIndex ? 'bg-blue-600 text-white' : 'hover:bg-gray-100'
                 }`}
               >
                 {service.service}

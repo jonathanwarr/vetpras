@@ -1,33 +1,33 @@
-import {
-  CameraIcon,
-  CheckCircleIcon,
-  ChartBarIcon,
-  ArrowPathIcon,
-} from '@heroicons/react/24/outline';
+import { CameraIcon, CheckCircleIcon, HeartIcon, ArrowPathIcon } from '@heroicons/react/24/outline';
+
+export const howItWorksHeading = 'Vetpras Makes Navigating Pet Care Easy';
+
+export const howItWorksIntro =
+  'We crowdsource vet bills from people like you, then verify and organize that information into a trusted resource—so every pet owner can make clearer, more confident care decisions.';
 
 export const howItWorks = [
   {
-    name: 'Submit a Vet Bill',
+    name: 'Your Bill Makes a Difference',
     description:
-      'Help other pet owners by uploading a photo or screenshot of your recent vet bill. No personal info required.',
+      'Anonymously share your vet bill and help other pet parents understand their options.',
     icon: CameraIcon,
   },
   {
-    name: 'We Review and Tag It',
+    name: 'Verified for Trust',
     description:
-      'Our team checks each submission to ensure the service and price are clear — so we can map it accurately.',
+      'We review each bill to match services and pricing—so what you see is accurate and easy to trust.',
     icon: CheckCircleIcon,
   },
   {
-    name: 'Build the Database Together',
+    name: 'Built by Pet Owners Like You',
     description:
-      'Each approved bill adds to a growing crowdsourced view of veterinary pricing. More data means better insights.',
-    icon: ChartBarIcon,
+      'Your submission is part of a community-powered database helping others navigate pet care.',
+    icon: HeartIcon,
   },
   {
-    name: 'Help Pet Owners Make Confident Choices',
+    name: 'Real Insights, Confident Choices',
     description:
-      'We’re creating tools to help pet owners understand care options and feel informed — while supporting great clinics.',
+      'Make informed decisions using real experiences and verified data—no guesswork, just clarity.',
     icon: ArrowPathIcon,
   },
 ];

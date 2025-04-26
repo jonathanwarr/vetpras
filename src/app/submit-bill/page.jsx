@@ -14,6 +14,8 @@ import ModalSuccess from '@/components/ui/modal-success';
 import ServiceNavigation from '@/components/sections/service-navigation';
 import ContainerNarrow from '@/components/layout/container-narrow';
 import InputDate from '@/components/forms/input-date';
+import DisclaimerBill from '@/components/forms/disclaimer-bill';
+import DisclaimerDogsOnly from '@/components/forms/dogs-only';
 
 export default function SubmitBillPage() {
   const [clinicId, setClinicId] = useState('');
@@ -144,12 +146,13 @@ export default function SubmitBillPage() {
   };
 
   return (
-    <section className="px-6 py-24 sm:px-10 md:px-16">
+    <section className="mt-10 px-6 py-24 sm:px-10 md:px-16">
       <ContainerNarrow className="mt-8">
-        <p className="text-primary mb-2 text-sm font-semibold tracking-widest uppercase">
+        <p className="mb-6 font-serif text-4xl font-semibold tracking-tight text-slate-900 sm:text-5xl lg:text-balance">
           Submit a Bill
         </p>
         <p className={submitBill.introClass}>{submitBill.intro}</p>
+        <DisclaimerDogsOnly />
 
         <div className="mt-12 grid grid-cols-1 gap-8 md:grid-cols-5">
           <div className="md:col-span-2">
@@ -170,6 +173,7 @@ export default function SubmitBillPage() {
               <InputPrice value={price} onChange={setPrice} />
               <InputDate value={dateOfService} onChange={setDateOfService} />
               <SubmissionNotes value={notes} onChange={setNotes} />
+              <DisclaimerBill />
               <UploadReceipt file={file} setFile={setFile} />
 
               {error && missingFields.length > 0 && (

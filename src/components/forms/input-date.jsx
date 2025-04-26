@@ -3,7 +3,7 @@
 export default function InputDate({ value, onChange }) {
   return (
     <div>
-      <label htmlFor="date" className="block text-sm font-medium text-gray-900">
+      <label htmlFor="date" className="block space-y-5 font-sans text-sm font-bold text-slate-900">
         Date of Service
       </label>
       <input

@@ -52,12 +52,12 @@ export default function DrawerClinic({ clinic, onClose, services }) {
       : null;
 
   return (
-    <Dialog open={!!clinic} onClose={onClose} className="relative z-10">
+    <Dialog open={!!clinic} onClose={onClose} className="relative z-50">
       <div className="fixed inset-0 bg-black/20 backdrop-blur-sm" />
       <div className="fixed inset-0 overflow-hidden">
         <div className="absolute inset-0 flex justify-end pl-10">
           <DialogPanel className="w-screen max-w-md bg-white shadow-xl">
-            <div className="flex h-full flex-col overflow-y-scroll py-6">
+            <div className="flex h-full flex-col overflow-y-auto py-6">
               {/* 🔹 Header with close button */}
               <div className="flex items-start justify-between px-6">
                 <DialogTitle className="text-heading-2 text-lg font-semibold">
@@ -66,7 +66,7 @@ export default function DrawerClinic({ clinic, onClose, services }) {
                 <button
                   type="button"
                   onClick={onClose}
-                  className="ml-3 text-zinc-400 hover:text-zinc-600 focus:outline-none"
+                  className="ml-3 text-slate-700 hover:cursor-pointer hover:text-slate-600 focus:outline-none"
                 >
                   <span className="sr-only">Close panel</span>
                   <XMarkIcon className="h-6 w-6" aria-hidden="true" />
@@ -75,75 +75,79 @@ export default function DrawerClinic({ clinic, onClose, services }) {
 
               {/* 🔹 Clinic details and service info */}
               <div className="text-body-md mt-6 flex-1 space-y-6 px-6">
-                {/* 📍 Contact Info */}
+                {/* Contact Info */}
                 <div>
-                  <h3 className="text-heading-3 mb-2 text-sm font-semibold">📍 Contact Info</h3>
-                  <p>
-                    <strong>Address:</strong> {clinic.street_address}
-                  </p>
-                  <p>
-                    <strong>City:</strong> {clinic.city}
-                  </p>
-                  <p>
-                    <strong>Province:</strong> {clinic.province}
-                  </p>
-                  <p>
-                    <strong>Country:</strong> {clinic.country}
-                  </p>
-                  <p>
-                    <strong>Postal Code:</strong> {clinic.postal_code}
-                  </p>
-                  <p>
-                    <strong>Phone:</strong> {clinic.phone_number}
-                  </p>
-                  <p>
-                    <strong>Website:</strong>{' '}
-                    {clinic.website ? (
-                      <a
-                        href={clinic.website}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-button-secondary-text hover:underline"
-                      >
-                        {clinic.website}
-                      </a>
-                    ) : (
-                      '—'
-                    )}
-                  </p>
+                  <h3 className="text-md mb-2 font-sans font-bold text-slate-900">Contact Info</h3>
+                  <div className="space-y-2 text-sm text-slate-900">
+                    <p>
+                      <strong>Address:</strong> {clinic.street_address}
+                    </p>
+                    <p>
+                      <strong>City:</strong> {clinic.city}
+                    </p>
+                    <p>
+                      <strong>Province:</strong> {clinic.province}
+                    </p>
+                    <p>
+                      <strong>Country:</strong> {clinic.country}
+                    </p>
+                    <p>
+                      <strong>Postal Code:</strong> {clinic.postal_code}
+                    </p>
+                    <p>
+                      <strong>Phone:</strong> {clinic.phone_number}
+                    </p>
+                    <p>
+                      <strong>Website:</strong>{' '}
+                      {clinic.website ? (
+                        <a
+                          href={clinic.website}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-button-secondary-text hover:cursor-pointer hover:text-blue-600"
+                        >
+                          {clinic.website}
+                        </a>
+                      ) : (
+                        '—'
+                      )}
+                    </p>
+                  </div>
                   {mapsUrl && (
-                    <p className="mt-2">
+                    <p className="my-5">
                       <a
                         href={mapsUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-primary text-sm font-medium hover:underline"
+                        className="text-primary text-sm font-medium text-blue-600 hover:cursor-pointer hover:text-blue-700"
                       >
-                        📍 View in Google Maps
+                        View in Google Maps
                       </a>
                     </p>
                   )}
                 </div>
 
-                {/* 📊 Quick Stats */}
+                {/* Quick Stats */}
                 <div>
-                  <h3 className="text-heading-3 mb-2 text-sm font-semibold">📊 Quick Stats</h3>
-                  <p>
-                    <strong>Google Rating:</strong> {clinic.rating ?? '—'}
-                  </p>
-                  <p>
-                    <strong>Total Reviews:</strong> {clinic.total_reviews ?? '—'}
-                  </p>
-                  <p>
-                    <strong>Exam Fee:</strong> {clinic.exam_fee ? `$${clinic.exam_fee}` : '—'}
-                  </p>
+                  <h3 className="text-md mb-2 font-sans font-bold text-slate-900">Quick Stats</h3>
+                  <div className="space-y-2 text-sm text-slate-900">
+                    <p>
+                      <strong>Google Rating:</strong> {clinic.rating ?? '—'}
+                    </p>
+                    <p>
+                      <strong>Total Reviews:</strong> {clinic.total_reviews ?? '—'}
+                    </p>
+                    <p>
+                      <strong>Exam Fee:</strong> {clinic.exam_fee ? `$${clinic.exam_fee}` : '—'}
+                    </p>
+                  </div>
                 </div>
 
-                {/* 🧾 Service Categories */}
+                {/* Service Categories */}
                 {services && clinicServiceCodes.length > 0 && (
                   <div>
-                    <h3 className="text-heading-3 mb-2 text-sm font-semibold">
-                      🧾 Service Categories
+                    <h3 className="text-md mb-2 font-sans font-bold text-slate-900">
+                      Service Categories
                     </h3>
 
                     {/* Top-level service categories as tags */}
@@ -151,7 +155,7 @@ export default function DrawerClinic({ clinic, onClose, services }) {
                       {getCategoryServices().map((name) => (
                         <span
                           key={name}
-                          className="inline-block rounded-full bg-indigo-100 px-2 py-1 text-xs text-indigo-800"
+                          className="inline-block rounded-full bg-indigo-100 px-2 py-1 text-xs text-blue-800"
                         >
                           {name}
                         </span>
@@ -163,12 +167,12 @@ export default function DrawerClinic({ clinic, onClose, services }) {
                       <div className="mt-3">
                         <button
                           onClick={() => setShowAllServices(!showAllServices)}
-                          className="text-primary text-sm hover:underline"
+                          className="text-md mb-2 font-sans font-bold text-slate-900 hover:cursor-pointer"
                         >
                           {showAllServices ? 'Hide Full List' : 'Show All Services'}
                         </button>
                         {showAllServices && (
-                          <ul className="text-body-sm mt-2 list-inside list-disc space-y-1 text-xs">
+                          <ul className="mt-2 list-inside list-disc space-y-1 font-sans text-xs font-medium">
                             {getAllServiceNames().map((name) => (
                               <li key={name}>{name}</li>
                             ))}
@@ -178,11 +182,6 @@ export default function DrawerClinic({ clinic, onClose, services }) {
                     )}
                   </div>
                 )}
-
-                {/* 💡 Coming Soon */}
-                <div className="border-t border-zinc-200 pt-4 text-xs text-zinc-400">
-                  💡 Coming Soon: AI Powered Symptom Search
-                </div>
               </div>
             </div>
           </DialogPanel>
