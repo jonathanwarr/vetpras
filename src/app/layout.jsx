@@ -1,12 +1,12 @@
 // src/app/layout.jsx
 
 import '@/styles/tailwind.css'; // Tailwind base styles
-import { Inter } from 'next/font/google'; // Optional: replace with your chosen font
-import Footer from '@/components/layout/footer'; // Assumes Footer is a shared component
-import Header from '@/components/layout/header'; // Will be used across all pages
-import ScrollToTop from '@/components/ui/scroll-to-top'; //Chevron to return to top of page
+import { Inter } from 'next/font/google'; // Optional font import
+import Footer from '@/components/layout/footer'; // Shared footer
+import Header from '@/components/layout/header'; // Shared header
+import ScrollToTop from '@/components/ui/scroll-to-top'; // Scroll-to-top button
+import Script from 'next/script'; // Script loader for Google Analytics and Hotjar
 
-// Load the Inter font and set it as the global font
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata = {
@@ -19,7 +19,36 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" className={inter.className}>
       <body className="bg-white text-gray-900 antialiased">
-        {/* Shared header across all pages */}
+        {/* Google Analytics */}
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-4YY2JG7YNQ"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-4YY2JG7YNQ');
+          `}
+        </Script>
+
+        {/* Hotjar + Contentsquare Integration */}
+        <Script id="hotjar-contentsquare" strategy="afterInteractive">
+          {`
+            (function (c, s, q, u, a, r, e) {
+              c.hj = c.hj || function() {(c.hj.q = c.hj.q || []).push(arguments)};
+              c._hjSettings = { hjid: 6386067 };
+              r = s.getElementsByTagName('head')[0];
+              e = s.createElement('script');
+              e.async = true;
+              e.src = q + c._hjSettings.hjid + u;
+              r.appendChild(e);
+            })(window, document, 'https://static.hj.contentsquare.net/c/csq-', '.js', 6386067);
+          `}
+        </Script>
+
+        {/* Shared header */}
         <Header />
 
         {/* Main content area */}
