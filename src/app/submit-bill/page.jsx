@@ -96,29 +96,19 @@ export default function SubmitBillPage() {
       return;
     }
 
-    // 📦 Build payload separately
     const payload = {
       clinic_id: clinicId,
       service_codes: serviceCodes,
       price: parseFloat(price),
-      image_url: fileData.path, // safe because we checked it exists
+      image_url: fileData.path,
       notes,
       submitted_at: new Date().toISOString(),
       date_of_service: dateOfService,
       status: 'pending',
     };
 
-    // 🧠 Log payload for confirmation
     console.log('[📦 DEBUG] Insert Payload:', payload);
 
-    if (!fileData?.path || typeof fileData.path !== 'string') {
-      console.error('[🚫 BAD IMAGE PATH] Possibly unsupported file type or encoding.', fileData);
-      setError('Unsupported image format. Try a JPG or PDF instead.');
-      setLoading(false);
-      return;
-    }
-
-    // 📤 Insert into Supabase
     const {
       data: insertData,
       error: insertError,
@@ -133,6 +123,21 @@ export default function SubmitBillPage() {
       setError('Submission failed. Please try again.');
     } else {
       console.log('[✅ DEBUG] Submission inserted successfully:', insertData);
+
+      // 🧠 Fire Google Analytics event - Bill Submitted
+      if (typeof window.gtag === 'function') {
+        window.gtag('event', 'submit_bill', {
+          event_category: 'engagement',
+          event_label: 'Bill Submission',
+          value: 1,
+        });
+      }
+
+      // 🔥 Fire Hotjar custom event - Bill Submitted
+      if (typeof window.hj === 'function') {
+        window.hj('event', 'bill_submitted');
+      }
+
       setSuccess(true);
       setClinicId('');
       setServiceCodes([]);
@@ -163,7 +168,7 @@ export default function SubmitBillPage() {
                   setServiceCodes((prev) => [...prev, code]);
                 }
               }}
-            />{' '}
+            />
           </div>
 
           <div className="md:col-span-3">
