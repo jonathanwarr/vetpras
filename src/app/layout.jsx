@@ -1,11 +1,13 @@
 // src/app/layout.jsx
 
-import '@/styles/tailwind.css'; // Tailwind base styles
-import { Inter } from 'next/font/google'; // Optional font import
-import Footer from '@/components/layout/footer'; // Shared footer
-import Header from '@/components/layout/header'; // Shared header
-import ScrollToTop from '@/components/ui/scroll-to-top'; // Scroll-to-top button
-import Script from 'next/script'; // Script loader for Google Analytics and Hotjar
+import '@/styles/tailwind.css';
+import { Inter } from 'next/font/google';
+import Footer from '@/components/layout/footer';
+import Header from '@/components/layout/header';
+import ScrollToTop from '@/components/ui/scroll-to-top';
+import Script from 'next/script';
+import SessionHandler from '@/components/system/session-handler';
+import SupabaseProvider from '@/components/system/supabase-provider'; // ✅ New
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -14,12 +16,12 @@ export const metadata = {
   description: 'Vetpras helps pet owners compare prices and find trusted veterinary clinics in BC.',
 };
 
-// 🔧 Root layout for the entire app
+// ✅ Server component layout wrapped in client-side auth context
 export default function RootLayout({ children }) {
   return (
     <html lang="en" className={inter.className}>
       <body className="bg-white text-gray-900 antialiased">
-        {/* Google Analytics */}
+        {/* Analytics & Tracking */}
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-4YY2JG7YNQ"
           strategy="afterInteractive"
@@ -32,8 +34,6 @@ export default function RootLayout({ children }) {
             gtag('config', 'G-4YY2JG7YNQ');
           `}
         </Script>
-
-        {/* Hotjar + Contentsquare Integration */}
         <Script id="hotjar-contentsquare" strategy="afterInteractive">
           {`
             (function (c, s, q, u, a, r, e) {
@@ -48,17 +48,14 @@ export default function RootLayout({ children }) {
           `}
         </Script>
 
-        {/* Shared header */}
-        <Header />
-
-        {/* Main content area */}
-        <main className="min-h-screen">{children}</main>
-
-        {/* Shared footer */}
-        <Footer />
-
-        {/* Scroll to top button */}
-        <ScrollToTop />
+        {/* ✅ Supabase session context wrapper */}
+        <SupabaseProvider>
+          <Header />
+          <SessionHandler />
+          <main className="min-h-screen">{children}</main>
+          <Footer />
+          <ScrollToTop />
+        </SupabaseProvider>
       </body>
     </html>
   );
