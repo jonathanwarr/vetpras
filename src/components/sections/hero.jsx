@@ -14,7 +14,7 @@ export default function Hero() {
         />
 
         {/* Hero Container */}
-        <ContainerConstrained className="py-32 sm:py-40">
+        <ContainerConstrained className="pt-8 pb-20 sm:pt-32 sm:pb-40">
           <div className="lg:grid lg:grid-cols-2 lg:gap-x-16 lg:gap-y-8">
             {/* Text Block */}
             <div className="mx-auto mt-10 max-w-2xl lg:mx-0">

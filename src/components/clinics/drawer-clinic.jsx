@@ -43,7 +43,7 @@ export default function DrawerClinic({ clinic, onClose, services }) {
       : null;
 
   return (
-    <Dialog open={!!clinic} onClose={onClose} className="relative z-10">
+    <Dialog open={!!clinic} onClose={onClose} className="relative z-50">
       <div className="fixed inset-0 bg-black/20 backdrop-blur-sm" />
       <div className="fixed inset-0 overflow-hidden">
         <div className="absolute inset-0 flex justify-end pl-10">
@@ -56,7 +56,7 @@ export default function DrawerClinic({ clinic, onClose, services }) {
                 <button
                   type="button"
                   onClick={onClose}
-                  className="ml-3 cursor-pointer text-gray-400 hover:text-gray-600 focus:outline-none"
+                  className="mt-2 -mr-2 cursor-pointer text-gray-500 hover:text-gray-700 focus:outline-none"
                 >
                   <span className="sr-only">Close panel</span>
                   <XMarkIcon className="h-6 w-6" aria-hidden="true" />
