@@ -10,6 +10,7 @@ This is a solo project and product design case study currently in active develop
 - Supabase backend (PostgreSQL) with relational schema
 - Clinic + service database with real FK integrity
 - User-submitted vet bills + image uploads for verification
+- Admin login and dashboard to review submissions
 - Service-based vet search and filtering
 - Aggregated price range calculations (min, max, avg)
 - Future: AI assistant to help pet owners triage and find care
@@ -43,30 +44,26 @@ This is a solo project and product design case study currently in active develop
 - [x] Responsive layout for all major views
 - [x] Project folder structure refactored and organized
 - [x] Tailwind styles cleaned and scoped to components
-- [ ] RLS policies for `services` + `submissions`
-- [ ] Vercel deployment
+- [x] Admin login + dashboard (Supabase Auth, RLS)
+- [x] Production deployment to Vercel (live on vetpras.com)
 
 ---
 
 ## Next Bricks
 
-1. Add RLS policies for `services` and `submissions`
-2. QA service filtering logic and form validation
-3. Deploy to Vercel with production keys
+1. Harden admin security (session tokens, admin list env var)
+2. Improve admin dashboard UI and filters
+3. Refactor submission validation and feedback tools
 4. Begin drafting the AI assistant concept
 
 ---
 
 ## Recent Updates
 
-- Completed full folder restructure for components, content, styles, and Supabase logic
-- Cleaned up Tailwind styling for global consistency
-- Removed unused legacy styles (`prism.css`, old typography files)
-- Built search drawer, pricing table, and form submission UI
-- Created placeholder components for buttons, pagination, modals
+### Release: `v0.2.0 – Secure Admin Login & Dashboard`
 
----
-
-## Built by @jonny
-
-Designed, developed, and documented as a solo project. Contributions welcome.
+- Set up Supabase Auth with RLS and email login
+- Created secure admin login and gated dashboard
+- Built admin pages for pending bill and feedback review
+- Added session handlers and permission guards
+- Fully deployed live via Vercel to [vetpras.com](https://vetpras.com)

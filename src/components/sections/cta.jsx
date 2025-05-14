@@ -7,10 +7,10 @@ export default function CTASection() {
   return (
     <section className="bg-blue-50 py-20 sm:py-28">
       <ContainerConstrained className="text-center">
-        <h2 className="font-playfair mb-4 text-3xl font-semibold tracking-tight text-gray-900 sm:text-4xl">
+        <h2 className="mb-6 font-serif text-4xl font-semibold tracking-tight text-slate-900 sm:text-5xl lg:text-balance">
           Help Make Vet Care More Transparent
         </h2>
-        <p className="mb-8 text-sm text-gray-700">
+        <p className="text-sans text-md mb-6 space-y-5 font-light text-slate-900">
           Vetpras only works because people like you share what they’ve paid. Help build a better
           picture of pet care pricing in your area.
         </p>
