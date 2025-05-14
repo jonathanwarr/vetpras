@@ -6,6 +6,7 @@ import DrawerClinic from '@/components/clinics/drawer-clinic';
 import ContainerConstrained from '@/components/layout/container-constrained';
 import SearchCategory from '@/components/forms/search-category';
 import SearchService from '@/components/forms/search-service';
+import SortDropdown from '@/components/search/sort-dropdown';
 import Pagination from '@/components/clinics/pagination';
 import { supabase } from '@/lib/supabase';
 
@@ -17,6 +18,7 @@ export default function ClinicsPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalResults, setTotalResults] = useState(0);
+  const [sortOption, setSortOption] = useState('name-asc');
 
   useEffect(() => {
     const fetchServices = async () => {
@@ -60,6 +62,9 @@ export default function ClinicsPage() {
           </div>
           <div className="mb-5 w-full flex-2 md:w-auto">
             <SearchService value={searchQuery} onChange={setSearchQuery} services={services} />
+          </div>
+          <div className="mb-5 w-full flex-2 md:w-auto">
+            <SortDropdown sortOption={sortOption} setSortOption={setSortOption} />
           </div>
         </div>
       </ContainerConstrained>
