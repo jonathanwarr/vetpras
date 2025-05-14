@@ -7,7 +7,7 @@
  * @param {string} [imageUrl] - Optional image URL returned from upload.
  * @returns {object} Structured context_data payload.
  */
-export function buildContextData(category, formData, imageUrl) {
+export function normalizeFeedback(category, formData, imageUrl) {
   switch (category) {
     case 'add_service_to_clinic':
       return {
@@ -46,6 +46,6 @@ export function buildContextData(category, formData, imageUrl) {
       };
 
     default:
-      return { message: 'Unsupported feedback category' };
+      throw new Error(`Unsupported feedback category: ${category}`);
   }
 }

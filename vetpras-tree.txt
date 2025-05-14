@@ -1,0 +1,107 @@
+.
+├── eslint.config.mjs
+├── jsconfig.json
+├── next.config.mjs
+├── package-lock.json
+├── package.json
+├── postcss.config.js
+├── prettier.config.js
+├── public
+│   ├── file.svg
+│   ├── globe.svg
+│   ├── images
+│   │   ├── hero-image.png
+│   │   ├── kooper.png
+│   │   └── vetpras-icon.png
+│   ├── next.svg
+│   ├── robots.txt
+│   ├── vercel.svg
+│   └── window.svg
+├── README.md
+├── src
+│   ├── app
+│   │   ├── about-us
+│   │   │   └── page.jsx
+│   │   ├── admin
+│   │   │   ├── bill-submissions
+│   │   │   │   ├── layout.jsx
+│   │   │   │   └── page.jsx
+│   │   │   └── feedback-submissions
+│   │   │       ├── layout.jsx
+│   │   │       └── page.jsx
+│   │   ├── clinics
+│   │   │   └── page.jsx
+│   │   ├── layout.jsx
+│   │   ├── not-found.jsx
+│   │   ├── page.jsx
+│   │   ├── privacy-policy
+│   │   │   └── page.jsx
+│   │   ├── submit-bill
+│   │   │   └── page.jsx
+│   │   └── submit-feedback
+│   │       └── page.jsx
+│   ├── components
+│   │   ├── clinics
+│   │   │   ├── drawer-clinic.jsx
+│   │   │   ├── pagination.jsx
+│   │   │   └── table-clinic.jsx
+│   │   ├── forms
+│   │   │   ├── disclaimer-bill.jsx
+│   │   │   ├── dogs-only.jsx
+│   │   │   ├── form-error.jsx
+│   │   │   ├── form-feedback.jsx
+│   │   │   ├── input-clinic.jsx
+│   │   │   ├── input-date.jsx
+│   │   │   ├── input-price.jsx
+│   │   │   ├── search-category.jsx
+│   │   │   ├── search-service.jsx
+│   │   │   ├── select-service.jsx
+│   │   │   ├── submission-notes.jsx
+│   │   │   └── upload-image.jsx
+│   │   ├── layout
+│   │   │   ├── container-constrained.jsx
+│   │   │   ├── container-full.jsx
+│   │   │   ├── container-narrow.jsx
+│   │   │   ├── footer.jsx
+│   │   │   └── header.jsx
+│   │   ├── sections
+│   │   │   ├── cta.jsx
+│   │   │   ├── faq.jsx
+│   │   │   ├── hero.jsx
+│   │   │   ├── how-it-works.jsx
+│   │   │   ├── our-story.jsx
+│   │   │   └── service-navigation.jsx
+│   │   └── ui
+│   │       ├── button-primary.jsx
+│   │       ├── button-secondary.jsx
+│   │       ├── modal-success.jsx
+│   │       ├── not-found.jsx
+│   │       ├── scroll-to-top.jsx
+│   │       ├── search-bar.jsx
+│   │       └── submission-confirm.jsx
+│   ├── content
+│   │   ├── about.js
+│   │   ├── clinics.js
+│   │   ├── hero.js
+│   │   ├── how-it-works.js
+│   │   ├── our-story.js
+│   │   ├── submit-bill.js
+│   │   └── submit-feedback.js
+│   ├── lib
+│   │   ├── supabase
+│   │   │   ├── analytics.js
+│   │   │   └── auth.js
+│   │   ├── supabase.js
+│   │   └── utils
+│   │       ├── context-data-builder.js
+│   │       └── upload-image.js
+│   └── styles
+│       ├── tailwind.css
+│       └── themes
+│           ├── color.js
+│           ├── fonts.js
+│           ├── index.js
+│           └── spacing.js
+└── vetpras-tree.txt
+
+25 directories, 80 files

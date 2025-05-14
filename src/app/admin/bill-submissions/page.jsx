@@ -1,11 +1,17 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import ContainerConstrained from '@/components/layout/container-constrained';
 import Pagination from '@/components/clinics/pagination';
 
 export default function AdminBillSubmissions() {
+  const router = useRouter();
+
+  const [session, setSession] = useState(null);
+  const [ready, setReady] = useState(false);
+
   const [submissions, setSubmissions] = useState([]);
   const [clinics, setClinics] = useState([]);
   const [services, setServices] = useState([]);
@@ -13,55 +19,86 @@ export default function AdminBillSubmissions() {
   const [page, setPage] = useState(1);
   const perPage = 10;
 
-  // 🔄 Fetch all required data
-  const fetchSubmissions = async () => {
-    const [
-      { data: pendingData, error: pendingError },
-      { data: clinicData, error: clinicError },
-      { data: serviceData, error: serviceError },
-    ] = await Promise.all([
-      supabase
-        .from('bill_submissions_pending')
-        .select('*')
-        .order('submitted_at', { ascending: false }),
-      supabase.from('clinics').select('clinic_id, clinic_name'),
-      supabase.from('services').select('service_code, service'),
-    ]);
-
-    if (!pendingError) setSubmissions(pendingData || []);
-    else console.error('[🔥 ERROR] Fetching bills:', pendingError);
-
-    if (!clinicError) setClinics(clinicData || []);
-    else console.error('[🔥 ERROR] Fetching clinics:', clinicError);
-
-    if (!serviceError) setServices(serviceData || []);
-    else console.error('[🔥 ERROR] Fetching services:', serviceError);
-  };
-
-  // 🌱 On load: fetch data and restore marked IDs from localStorage
+  // 🔐 Load session manually and check admin
   useEffect(() => {
-    fetchSubmissions();
+    const checkSession = async () => {
+      const { data, error } = await supabase.auth.getSession();
+      const currentSession = data?.session;
+      setSession(currentSession);
+      setReady(true);
+
+      if (!currentSession) {
+        console.log('❌ No session, redirecting to login');
+        router.replace('/admin/login');
+        return;
+      }
+
+      const user = currentSession.user;
+      console.log('👤 Logged in as:', user?.email);
+      const isAdmin =
+        user?.email === 'jonathan.e.g.warr@gmail.com' || user?.email === 'negamiri@gmail.com';
+
+      console.log('🛡 isAdmin:', isAdmin);
+      if (!isAdmin) {
+        console.log('🚫 Not admin, redirecting to /');
+        router.replace('/');
+      }
+    };
+
+    checkSession();
+  }, [router]);
+
+  // 🔄 Fetch data once authenticated
+  useEffect(() => {
+    if (!ready || !session) return;
+
+    const fetchData = async () => {
+      const [
+        { data: pendingData, error: pendingError },
+        { data: clinicData, error: clinicError },
+        { data: serviceData, error: serviceError },
+      ] = await Promise.all([
+        supabase
+          .from('bill_submissions_pending')
+          .select('*')
+          .order('submitted_at', { ascending: false }),
+        supabase.from('clinics').select('clinic_id, clinic_name'),
+        supabase.from('services').select('service_code, service'),
+      ]);
+
+      if (!pendingError) setSubmissions(pendingData || []);
+      else console.error('[🔥 ERROR] Fetching bills:', pendingError);
+
+      if (!clinicError) setClinics(clinicData || []);
+      else console.error('[🔥 ERROR] Fetching clinics:', clinicError);
+
+      if (!serviceError) setServices(serviceData || []);
+      else console.error('[🔥 ERROR] Fetching services:', serviceError);
+    };
+
+    fetchData();
     const saved = localStorage.getItem('markedAdded');
     setMarkedIds(saved ? JSON.parse(saved) : []);
-  }, []);
+  }, [ready, session]);
 
-  const getClinicName = (id) => {
-    const match = clinics.find((c) => c.clinic_id === id);
-    return match ? match.clinic_name : id;
-  };
-
+  const getClinicName = (id) => clinics.find((c) => c.clinic_id === id)?.clinic_name || id;
   const formatDate = (iso) => new Date(iso).toLocaleDateString();
+  const totalPages = Math.ceil(submissions.length / perPage);
+  const currentPageData = submissions.slice((page - 1) * perPage, page * perPage);
 
-  // ✅ Update local state + localStorage only
   const handleMarkAsAdded = (id) => {
     const updated = [...markedIds, id];
     setMarkedIds(updated);
     localStorage.setItem('markedAdded', JSON.stringify(updated));
   };
 
-  // 🔢 Pagination logic
-  const totalPages = Math.ceil(submissions.length / perPage);
-  const currentPageData = submissions.slice((page - 1) * perPage, page * perPage);
+  if (!ready) {
+    return (
+      <main className="flex min-h-screen items-center justify-center bg-gray-50 px-4 py-20">
+        <p className="text-sm text-gray-500">Loading page...</p>
+      </main>
+    );
+  }
 
   return (
     <ContainerConstrained className="pt-[200px]">
@@ -79,18 +116,15 @@ export default function AdminBillSubmissions() {
                 key={sub.id}
                 className="rounded-md border border-gray-200 bg-white p-4 shadow-sm"
               >
-                {/* ✅ Local-only marked indicator */}
                 {isMarked && (
                   <div className="mb-2 rounded bg-green-50 px-2 py-1 text-xs text-green-700">
                     ✅ Marked as Added
                   </div>
                 )}
 
-                {/* Header: Clinic + Date */}
                 <div className="mb-1 flex flex-wrap items-start justify-between">
                   <p className="text-xs font-medium text-gray-700">
-                    <strong>Clinic:</strong>{' '}
-                    <span className="text-gray-600">{getClinicName(sub.clinic_id)}</span>
+                    <strong>Clinic:</strong> {getClinicName(sub.clinic_id)}
                   </p>
                   <p className="text-xs text-gray-500">{formatDate(sub.submitted_at)}</p>
                 </div>
@@ -98,11 +132,9 @@ export default function AdminBillSubmissions() {
                 <p className="mb-1 text-xs text-gray-700">
                   <strong>Price:</strong> ${sub.price}
                 </p>
-
                 <p className="mb-1 text-xs text-gray-700">
                   <strong>Notes:</strong> {sub.notes || '—'}
                 </p>
-
                 <p className="mb-1 text-xs text-gray-700">
                   <strong>Date of Service:</strong>{' '}
                   {sub.date_of_service ? formatDate(sub.date_of_service) : '—'}
@@ -130,7 +162,6 @@ export default function AdminBillSubmissions() {
                   )}
                 </div>
 
-                {/* 🔗 View Receipt */}
                 {sub.image_url ? (
                   <div className="mb-2">
                     <a
@@ -146,7 +177,6 @@ export default function AdminBillSubmissions() {
                   <p className="text-xs text-gray-400">No receipt uploaded</p>
                 )}
 
-                {/* ✅ Local button (only if not already marked) */}
                 {!isMarked && (
                   <button
                     onClick={() => handleMarkAsAdded(sub.id)}
@@ -161,7 +191,6 @@ export default function AdminBillSubmissions() {
         </div>
       )}
 
-      {/* Pagination */}
       {totalPages > 1 && (
         <div className="mt-10">
           <Pagination
