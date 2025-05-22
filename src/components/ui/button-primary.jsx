@@ -13,8 +13,8 @@ export default function ButtonPrimary({ children, href, size = 'md', className =
   };
 
   const baseStyles =
-    'inline-block cursor-pointer rounded-lg bg-slate-500 text-white uppercase shadow-xs hover:bg-slate-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-600 font-bold px-6 py-2 min-w-[10rem] text-center';
-
+    //'inline-block cursor-pointer rounded-lg bg-blue-600 text-white uppercase shadow-xs hover:scale-95 hover:bg-blue-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-600 font-bold px-6 py-2 min-w-[10rem] text-center';
+    'focus-visible:outline-primary cursor-pointer inline-block transform rounded-lg border bg-blue-600 px-4.5 py-2.5 text-xs font-bold text-white uppercase shadow-md transition-transform hover:scale-95 hover:bg-blue-700 hover:from-blue-500 hover:to-blue-700';
   const combinedClassName = clsx(baseStyles, sizeStyles[size], className);
 
   if (href) {
@@ -31,4 +31,3 @@ export default function ButtonPrimary({ children, href, size = 'md', className =
     </button>
   );
 }
-

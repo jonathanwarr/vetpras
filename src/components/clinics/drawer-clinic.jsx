@@ -5,29 +5,63 @@ import { XMarkIcon } from '@heroicons/react/24/outline';
 import { StarIcon } from '@heroicons/react/20/solid';
 import { useState } from 'react';
 
+/**
+ * DrawerClinic displays detailed info for a selected clinic inside a modal drawer.
+ *
+ * @param {object} clinic - Clinic data to display.
+ * @param {Function} onClose - Handler to close the drawer.
+ * @param {Array} services - Full list of services from the DB.
+ */
 export default function DrawerClinic({ clinic, onClose, services }) {
   const [showAllServices, setShowAllServices] = useState(false);
 
   if (!clinic) return null;
 
-  const clinicServiceCodes = (() => {
-    if (!clinic?.service_codes) return [];
-    if (Array.isArray(clinic.service_codes)) return clinic.service_codes.map((c) => c.trim());
-    if (typeof clinic.service_codes === 'string')
-      return clinic.service_codes.split(',').map((c) => c.trim());
-    return [];
-  })();
+  const getClinicServiceCodes = () => {
+    if (!clinic?.service_code) return [];
 
-  const getCategoryServices = () => {
+    let clinicServiceCodes = [];
+    try {
+      if (typeof clinic.service_code === 'string') {
+        if (clinic.service_code.startsWith('{') || clinic.service_code.startsWith('[')) {
+          const parsed = JSON.parse(clinic.service_code);
+          clinicServiceCodes = Array.isArray(parsed) ? parsed : [parsed];
+        } else {
+          clinicServiceCodes = clinic.service_code.split(',').map((c) => c.trim());
+        }
+      } else if (Array.isArray(clinic.service_code)) {
+        clinicServiceCodes = clinic.service_code;
+      }
+    } catch {
+      clinicServiceCodes =
+        typeof clinic.service_code === 'string'
+          ? clinic.service_code.split(',').map((c) => c.trim())
+          : [];
+    }
+
+    return clinicServiceCodes;
+  };
+
+  const getServiceCategories = () => {
+    const clinicServiceCodes = getClinicServiceCodes();
     if (!services || !clinicServiceCodes.length) return [];
 
-    const matched = services
-      .filter((s) => clinicServiceCodes.includes(s.service_code))
-      .filter((s) => s.parent_code === null)
-      .sort((a, b) => a.sort_order - b.sort_order);
+    const allCategories = services.filter((s) => s.service_code.endsWith('.00'));
 
-    return matched.map((s) => s.service);
+    const serviceCodePrefixes = clinicServiceCodes.map((code) => {
+      const parts = code.split('.');
+      return parts.length > 1 ? `${parts[0]}.` : code;
+    });
+
+    const matchedCategories = allCategories.filter((category) => {
+      const categoryPrefix = `${category.service_code.split('.')[0]}.`;
+      return serviceCodePrefixes.includes(categoryPrefix);
+    });
+
+    return matchedCategories.map((c) => c.service);
   };
+
+  const serviceCategories = getServiceCategories();
 
   return (
     <Dialog open={!!clinic} onClose={onClose} className="relative z-50">
@@ -68,7 +102,9 @@ export default function DrawerClinic({ clinic, onClose, services }) {
             )}
             {clinic.street_address && (
               <a
-                href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(clinic.street_address + ', ' + clinic.city + ', ' + clinic.province)}`}
+                href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+                  `${clinic.street_address}, ${clinic.city}, ${clinic.province}`
+                )}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="block text-blue-600 hover:underline"
@@ -78,7 +114,6 @@ export default function DrawerClinic({ clinic, onClose, services }) {
             )}
           </div>
 
-          {/* Basic Costs Section */}
           <div className="mt-6 border-t pt-4">
             <h3 className="text-sm font-semibold text-gray-900">Basic Costs</h3>
             <dl className="mt-2 space-y-1 text-sm text-gray-700">
@@ -97,17 +132,14 @@ export default function DrawerClinic({ clinic, onClose, services }) {
             </dl>
           </div>
 
-          {/* Services */}
           <div className="mt-6">
-            <h3 className="text-sm font-semibold text-gray-900">Services</h3>
+            <h3 className="text-sm font-semibold text-gray-900">Service Categories</h3>
             <ul className="mt-2 space-y-1 text-sm text-gray-700">
-              {getCategoryServices()
-                .slice(0, showAllServices ? undefined : 5)
-                .map((service) => (
-                  <li key={service}>• {service}</li>
-                ))}
+              {serviceCategories.slice(0, showAllServices ? undefined : 5).map((service, index) => (
+                <li key={index}>• {service}</li>
+              ))}
             </ul>
-            {getCategoryServices().length > 5 && (
+            {serviceCategories.length > 5 && (
               <button
                 onClick={() => setShowAllServices((prev) => !prev)}
                 className="mt-2 text-sm text-blue-600 hover:underline"

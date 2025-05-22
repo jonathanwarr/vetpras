@@ -6,7 +6,6 @@ import DrawerClinic from '@/components/clinics/drawer-clinic';
 import ContainerConstrained from '@/components/layout/container-constrained';
 import SearchCategory from '@/components/forms/search-category';
 import SearchService from '@/components/forms/search-service';
-import SortDropdown from '@/components/search/sort-dropdown';
 import Pagination from '@/components/clinics/pagination';
 import { supabase } from '@/lib/supabase';
 
@@ -20,9 +19,12 @@ export default function ClinicsPage() {
   const [totalResults, setTotalResults] = useState(0);
   const [sortOption, setSortOption] = useState('name-asc');
 
+  // Combine search query and category query
+  const combinedSearchQuery = categoryQuery || searchQuery;
+
   useEffect(() => {
     const fetchServices = async () => {
-      const { data: serviceList, error } = await supabase.from('services').select('*');
+      const { data: serviceList, error } = await supabase.from('vet_services').select('*');
 
       if (error) {
         console.error('[Supabase] Error loading services:', error);
@@ -41,6 +43,14 @@ export default function ClinicsPage() {
   const handleCloseDrawer = () => setSelectedClinic(null);
   const handleCategoryChange = (categoryName) => {
     setCategoryQuery(categoryName);
+    // Clear service search when category is selected
+    setSearchQuery('');
+  };
+
+  const handleServiceChange = (serviceName) => {
+    setSearchQuery(serviceName);
+    // Clear category search when service is selected
+    setCategoryQuery('');
   };
 
   return (
@@ -48,11 +58,11 @@ export default function ClinicsPage() {
       <ContainerConstrained>
         <div className="mb-16">
           <h2 className="mt-20 mb-6 font-serif text-4xl font-semibold tracking-tight text-slate-900 sm:text-5xl lg:text-balance">
-            Search for a Service
+            Search Vet Clinics
           </h2>
           <p className="space-y-5 font-sans text-lg font-light text-slate-900">
-            Use the search to find clinics that offer the care your pet needs. The list will filter
-            and only show clinics that have listed the service you're looking for.
+            Search for a vet clinic that offers the care your pet needs. The list will filter and
+            only show clinics that have listed the service you're looking for.
           </p>
         </div>
 
@@ -61,10 +71,7 @@ export default function ClinicsPage() {
             <SearchCategory services={services} onCategoryChange={handleCategoryChange} />
           </div>
           <div className="mb-5 w-full flex-2 md:w-auto">
-            <SearchService value={searchQuery} onChange={setSearchQuery} services={services} />
-          </div>
-          <div className="mb-5 w-full flex-2 md:w-auto">
-            <SortDropdown sortOption={sortOption} setSortOption={setSortOption} />
+            <SearchService value={searchQuery} onChange={handleServiceChange} services={services} />
           </div>
         </div>
       </ContainerConstrained>
@@ -72,7 +79,7 @@ export default function ClinicsPage() {
       <ContainerConstrained>
         <TableClinic
           onSelectClinic={setSelectedClinic}
-          searchQuery={categoryQuery || searchQuery}
+          searchQuery={combinedSearchQuery}
           currentPage={currentPage}
           setCurrentPage={setCurrentPage}
           onTotalPages={setTotalPages}

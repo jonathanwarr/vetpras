@@ -1,7 +1,7 @@
 const heroContent = {
-  heading: 'Confidence and Clarity in Pet Care',
+  heading: 'Accessible Pet Care Begins With Clarity.',
   subheading:
-    'Vetpras gives you the clear information you need to find the best vet services, understand costs, and feel confident in your care decisions.',
+    'Vetpras connects pet owners with veterinarians and their services, while providing transparent, community-sourced cost information. Because every pet deserves access, and every owner deserves clarity.',
 };
 
 export default heroContent;

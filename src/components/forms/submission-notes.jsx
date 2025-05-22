@@ -24,7 +24,7 @@ export default function SubmissionNotes({ value, onChange }) {
         }}
         placeholder="Add any details about the service or custom name here..."
         className="w-full resize-none rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-800 placeholder:text-gray-400"
-        style={{ height: '120px' }}
+        style={{ height: '100px' }}
       />
       <p className={`mt-1 text-xs ${isOverLimit ? 'text-red-600' : 'text-gray-500'}`}>
         {wordCount}/{maxWords} words

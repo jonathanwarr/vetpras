@@ -62,7 +62,7 @@ export default function SearchService({ value, onChange, services }) {
     <div className="relative w-full sm:w-80">
       <label
         htmlFor="search"
-        className="mt-5 mb-3 block font-sans text-sm font-bold text-slate-900"
+        className="mb-2 text-xs font-semibold tracking-wide text-gray-700 uppercase"
       >
         Search by Service
       </label>

@@ -8,12 +8,10 @@ export default function SelectService({ values = [], onChange, services = [] }) 
   const [highlightedIndex, setHighlightedIndex] = useState(-1);
   const listRef = useRef(null);
 
-  // Filter suggestions based on user input
   const filtered = input.length
     ? services.filter((s) => s.service.toLowerCase().includes(input.toLowerCase()))
     : [];
 
-  // Scroll selected dropdown item into view
   useEffect(() => {
     if (highlightedIndex >= 0 && listRef.current) {
       const listItem = listRef.current.children[highlightedIndex];
@@ -21,7 +19,6 @@ export default function SelectService({ values = [], onChange, services = [] }) 
     }
   }, [highlightedIndex]);
 
-  // When user selects a service, add it to array if not already selected
   const handleSelect = (service) => {
     if (!values.includes(service.service_code)) {
       onChange([...values, service.service_code]);
@@ -31,7 +28,6 @@ export default function SelectService({ values = [], onChange, services = [] }) 
     setHighlightedIndex(-1);
   };
 
-  // Keyboard navigation logic
   const handleKeyDown = (e) => {
     if (!showDropdown) return;
 
@@ -43,8 +39,6 @@ export default function SelectService({ values = [], onChange, services = [] }) 
       setHighlightedIndex((prev) => (prev > 0 ? prev - 1 : filtered.length - 1));
     } else if (e.key === 'Enter') {
       e.preventDefault();
-
-      // ✅ Only select if highlighted item is valid
       if (highlightedIndex >= 0 && filtered[highlightedIndex]) {
         handleSelect(filtered[highlightedIndex]);
       }
@@ -54,17 +48,13 @@ export default function SelectService({ values = [], onChange, services = [] }) 
     }
   };
 
-  // Remove a service from the selected list
   const removeService = (code) => {
     onChange(values.filter((c) => c !== code));
   };
 
   return (
     <div className="relative">
-      <label
-        htmlFor="services"
-        className="block space-y-5 font-sans text-sm font-bold text-slate-900"
-      >
+      <label htmlFor="services" className="block font-sans text-sm font-bold text-slate-900">
         Services
       </label>
 
@@ -100,6 +90,7 @@ export default function SelectService({ values = [], onChange, services = [] }) 
           setHighlightedIndex(-1);
         }}
         onKeyDown={handleKeyDown}
+        onBlur={() => setShowDropdown(false)}
         className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:outline-blue-600 sm:text-sm"
       />
 

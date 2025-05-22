@@ -22,10 +22,10 @@ export default function Footer() {
 
         {/* Right Column */}
         <div className="mt-8 flex justify-center md:mt-0 md:w-1/3 md:justify-end">
-          <p className="text-xs text-gray-400">v0.2.1</p>
+          <p className="text-xs text-gray-400">v0.3.0</p>
         </div>
       </div>
-      <p className="text-right text-xs text-gray-400">v0.2.1</p>
+      <p className="text-right text-xs text-gray-400">v0.3.0</p>
     </footer>
   );
 }

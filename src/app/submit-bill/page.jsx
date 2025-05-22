@@ -38,22 +38,20 @@ export default function SubmitBillPage() {
   }, [success]);
 
   useEffect(() => {
-    const fetchClinics = async () => {
-      const { data } = await supabase.from('clinics').select('clinic_id, clinic_name');
-      setClinics(data || []);
-    };
-    fetchClinics();
-  }, []);
+    const fetchData = async () => {
+      const [{ data: clinicData }, { data: serviceData }] = await Promise.all([
+        supabase.from('vet_clinics').select('clinic_id, clinic_name'),
+        supabase
+          .from('vet_services')
+          .select('service_id, service, service_code, parent_code')
+          .order('sort_order'),
+      ]);
 
-  useEffect(() => {
-    const fetchServices = async () => {
-      const { data } = await supabase
-        .from('services')
-        .select('id, service, service_code, parent_code')
-        .order('sort_order');
-      setServices(data || []);
+      setClinics(clinicData || []);
+      setServices(serviceData || []);
     };
-    fetchServices();
+
+    fetchData();
   }, []);
 
   const handleSubmit = async (e) => {
@@ -77,7 +75,6 @@ export default function SubmitBillPage() {
     setLoading(true);
     setMissingFields([]);
 
-    // Clean the filename
     const sanitizedFilename = file.name.replace(/[^\w.-]/g, '_');
     const filename = `${Date.now()}_${sanitizedFilename}`;
 
@@ -85,59 +82,37 @@ export default function SubmitBillPage() {
       .from('receipts')
       .upload(filename, file);
 
-    console.log('[📂 Upload Response]', { fileData, fileError });
+    if (fileError || !fileData?.path) {
+      setError('Something went wrong with the uploaded image. Try a JPG or PDF.');
+      setLoading(false);
+      return;
+    }
 
-    if (fileError || !fileData?.path || typeof fileData.path !== 'string') {
-      console.error('[🚫 BAD IMAGE PATH] Possibly unsupported file type or encoding.', fileData);
-      setError(
-        'Something went wrong with the uploaded image. Try a JPG or PDF if this keeps happening.'
-      );
+    const { data: userData, error: userError } = await supabase.auth.getUser();
+
+    if (userError || !userData?.user?.id) {
+      setError('Unable to confirm your login session. Please try logging in again.');
       setLoading(false);
       return;
     }
 
     const payload = {
+      user_id: userData.user.id,
       clinic_id: clinicId,
-      service_codes: serviceCodes,
+      service_code: serviceCodes[0],
       price: parseFloat(price),
       image_url: fileData.path,
       notes,
-      submitted_at: new Date().toISOString(),
-      date_of_service: dateOfService,
-      status: 'pending',
+      submission_date: new Date().toISOString(),
+      service_date: dateOfService,
     };
 
-    console.log('[📦 DEBUG] Insert Payload:', payload);
-
-    const {
-      data: insertData,
-      error: insertError,
-      status,
-      statusText,
-    } = await supabase.from('bill_submissions_pending').insert([payload]);
+    const { error: insertError } = await supabase.from('pending_bills').insert([payload]);
 
     if (insertError) {
-      console.error('[🧾 Supabase Error]', insertError.message || insertError);
-      console.error('[📉 Status]', status, statusText);
-      console.error('[🧾 Full Insert Error]', insertError);
+      console.error('[Insert Error]', insertError);
       setError('Submission failed. Please try again.');
     } else {
-      console.log('[✅ DEBUG] Submission inserted successfully:', insertData);
-
-      // 🧠 Fire Google Analytics event - Bill Submitted
-      if (typeof window.gtag === 'function') {
-        window.gtag('event', 'submit_bill', {
-          event_category: 'engagement',
-          event_label: 'Bill Submission',
-          value: 1,
-        });
-      }
-
-      // 🔥 Fire Hotjar custom event - Bill Submitted
-      if (typeof window.hj === 'function') {
-        window.hj('event', 'bill_submitted');
-      }
-
       setSuccess(true);
       setClinicId('');
       setServiceCodes([]);
