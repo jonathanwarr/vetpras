@@ -21,19 +21,26 @@ export default function TableClinic({
   const [sortDirection, setSortDirection] = useState('asc');
 
   useEffect(() => {
-    const fetchData = async () => {
+    async function fetchData() {
       setLoading(true);
-      const [{ data: clinicData }, { data: serviceData }] = await Promise.all([
-        supabase.from('clinics').select('*'),
-        supabase
-          .from('services')
-          .select('service, service_code, parent_code, sort_order')
-          .order('sort_order', { ascending: true }),
-      ]);
+
+      const [{ data: clinicData, error: clinicError }, { data: serviceData, error: serviceError }] =
+        await Promise.all([
+          supabase.from('vet_clinics').select('*'),
+          supabase
+            .from('vet_services')
+            .select('service, service_code, parent_code, sort_order')
+            .order('sort_order', { ascending: true }),
+        ]);
+
+      if (clinicError) console.error('[Supabase] Error loading clinics:', clinicError);
+      if (serviceError) console.error('[Supabase] Error loading services:', serviceError);
+
       setClinics(clinicData || []);
       setServices(serviceData || []);
       setLoading(false);
-    };
+    }
+
     fetchData();
   }, []);
 
@@ -42,23 +49,34 @@ export default function TableClinic({
   }, [searchQuery]);
 
   const matchingServiceCodes = (() => {
-    if (!searchQuery.trim()) return [];
+    if (!searchQuery?.trim()) return [];
+
     const query = searchQuery.toLowerCase();
     const matched = services.filter((s) => s.service.toLowerCase().includes(query));
-    const parentCodes = matched.filter((s) => s.parent_code === null).map((s) => s.service_code);
-    const childCodes = services
-      .filter((s) => parentCodes.includes(s.parent_code))
+
+    const directCodes = matched.map((s) => s.service_code);
+    const parentCodes = matched
+      .filter((s) => /\.00$/.test(s.service_code))
       .map((s) => s.service_code);
-    return [...new Set([...matched.map((s) => s.service_code), ...childCodes])];
+
+    const childCodes = services.flatMap((s) => {
+      const parentPrefix = s.service_code.split('.')[0] + '.';
+      return parentCodes.some(
+        (p) => s.service_code.startsWith(parentPrefix) && s.service_code !== p
+      )
+        ? [s.service_code]
+        : [];
+    });
+
+    return [...new Set([...directCodes, ...childCodes])];
   })();
 
   const filteredClinics = searchQuery
-    ? clinics.filter((clinic) => {
-        const codes = Array.isArray(clinic.service_codes)
-          ? clinic.service_codes
-          : (clinic.service_codes || '').split(',').map((c) => c.trim());
-        return matchingServiceCodes.some((code) => codes.includes(code));
-      })
+    ? clinics.filter(
+        (clinic) =>
+          Array.isArray(clinic.service_code) &&
+          matchingServiceCodes.some((code) => clinic.service_code.includes(code))
+      )
     : clinics;
 
   const sortedClinics = [...filteredClinics].sort((a, b) => {
@@ -106,36 +124,46 @@ export default function TableClinic({
             <tr>
               <th
                 onClick={() => handleSort('clinic_name')}
-                className="text-table-header text-heading-2 w-68 cursor-pointer px-3 py-[14px] text-left select-none first:pl-4 sm:w-76 sm:first:pl-0"
+                className="text-table-header w-56 cursor-pointer px-3 py-[14px] text-left text-xs select-none first:pl-4 sm:first:pl-0"
               >
                 Name{' '}
-                <span className="ml-1 inline-block text-sm">{renderSortIcon('clinic_name')}</span>
+                <span className="ml-1 inline-block text-xs">{renderSortIcon('clinic_name')}</span>
               </th>
               <th
                 onClick={() => handleSort('city')}
-                className="text-table-header text-heading-2 w-32 cursor-pointer px-3 py-[14px] text-left select-none"
+                className="text-table-header w-24 cursor-pointer px-3 py-[14px] text-left text-xs select-none"
               >
-                City <span className="ml-1 inline-block text-sm">{renderSortIcon('city')}</span>
-              </th>
-              <th className="text-table-header text-heading-2 w-32 px-3 py-[14px] text-left">
-                Phone
+                City <span className="ml-1 inline-block text-xs">{renderSortIcon('city')}</span>
               </th>
               <th
                 onClick={() => handleSort('exam_fee')}
-                className="text-table-header text-heading-2 w-20 cursor-pointer px-3 py-[14px] text-center select-none"
+                className="text-table-header w-18 cursor-pointer px-3 py-[14px] text-center text-xs select-none"
               >
-                Exam Fee{' '}
-                <span className="ml-1 inline-block text-sm">{renderSortIcon('exam_fee')}</span>
+                Exam <span className="ml-1 inline-block text-xs">{renderSortIcon('exam_fee')}</span>
+              </th>
+              <th
+                onClick={() => handleSort('rabies_vaccine')}
+                className="text-table-header w-18 cursor-pointer px-3 py-[14px] text-center text-xs select-none"
+              >
+                Rabies{' '}
+                <span className="ml-1 inline-block text-xs">
+                  {renderSortIcon('rabies_vaccine')}
+                </span>
+              </th>
+              <th
+                onClick={() => handleSort('da2pp_vaccine')}
+                className="text-table-header w-18 cursor-pointer px-3 py-[14px] text-center text-xs select-none"
+              >
+                DA2PP{' '}
+                <span className="ml-1 inline-block text-xs">{renderSortIcon('da2pp_vaccine')}</span>
               </th>
               <th
                 onClick={() => handleSort('rating')}
-                className="text-table-header text-heading-2 w-20 cursor-pointer px-3 py-[14px] text-center select-none"
+                className="text-table-header w-20 cursor-pointer px-3 py-[14px] text-center text-xs select-none"
               >
-                Rating <span className="ml-1 inline-block text-sm">{renderSortIcon('rating')}</span>
+                Rating <span className="ml-1 inline-block text-xs">{renderSortIcon('rating')}</span>
               </th>
-              <th className="text-table-header text-heading-2 w-20 px-3 py-[14px] text-center">
-                Website
-              </th>
+              <th className="text-table-header w-16 px-3 py-[14px] text-center text-xs">Website</th>
             </tr>
           </thead>
           <tbody className="divide-table-header-bg divide-y">
@@ -146,25 +174,29 @@ export default function TableClinic({
               >
                 <td
                   onClick={() => onSelectClinic(clinic)}
-                  className="w-48 py-4 pr-3 pl-4 text-left font-sans text-xs font-medium whitespace-nowrap hover:text-blue-600 sm:w-56 sm:pl-0"
+                  className="w-56 py-4 pr-3 pl-4 text-left font-sans text-xs font-medium hover:text-blue-600 sm:pl-0"
+                  style={{ wordBreak: 'break-word' }}
                 >
                   {clinic.clinic_name}
                 </td>
-                <td className="w-32 text-left font-sans text-xs font-medium whitespace-nowrap">
+                <td className="w-24 text-left font-sans text-xs font-medium whitespace-nowrap">
                   {clinic.city || '—'}
                 </td>
-                <td className="w-32 text-left font-sans text-xs font-medium whitespace-nowrap">
-                  {clinic.phone_number || '—'}
+                <td className="w-18 text-center font-sans text-xs font-medium whitespace-nowrap">
+                  {clinic.exam_fee ? `$${clinic.exam_fee.toFixed(0)}` : '—'}
                 </td>
-                <td className="w-28 text-center font-sans text-xs font-medium whitespace-nowrap">
-                  {clinic.exam_fee ? `$${clinic.exam_fee.toFixed(2)}` : '—'}
+                <td className="w-18 text-center font-sans text-xs font-medium whitespace-nowrap">
+                  {clinic.rabies_vaccine ? `$${clinic.rabies_vaccine.toFixed(0)}` : '—'}
                 </td>
-                <td className="w-32 text-center font-sans text-xs font-medium whitespace-nowrap">
+                <td className="w-18 text-center font-sans text-xs font-medium whitespace-nowrap">
+                  {clinic.da2pp_vaccine ? `$${clinic.da2pp_vaccine.toFixed(0)}` : '—'}
+                </td>
+                <td className="w-20 text-center font-sans text-xs font-medium whitespace-nowrap">
                   {clinic.rating
                     ? `${clinic.rating.toFixed(1)} (${clinic.total_reviews || 0})`
                     : '—'}
                 </td>
-                <td className="w-20 text-center font-sans text-xs font-medium whitespace-nowrap">
+                <td className="w-16 text-center font-sans text-xs font-medium whitespace-nowrap">
                   {clinic.website ? (
                     <a
                       href={clinic.website}

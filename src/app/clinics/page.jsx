@@ -1,14 +1,19 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { supabase } from '@/lib/supabase';
+
+import ContainerConstrained from '@/components/layout/container-constrained';
+import Header from '@/components/layout/header';
+import Footer from '@/components/layout/footer';
+import ScrollToTop from '@/components/ui/scroll-to-top';
+
 import TableClinic from '@/components/clinics/table-clinic';
 import DrawerClinic from '@/components/clinics/drawer-clinic';
-import ContainerConstrained from '@/components/layout/container-constrained';
+import Pagination from '@/components/clinics/pagination';
+
 import SearchCategory from '@/components/forms/search-category';
 import SearchService from '@/components/forms/search-service';
-import SortDropdown from '@/components/search/sort-dropdown';
-import Pagination from '@/components/clinics/pagination';
-import { supabase } from '@/lib/supabase';
 
 export default function ClinicsPage() {
   const [selectedClinic, setSelectedClinic] = useState(null);
@@ -18,30 +23,30 @@ export default function ClinicsPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalResults, setTotalResults] = useState(0);
-  const [sortOption, setSortOption] = useState('name-asc');
 
   useEffect(() => {
-    const fetchServices = async () => {
-      const { data: serviceList, error } = await supabase.from('services').select('*');
+    async function fetchServices() {
+      const { data: serviceList, error } = await supabase
+        .from('vet_services')
+        .select('service, service_code, parent_code, sort_order')
+        .order('sort_order', { ascending: true });
 
       if (error) {
         console.error('[Supabase] Error loading services:', error);
       } else {
         setServices(serviceList);
       }
-    };
+    }
 
     fetchServices();
   }, []);
 
   useEffect(() => {
-    setCurrentPage(1); // Reset to page 1 when search query changes
+    setCurrentPage(1);
   }, [searchQuery, categoryQuery]);
 
   const handleCloseDrawer = () => setSelectedClinic(null);
-  const handleCategoryChange = (categoryName) => {
-    setCategoryQuery(categoryName);
-  };
+  const handleCategoryChange = (categoryName) => setCategoryQuery(categoryName);
 
   return (
     <div className="pt-12 pb-20 sm:pt-24 sm:pb-12">
@@ -62,9 +67,6 @@ export default function ClinicsPage() {
           </div>
           <div className="mb-5 w-full flex-2 md:w-auto">
             <SearchService value={searchQuery} onChange={setSearchQuery} services={services} />
-          </div>
-          <div className="mb-5 w-full flex-2 md:w-auto">
-            <SortDropdown sortOption={sortOption} setSortOption={setSortOption} />
           </div>
         </div>
       </ContainerConstrained>
