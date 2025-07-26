@@ -118,7 +118,7 @@ export default function TableClinic({
 
   return (
     <div className="w-full">
-      <div className="hidden overflow-x-auto sm:block">
+      <div className="overflow-x-auto">
         <table className="divide-table-header-bg w-full table-fixed divide-y">
           <thead>
             <tr>
