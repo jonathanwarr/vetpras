@@ -3,19 +3,13 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
 import { submitBill } from '@/content/submit-bill';
-import InputClinic from '@/components/forms/input-clinic';
-import SelectService from '@/components/forms/select-service';
-import InputPrice from '@/components/forms/input-price';
 import UploadReceipt from '@/components/forms/upload-image';
 import SubmissionNotes from '@/components/forms/submission-notes';
 import ButtonPrimary from '@/components/ui/button-primary';
 import FormError from '@/components/forms/form-error';
 import ModalSuccess from '@/components/ui/modal-success';
-import ServiceNavigation from '@/components/sections/service-navigation';
 import ContainerNarrow from '@/components/layout/container-narrow';
-import InputDate from '@/components/forms/input-date';
 import DisclaimerBill from '@/components/forms/disclaimer-bill';
-import DisclaimerDogsOnly from '@/components/forms/dogs-only';
 
 export default function SubmitBillPage() {
   const [clinicId, setClinicId] = useState('');
@@ -60,15 +54,11 @@ export default function SubmitBillPage() {
     setSuccess(false);
 
     const missing = [];
-    if (!clinicId) missing.push('Clinic Name');
-    if (!serviceCodes.length) missing.push('At least one Service');
-    if (!price.trim()) missing.push('Price');
     if (!file) missing.push('Receipt');
-    if (!dateOfService) missing.push('Date of Service');
 
     if (missing.length > 0) {
       setMissingFields(missing);
-      setError('Please fill out all required fields.');
+      setError('Please attach a receipt before submitting.');
       return;
     }
 
@@ -132,29 +122,21 @@ export default function SubmitBillPage() {
           Submit a Bill
         </p>
         <p className={submitBill.introClass}>{submitBill.intro}</p>
-        <DisclaimerDogsOnly />
 
-        <div className="mt-12 grid grid-cols-1 gap-8 md:grid-cols-5">
-          <div className="md:col-span-2">
-            <ServiceNavigation
-              services={services}
-              onSelect={(code) => {
-                if (!serviceCodes.includes(code)) {
-                  setServiceCodes((prev) => [...prev, code]);
-                }
-              }}
-            />
-          </div>
+        <div className="mt-12 flex justify-center">
+          <div className="w-full max-w-lg">
+            <form onSubmit={handleSubmit} className="space-y-8">
+              <div className="w-full">
+                <DisclaimerBill />
+                <label className="mb-2 block space-y-5 font-sans text-sm font-bold text-slate-900">
+                  Receipt
+                </label>
+                <UploadReceipt file={file} setFile={setFile} />
+              </div>
 
-          <div className="md:col-span-3">
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <InputClinic value={clinicId} onChange={setClinicId} clinics={clinics} />
-              <SelectService values={serviceCodes} onChange={setServiceCodes} services={services} />
-              <InputPrice value={price} onChange={setPrice} />
-              <InputDate value={dateOfService} onChange={setDateOfService} />
-              <SubmissionNotes value={notes} onChange={setNotes} />
-              <DisclaimerBill />
-              <UploadReceipt file={file} setFile={setFile} />
+              <div className="w-full">
+                <SubmissionNotes value={notes} onChange={setNotes} />
+              </div>
 
               {error && missingFields.length > 0 && (
                 <FormError
@@ -163,9 +145,15 @@ export default function SubmitBillPage() {
                 />
               )}
 
-              <ButtonPrimary type="submit" disabled={loading}>
-                {loading ? 'Submitting...' : 'Submit'}
-              </ButtonPrimary>
+              <div className="w-full">
+                <ButtonPrimary
+                  type="submit"
+                  disabled={loading}
+                  className="w-full justify-center py-4 text-sm"
+                >
+                  {loading ? 'Submitting...' : 'Submit'}
+                </ButtonPrimary>
+              </div>
             </form>
 
             <ModalSuccess
