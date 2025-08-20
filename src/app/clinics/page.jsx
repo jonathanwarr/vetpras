@@ -12,73 +12,111 @@ import TableClinic from '@/components/clinics/table-clinic';
 import DrawerClinic from '@/components/clinics/drawer-clinic';
 import Pagination from '@/components/clinics/pagination';
 
-import SearchCategory from '@/components/forms/search-category';
-import SearchService from '@/components/forms/search-service';
+// New components
+import SearchBar from '@/components/search/search-bar';
+import SortFilterControls from '@/components/search/sort-filter-controls';
 
 export default function ClinicsPage() {
   const [selectedClinic, setSelectedClinic] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
-  const [categoryQuery, setCategoryQuery] = useState('');
+  const [searchType, setSearchType] = useState('');
+  const [clinics, setClinics] = useState([]);
   const [services, setServices] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalResults, setTotalResults] = useState(0);
+  const [sortOption, setSortOption] = useState('clinic-asc');
+  const [activeFilters, setActiveFilters] = useState({ exam: [], vaccine: [], rating: [] });
 
   useEffect(() => {
-    async function fetchServices() {
-      const { data: serviceList, error } = await supabase
-        .from('vet_services')
-        .select('service, service_code, parent_code, sort_order')
-        .order('sort_order', { ascending: true });
+    async function fetchData() {
+      const [{ data: clinicList, error: clinicError }, { data: serviceList, error: serviceError }] =
+        await Promise.all([
+          supabase.from('vet_clinics').select('*'),
+          supabase
+            .from('vet_services')
+            .select('service, service_code, parent_code, sort_order')
+            .order('sort_order', { ascending: true }),
+        ]);
 
-      if (error) {
-        console.error('[Supabase] Error loading services:', error);
+      if (clinicError) {
+        console.error('[Supabase] Error loading clinics:', clinicError);
       } else {
-        setServices(serviceList);
+        setClinics(clinicList || []);
+      }
+
+      if (serviceError) {
+        console.error('[Supabase] Error loading services:', serviceError);
+      } else {
+        setServices(serviceList || []);
       }
     }
 
-    fetchServices();
+    fetchData();
   }, []);
 
   useEffect(() => {
     setCurrentPage(1);
-  }, [searchQuery, categoryQuery]);
+  }, [searchQuery, searchType, sortOption, activeFilters]);
 
   const handleCloseDrawer = () => setSelectedClinic(null);
-  const handleCategoryChange = (categoryName) => setCategoryQuery(categoryName);
+
+  const handleSearchChange = ({ query, type }) => {
+    setSearchQuery(query);
+    setSearchType(type);
+  };
+
+  const handleSortChange = (newSort) => {
+    setSortOption(newSort);
+  };
+
+  const handleFilterChange = (filters) => {
+    setActiveFilters(filters);
+  };
 
   return (
     <div className="pt-12 pb-20 sm:pt-24 sm:pb-12">
       <ContainerConstrained>
-        <div className="mb-16">
-          <h2 className="mt-20 mb-6 font-serif text-4xl font-semibold tracking-tight text-slate-900 sm:text-5xl lg:text-balance">
-            Search for a Service
+        <div className="mb-10">
+          <h2 className="mt-20 mb-6 flex justify-center font-serif text-4xl font-semibold tracking-tight text-slate-900 sm:text-5xl lg:text-balance">
+            Find a Vet
           </h2>
-          <p className="space-y-5 font-sans text-lg font-light text-slate-900">
-            Use the search to find clinics that offer the care your pet needs. The list will filter
-            and only show clinics that have listed the service you're looking for.
+          <p className="flex justify-center space-y-5 font-sans text-lg font-light text-slate-900">
+            Search for clinics by name, location, or the specific services your pet needs.
+          </p>
+          <p className="flex justify-center space-y-5 font-sans text-lg font-light text-slate-900">
+            Filter and sort results to find the perfect match for your requirements.
           </p>
         </div>
 
-        <div className="flex flex-col gap-4 md:flex-row md:items-end">
-          <div className="mb-5 w-full flex-1 md:w-auto">
-            <SearchCategory services={services} onCategoryChange={handleCategoryChange} />
-          </div>
-          <div className="mb-5 w-full flex-2 md:w-auto">
-            <SearchService value={searchQuery} onChange={setSearchQuery} services={services} />
-          </div>
+        {/* New Search Bar */}
+        <div className="mb-6 flex justify-center pb-10">
+          <SearchBar clinics={clinics} services={services} onSearchChange={handleSearchChange} />
+        </div>
+
+        {/* Sort and Filter Controls */}
+        <div className="mb-6">
+          <SortFilterControls
+            clinics={clinics}
+            onSortChange={handleSortChange}
+            onFilterChange={handleFilterChange}
+          />
         </div>
       </ContainerConstrained>
 
       <ContainerConstrained>
         <TableClinic
           onSelectClinic={setSelectedClinic}
-          searchQuery={categoryQuery || searchQuery}
+          searchQuery={searchQuery}
+          searchType={searchType}
+          sortOption={sortOption}
+          activeFilters={activeFilters}
           currentPage={currentPage}
           setCurrentPage={setCurrentPage}
           onTotalPages={setTotalPages}
           onTotalResults={setTotalResults}
+          clinics={clinics}
+          services={services}
         />
         <div className="mt-15">
           <Pagination

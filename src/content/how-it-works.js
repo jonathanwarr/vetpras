@@ -3,7 +3,7 @@ import { CameraIcon, CheckCircleIcon, HeartIcon, ArrowPathIcon } from '@heroicon
 export const howItWorksHeading = 'Vetpras Makes Navigating Pet Care Easy';
 
 export const howItWorksIntro =
-  'We crowdsource vet bills from people like you, then verify and organize that information into a trusted resource—so every pet owner can make clearer, more confident care decisions.';
+  'Loving pet owners like you submit bills. Vetpras verifies and organizes the information. Pet owners gain more access to understanding pet care costs. It’s that simple.';
 
 export const howItWorks = [
   {

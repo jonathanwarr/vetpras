@@ -1,7 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { supabase } from '@/lib/supabase';
+import { useEffect, useState, useMemo } from 'react';
 import { ArrowTopRightOnSquareIcon } from '@heroicons/react/20/solid';
 
 const CLINICS_PER_PAGE = 15;
@@ -9,112 +8,181 @@ const CLINICS_PER_PAGE = 15;
 export default function TableClinic({
   onSelectClinic,
   searchQuery,
+  searchType,
+  sortOption,
+  activeFilters,
   currentPage,
   setCurrentPage,
   onTotalPages,
   onTotalResults,
+  clinics = [],
+  services = [],
 }) {
-  const [clinics, setClinics] = useState([]);
-  const [services, setServices] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [sortField, setSortField] = useState('clinic_name');
-  const [sortDirection, setSortDirection] = useState('asc');
+  const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    async function fetchData() {
-      setLoading(true);
-
-      const [{ data: clinicData, error: clinicError }, { data: serviceData, error: serviceError }] =
-        await Promise.all([
-          supabase.from('vet_clinics').select('*'),
-          supabase
-            .from('vet_services')
-            .select('service, service_code, parent_code, sort_order')
-            .order('sort_order', { ascending: true }),
-        ]);
-
-      if (clinicError) console.error('[Supabase] Error loading clinics:', clinicError);
-      if (serviceError) console.error('[Supabase] Error loading services:', serviceError);
-
-      setClinics(clinicData || []);
-      setServices(serviceData || []);
-      setLoading(false);
-    }
-
-    fetchData();
-  }, []);
-
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [searchQuery]);
-
-  const matchingServiceCodes = (() => {
-    if (!searchQuery?.trim()) return [];
+  // Filter clinics based on search query
+  const searchFilteredClinics = useMemo(() => {
+    if (!searchQuery?.trim()) return clinics;
 
     const query = searchQuery.toLowerCase();
-    const matched = services.filter((s) => s.service.toLowerCase().includes(query));
 
-    const directCodes = matched.map((s) => s.service_code);
-    const parentCodes = matched
-      .filter((s) => /\.00$/.test(s.service_code))
-      .map((s) => s.service_code);
+    return clinics.filter((clinic) => {
+      // Search by clinic name
+      if (clinic.clinic_name?.toLowerCase().includes(query)) return true;
 
-    const childCodes = services.flatMap((s) => {
-      const parentPrefix = s.service_code.split('.')[0] + '.';
-      return parentCodes.some(
-        (p) => s.service_code.startsWith(parentPrefix) && s.service_code !== p
-      )
-        ? [s.service_code]
-        : [];
+      // Search by city
+      if (clinic.city?.toLowerCase().includes(query)) return true;
+
+      // Search by address
+      if (clinic.street_address?.toLowerCase().includes(query)) return true;
+
+      // Search by province
+      if (clinic.province?.toLowerCase().includes(query)) return true;
+
+      // Search by services
+      if (Array.isArray(clinic.service_code)) {
+        const clinicServices = services.filter((s) => clinic.service_code.includes(s.service_code));
+
+        const hasMatchingService = clinicServices.some((s) =>
+          s.service?.toLowerCase().includes(query)
+        );
+
+        if (hasMatchingService) return true;
+
+        // Check for category matches
+        const categories = services.filter(
+          (s) => s.service_code.endsWith('.00') && s.service?.toLowerCase().includes(query)
+        );
+
+        for (const category of categories) {
+          const categoryPrefix = category.service_code.split('.')[0] + '.';
+          const hasServiceInCategory = clinic.service_code.some((code) =>
+            code.startsWith(categoryPrefix)
+          );
+          if (hasServiceInCategory) return true;
+        }
+      }
+
+      return false;
     });
+  }, [searchQuery, clinics, services]);
 
-    return [...new Set([...directCodes, ...childCodes])];
-  })();
+  // Apply price and rating filters
+  const filteredClinics = useMemo(() => {
+    let result = [...searchFilteredClinics];
 
-  const filteredClinics = searchQuery
-    ? clinics.filter(
-        (clinic) =>
-          Array.isArray(clinic.service_code) &&
-          matchingServiceCodes.some((code) => clinic.service_code.includes(code))
-      )
-    : clinics;
+    // Apply exam fee filters
+    if (activeFilters.exam && activeFilters.exam.length > 0) {
+      result = result.filter((clinic) => {
+        if (!clinic.exam_fee) return false;
+        return activeFilters.exam.some((filter) => {
+          const [min, max] = filter.range;
+          return clinic.exam_fee >= min && clinic.exam_fee <= max;
+        });
+      });
+    }
 
-  const sortedClinics = [...filteredClinics].sort((a, b) => {
-    const aVal = a[sortField] || 0;
-    const bVal = b[sortField] || 0;
-    return sortDirection === 'asc'
-      ? aVal.toString().localeCompare(bVal.toString(), undefined, { numeric: true })
-      : bVal.toString().localeCompare(aVal.toString(), undefined, { numeric: true });
-  });
+    // Apply vaccine fee filters (using average of rabies and da2pp)
+    if (activeFilters.vaccine && activeFilters.vaccine.length > 0) {
+      result = result.filter((clinic) => {
+        if (!clinic.rabies_vaccine && !clinic.da2pp_vaccine) return false;
 
+        // Calculate average vaccine cost
+        let vaccineCount = 0;
+        let vaccineTotal = 0;
+        if (clinic.rabies_vaccine) {
+          vaccineTotal += clinic.rabies_vaccine;
+          vaccineCount++;
+        }
+        if (clinic.da2pp_vaccine) {
+          vaccineTotal += clinic.da2pp_vaccine;
+          vaccineCount++;
+        }
+        const avgVaccine = vaccineCount > 0 ? vaccineTotal / vaccineCount : 0;
+
+        return activeFilters.vaccine.some((filter) => {
+          const [min, max] = filter.range;
+          return avgVaccine >= min && avgVaccine <= max;
+        });
+      });
+    }
+
+    // Apply rating filters
+    if (activeFilters.rating && activeFilters.rating.length > 0) {
+      result = result.filter((clinic) => {
+        const rating = clinic.rating || 0;
+        return activeFilters.rating.some((filter) => {
+          const [min, max] = filter.range;
+          return rating >= min && rating <= max;
+        });
+      });
+    }
+
+    return result;
+  }, [searchFilteredClinics, activeFilters]);
+
+  // Sort clinics
+  const sortedClinics = useMemo(() => {
+    const sorted = [...filteredClinics];
+
+    switch (sortOption) {
+      case 'clinic-asc':
+        sorted.sort((a, b) => (a.clinic_name || '').localeCompare(b.clinic_name || ''));
+        break;
+      case 'clinic-desc':
+        sorted.sort((a, b) => (b.clinic_name || '').localeCompare(a.clinic_name || ''));
+        break;
+      case 'city-asc':
+        sorted.sort((a, b) => (a.city || '').localeCompare(b.city || ''));
+        break;
+      case 'city-desc':
+        sorted.sort((a, b) => (b.city || '').localeCompare(a.city || ''));
+        break;
+      case 'nearest':
+        // This would require user location - for now, sort by city
+        sorted.sort((a, b) => (a.city || '').localeCompare(b.city || ''));
+        break;
+      case 'exam-low':
+        sorted.sort((a, b) => (a.exam_fee || 999999) - (b.exam_fee || 999999));
+        break;
+      case 'vaccine-low':
+        sorted.sort((a, b) => {
+          const aVaccine = ((a.rabies_vaccine || 0) + (a.da2pp_vaccine || 0)) / 2 || 999999;
+          const bVaccine = ((b.rabies_vaccine || 0) + (b.da2pp_vaccine || 0)) / 2 || 999999;
+          return aVaccine - bVaccine;
+        });
+        break;
+      case 'rating-high':
+        sorted.sort((a, b) => (b.rating || 0) - (a.rating || 0));
+        break;
+      default:
+        break;
+    }
+
+    return sorted;
+  }, [filteredClinics, sortOption]);
+
+  // Update total results
   useEffect(() => {
-    onTotalResults(filteredClinics.length);
-  }, [filteredClinics]);
-
-  const totalPages = Math.ceil(filteredClinics.length / CLINICS_PER_PAGE);
-
-  useEffect(() => {
+    onTotalResults(sortedClinics.length);
+    const totalPages = Math.ceil(sortedClinics.length / CLINICS_PER_PAGE);
     onTotalPages(totalPages);
-  }, [filteredClinics]);
+  }, [sortedClinics, onTotalResults, onTotalPages]);
 
+  // Paginate results
   const startIdx = (currentPage - 1) * CLINICS_PER_PAGE;
   const paginatedClinics = sortedClinics.slice(startIdx, startIdx + CLINICS_PER_PAGE);
 
-  const handleSort = (field) => {
-    if (sortField === field) {
-      setSortDirection((prev) => (prev === 'asc' ? 'desc' : 'asc'));
-    } else {
-      setSortField(field);
-      setSortDirection('asc');
-    }
-  };
-
-  const renderSortIcon = (field) => {
-    if (sortField !== field) return '⇅';
-    return sortDirection === 'asc' ? '▲' : '▼';
-  };
-
   if (loading) return <div className="text-body-sm text-body-medium p-4">Loading clinics...</div>;
+
+  if (paginatedClinics.length === 0) {
+    return (
+      <div className="py-12 text-center">
+        <p className="text-gray-500">No clinics found matching your search criteria.</p>
+        <p className="mt-2 text-sm text-gray-400">Try adjusting your search or filters.</p>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full">
@@ -122,47 +190,14 @@ export default function TableClinic({
         <table className="divide-table-header-bg w-full table-fixed divide-y">
           <thead>
             <tr>
-              <th
-                onClick={() => handleSort('clinic_name')}
-                className="text-table-header w-56 cursor-pointer px-3 py-[14px] text-left text-xs select-none first:pl-4 sm:first:pl-0"
-              >
-                Name{' '}
-                <span className="ml-1 inline-block text-xs">{renderSortIcon('clinic_name')}</span>
+              <th className="text-table-header w-56 px-3 py-[14px] text-left text-xs first:pl-4 sm:first:pl-0">
+                Name
               </th>
-              <th
-                onClick={() => handleSort('city')}
-                className="text-table-header w-24 cursor-pointer px-3 py-[14px] text-left text-xs select-none"
-              >
-                City <span className="ml-1 inline-block text-xs">{renderSortIcon('city')}</span>
-              </th>
-              <th
-                onClick={() => handleSort('exam_fee')}
-                className="text-table-header w-18 cursor-pointer px-3 py-[14px] text-center text-xs select-none"
-              >
-                Exam <span className="ml-1 inline-block text-xs">{renderSortIcon('exam_fee')}</span>
-              </th>
-              <th
-                onClick={() => handleSort('rabies_vaccine')}
-                className="text-table-header w-18 cursor-pointer px-3 py-[14px] text-center text-xs select-none"
-              >
-                Rabies{' '}
-                <span className="ml-1 inline-block text-xs">
-                  {renderSortIcon('rabies_vaccine')}
-                </span>
-              </th>
-              <th
-                onClick={() => handleSort('da2pp_vaccine')}
-                className="text-table-header w-18 cursor-pointer px-3 py-[14px] text-center text-xs select-none"
-              >
-                DA2PP{' '}
-                <span className="ml-1 inline-block text-xs">{renderSortIcon('da2pp_vaccine')}</span>
-              </th>
-              <th
-                onClick={() => handleSort('rating')}
-                className="text-table-header w-20 cursor-pointer px-3 py-[14px] text-center text-xs select-none"
-              >
-                Rating <span className="ml-1 inline-block text-xs">{renderSortIcon('rating')}</span>
-              </th>
+              <th className="text-table-header w-24 px-3 py-[14px] text-left text-xs">City</th>
+              <th className="text-table-header w-18 px-3 py-[14px] text-center text-xs">Exam</th>
+              <th className="text-table-header w-18 px-3 py-[14px] text-center text-xs">Rabies</th>
+              <th className="text-table-header w-18 px-3 py-[14px] text-center text-xs">DA2PP</th>
+              <th className="text-table-header w-20 px-3 py-[14px] text-center text-xs">Rating</th>
               <th className="text-table-header w-16 px-3 py-[14px] text-center text-xs">Website</th>
             </tr>
           </thead>

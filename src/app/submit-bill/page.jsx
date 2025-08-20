@@ -75,9 +75,9 @@ export default function SubmitBillPage() {
   };
 
   return (
-    <section className="mt-12 px-6 pt-8 pb-20 sm:px-10 sm:pt-24 sm:pb-24 md:px-16">
+    <section className="mt-12 flex justify-center px-6 pt-8 pb-20 sm:px-10 sm:pt-24 sm:pb-24 md:px-16">
       <ContainerNarrow className="mt-8">
-        <p className="mb-6 font-serif text-4xl font-semibold tracking-tight text-slate-900 sm:text-5xl lg:text-balance">
+        <p className="mb-6 flex justify-center font-serif text-4xl font-semibold tracking-tight text-slate-900 sm:text-5xl lg:text-balance">
           Submit a Bill
         </p>
         <p className={submitBill.introClass}>{submitBill.intro}</p>
