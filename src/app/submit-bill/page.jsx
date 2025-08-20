@@ -12,15 +12,8 @@ import ContainerNarrow from '@/components/layout/container-narrow';
 import DisclaimerBill from '@/components/forms/disclaimer-bill';
 
 export default function SubmitBillPage() {
-  const [clinicId, setClinicId] = useState('');
-  const [serviceCodes, setServiceCodes] = useState([]);
-  const [price, setPrice] = useState('');
   const [notes, setNotes] = useState('');
   const [file, setFile] = useState(null);
-  const [dateOfService, setDateOfService] = useState('');
-
-  const [services, setServices] = useState([]);
-  const [clinics, setClinics] = useState([]);
 
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(null);
@@ -30,23 +23,6 @@ export default function SubmitBillPage() {
   useEffect(() => {
     if (success) window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [success]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const [{ data: clinicData }, { data: serviceData }] = await Promise.all([
-        supabase.from('vet_clinics').select('clinic_id, clinic_name'),
-        supabase
-          .from('vet_services')
-          .select('service_id, service, service_code, parent_code')
-          .order('sort_order'),
-      ]);
-
-      setClinics(clinicData || []);
-      setServices(serviceData || []);
-    };
-
-    fetchData();
-  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -78,23 +54,10 @@ export default function SubmitBillPage() {
       return;
     }
 
-    const { data: userData, error: userError } = await supabase.auth.getUser();
-
-    if (userError || !userData?.user?.id) {
-      setError('Unable to confirm your login session. Please try logging in again.');
-      setLoading(false);
-      return;
-    }
-
     const payload = {
-      user_id: userData.user.id,
-      clinic_id: clinicId,
-      service_code: serviceCodes[0],
-      price: parseFloat(price),
       image_url: fileData.path,
       notes,
       submission_date: new Date().toISOString(),
-      service_date: dateOfService,
     };
 
     const { error: insertError } = await supabase.from('pending_bills').insert([payload]);
@@ -104,12 +67,8 @@ export default function SubmitBillPage() {
       setError('Submission failed. Please try again.');
     } else {
       setSuccess(true);
-      setClinicId('');
-      setServiceCodes([]);
-      setPrice('');
       setNotes('');
       setFile(null);
-      setDateOfService('');
     }
 
     setLoading(false);
