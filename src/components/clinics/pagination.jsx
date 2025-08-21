@@ -5,7 +5,7 @@ export default function Pagination({ current = 1, total = 20, perPage = 10, onPr
   return (
     <nav
       aria-label="Pagination"
-      className="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6"
+      className="flex items-center justify-between border-t border-gray-200 bg-slate-50 px-4 py-3 sm:px-6"
     >
       <div className="hidden sm:block">
         <p className="text-secondary-text text-sm">

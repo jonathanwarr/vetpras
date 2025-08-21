@@ -82,10 +82,7 @@ export default function ClinicsPage() {
             Find a Vet
           </h2>
           <p className="flex justify-center space-y-5 font-sans text-lg font-light text-slate-900">
-            Search for clinics by name, location, or the specific services your pet needs.
-          </p>
-          <p className="flex justify-center space-y-5 font-sans text-lg font-light text-slate-900">
-            Filter and sort results to find the perfect match for your requirements.
+            Search for vets by clinic name, city or even treatment.
           </p>
         </div>
 

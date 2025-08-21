@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useMemo } from 'react';
 import { ChevronDownIcon, ChevronUpIcon, XMarkIcon } from '@heroicons/react/20/solid';
 
 export default function SortFilterControls({ onSortChange, onFilterChange, clinics = [] }) {
@@ -13,15 +13,18 @@ export default function SortFilterControls({ onSortChange, onFilterChange, clini
   const [examFilterOpen, setExamFilterOpen] = useState(false);
   const [vaccineFilterOpen, setVaccineFilterOpen] = useState(false);
   const [ratingFilterOpen, setRatingFilterOpen] = useState(false);
+  const [cityFilterOpen, setCityFilterOpen] = useState(false);
 
   const [examFilters, setExamFilters] = useState([]);
   const [vaccineFilters, setVaccineFilters] = useState([]);
   const [ratingFilters, setRatingFilters] = useState([]);
+  const [cityFilters, setCityFilters] = useState([]);
 
   const sortRef = useRef(null);
   const examRef = useRef(null);
   const vaccineRef = useRef(null);
   const ratingRef = useRef(null);
+  const cityRef = useRef(null);
 
   const sortOptions = [
     { value: 'clinic-asc', label: 'Clinic - Ascending' },
@@ -55,6 +58,16 @@ export default function SortFilterControls({ onSortChange, onFilterChange, clini
     { value: '0-3.9', label: '0 to 3.9 Stars', range: [0, 3.9] },
   ];
 
+  // Build City options dynamically from clinics
+  const cityOptions = useMemo(() => {
+    const cities = new Set(
+      clinics.map((c) => c?.city || c?.address?.city || c?.location?.city || '').filter(Boolean)
+    );
+    return Array.from(cities)
+      .sort((a, b) => a.localeCompare(b))
+      .map((name) => ({ value: name, label: name }));
+  }, [clinics]);
+
   // Handle sort selection
   const handleSortSelect = (value) => {
     setSelectedSort(value);
@@ -63,12 +76,29 @@ export default function SortFilterControls({ onSortChange, onFilterChange, clini
   };
 
   // Handle filter changes
+  const notifyFilterChange = (filters) => {
+    if (onFilterChange) {
+      const filterConfig = {
+        exam: filters.exam.map((f) => examFilterOptions.find((opt) => opt.value === f)),
+        vaccine: filters.vaccine.map((f) => vaccineFilterOptions.find((opt) => opt.value === f)),
+        rating: filters.rating.map((f) => ratingFilterOptions.find((opt) => opt.value === f)),
+        city: filters.city.map((f) => ({ value: f, label: f })),
+      };
+      onFilterChange(filterConfig);
+    }
+  };
+
   const handleExamFilterToggle = (value) => {
     const newFilters = examFilters.includes(value)
       ? examFilters.filter((f) => f !== value)
       : [...examFilters, value];
     setExamFilters(newFilters);
-    notifyFilterChange({ exam: newFilters, vaccine: vaccineFilters, rating: ratingFilters });
+    notifyFilterChange({
+      exam: newFilters,
+      vaccine: vaccineFilters,
+      rating: ratingFilters,
+      city: cityFilters,
+    });
   };
 
   const handleVaccineFilterToggle = (value) => {
@@ -76,7 +106,12 @@ export default function SortFilterControls({ onSortChange, onFilterChange, clini
       ? vaccineFilters.filter((f) => f !== value)
       : [...vaccineFilters, value];
     setVaccineFilters(newFilters);
-    notifyFilterChange({ exam: examFilters, vaccine: newFilters, rating: ratingFilters });
+    notifyFilterChange({
+      exam: examFilters,
+      vaccine: newFilters,
+      rating: ratingFilters,
+      city: cityFilters,
+    });
   };
 
   const handleRatingFilterToggle = (value) => {
@@ -84,18 +119,25 @@ export default function SortFilterControls({ onSortChange, onFilterChange, clini
       ? ratingFilters.filter((f) => f !== value)
       : [...ratingFilters, value];
     setRatingFilters(newFilters);
-    notifyFilterChange({ exam: examFilters, vaccine: vaccineFilters, rating: newFilters });
+    notifyFilterChange({
+      exam: examFilters,
+      vaccine: vaccineFilters,
+      rating: newFilters,
+      city: cityFilters,
+    });
   };
 
-  const notifyFilterChange = (filters) => {
-    if (onFilterChange) {
-      const filterConfig = {
-        exam: filters.exam.map((f) => examFilterOptions.find((opt) => opt.value === f)),
-        vaccine: filters.vaccine.map((f) => vaccineFilterOptions.find((opt) => opt.value === f)),
-        rating: filters.rating.map((f) => ratingFilterOptions.find((opt) => opt.value === f)),
-      };
-      onFilterChange(filterConfig);
-    }
+  const handleCityFilterToggle = (value) => {
+    const newFilters = cityFilters.includes(value)
+      ? cityFilters.filter((f) => f !== value)
+      : [...cityFilters, value];
+    setCityFilters(newFilters);
+    notifyFilterChange({
+      exam: examFilters,
+      vaccine: vaccineFilters,
+      rating: ratingFilters,
+      city: newFilters,
+    });
   };
 
   // Remove individual filter
@@ -103,15 +145,39 @@ export default function SortFilterControls({ onSortChange, onFilterChange, clini
     if (type === 'exam') {
       const newFilters = examFilters.filter((f) => f !== value);
       setExamFilters(newFilters);
-      notifyFilterChange({ exam: newFilters, vaccine: vaccineFilters, rating: ratingFilters });
+      notifyFilterChange({
+        exam: newFilters,
+        vaccine: vaccineFilters,
+        rating: ratingFilters,
+        city: cityFilters,
+      });
     } else if (type === 'vaccine') {
       const newFilters = vaccineFilters.filter((f) => f !== value);
       setVaccineFilters(newFilters);
-      notifyFilterChange({ exam: examFilters, vaccine: newFilters, rating: ratingFilters });
+      notifyFilterChange({
+        exam: examFilters,
+        vaccine: newFilters,
+        rating: ratingFilters,
+        city: cityFilters,
+      });
     } else if (type === 'rating') {
       const newFilters = ratingFilters.filter((f) => f !== value);
       setRatingFilters(newFilters);
-      notifyFilterChange({ exam: examFilters, vaccine: vaccineFilters, rating: newFilters });
+      notifyFilterChange({
+        exam: examFilters,
+        vaccine: vaccineFilters,
+        rating: newFilters,
+        city: cityFilters,
+      });
+    } else if (type === 'city') {
+      const newFilters = cityFilters.filter((f) => f !== value);
+      setCityFilters(newFilters);
+      notifyFilterChange({
+        exam: examFilters,
+        vaccine: vaccineFilters,
+        rating: ratingFilters,
+        city: newFilters,
+      });
     }
   };
 
@@ -142,18 +208,13 @@ export default function SortFilterControls({ onSortChange, onFilterChange, clini
   // Close dropdowns when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (sortRef.current && !sortRef.current.contains(event.target)) {
-        setSortOpen(false);
-      }
-      if (examRef.current && !examRef.current.contains(event.target)) {
-        setExamFilterOpen(false);
-      }
-      if (vaccineRef.current && !vaccineRef.current.contains(event.target)) {
+      if (sortRef.current && !sortRef.current.contains(event.target)) setSortOpen(false);
+      if (examRef.current && !examRef.current.contains(event.target)) setExamFilterOpen(false);
+      if (vaccineRef.current && !vaccineRef.current.contains(event.target))
         setVaccineFilterOpen(false);
-      }
-      if (ratingRef.current && !ratingRef.current.contains(event.target)) {
+      if (ratingRef.current && !ratingRef.current.contains(event.target))
         setRatingFilterOpen(false);
-      }
+      if (cityRef.current && !cityRef.current.contains(event.target)) setCityFilterOpen(false);
     };
 
     document.addEventListener('mousedown', handleClickOutside);
@@ -175,6 +236,11 @@ export default function SortFilterControls({ onSortChange, onFilterChange, clini
       type: 'rating',
       value: f,
       label: ratingFilterOptions.find((opt) => opt.value === f)?.label,
+    })),
+    ...cityFilters.map((f) => ({
+      type: 'city',
+      value: f,
+      label: f,
     })),
   ];
 
@@ -246,6 +312,48 @@ export default function SortFilterControls({ onSortChange, onFilterChange, clini
                   {option.label}
                 </button>
               ))}
+            </div>
+          )}
+        </div>
+
+        {/* City filter */}
+        <div ref={cityRef} className="relative">
+          <button
+            onClick={() => setCityFilterOpen(!cityFilterOpen)}
+            className="flex items-center gap-1 px-3 py-1.5 text-sm font-medium transition-colors"
+            style={{ color: '#0F172B' }}
+          >
+            <span>City</span>
+            {cityFilterOpen ? (
+              <ChevronUpIcon className="h-4 w-4" style={{ color: '#2C7FFF' }} />
+            ) : (
+              <ChevronDownIcon className="h-4 w-4" style={{ color: '#45556C' }} />
+            )}
+          </button>
+
+          {cityFilterOpen && (
+            <div
+              className="absolute z-50 mt-1 max-h-64 w-56 overflow-auto rounded-md p-2 shadow-lg"
+              style={{ backgroundColor: '#F1F5F9', border: '1px solid #CBD5E1' }}
+            >
+              {cityOptions.length === 0 ? (
+                <div className="px-2 py-1.5 text-sm text-slate-500">No cities found</div>
+              ) : (
+                cityOptions.map((option) => (
+                  <label
+                    key={option.value}
+                    className="flex cursor-pointer items-center gap-2 rounded px-2 py-1.5 text-sm hover:bg-slate-200"
+                  >
+                    <input
+                      type="checkbox"
+                      checked={cityFilters.includes(option.value)}
+                      onChange={() => handleCityFilterToggle(option.value)}
+                      className="rounded border-gray-300"
+                    />
+                    <span style={{ color: '#475569' }}>{option.label}</span>
+                  </label>
+                ))
+              )}
             </div>
           )}
         </div>
