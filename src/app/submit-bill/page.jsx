@@ -55,15 +55,21 @@ export default function SubmitBillPage() {
     }
 
     const payload = {
-      image_url: fileData.path,
+      image_url: fileData?.path ?? null,
       notes,
       submission_date: new Date().toISOString(),
+      // add any other required columns here
     };
 
-    const { error: insertError } = await supabase.from('pending_bills').insert([payload]);
+    const res = await fetch('/api/submit-bill', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
 
-    if (insertError) {
-      console.error('[Insert Error]', insertError);
+    if (!res.ok) {
+      const { error } = await res.json().catch(() => ({}));
+      console.error('[Insert Error server]', error);
       setError('Submission failed. Please try again.');
     } else {
       setSuccess(true);

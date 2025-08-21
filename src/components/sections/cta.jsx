@@ -8,11 +8,12 @@ export default function CTASection() {
     <section className="bg-blue-50 py-20 sm:py-28">
       <ContainerConstrained className="text-center">
         <h2 className="mb-6 font-serif text-4xl font-semibold tracking-tight text-slate-900 sm:text-5xl lg:text-balance">
-          Help Make Vet Care More Transparent
+          Help Make Pet Care More Transparent
         </h2>
         <p className="text-sans text-md mb-6 space-y-5 font-light text-slate-900">
-          Vetpras only works because people like you share what they’ve paid. Help build a better
-          picture of pet care pricing in your area.
+          You can contribute to Vetpras mission by submitting your vet bills. This helps build a
+          comprehensive view of veterinary costs, making it easier for pet owners to understand and
+          compare prices.
         </p>
         <Link
           href="/submit-bill"

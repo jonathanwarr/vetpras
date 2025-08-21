@@ -5,6 +5,17 @@ import { ArrowTopRightOnSquareIcon } from '@heroicons/react/20/solid';
 
 const CLINICS_PER_PAGE = 15;
 
+// Normalize any filter item into [min, max]
+function toRange(item) {
+  if (!item) return [-Infinity, Infinity];
+  if (Array.isArray(item)) return [Number(item[0]), Number(item[1])];
+  if (Array.isArray(item.range)) return [Number(item.range[0]), Number(item.range[1])];
+  if (typeof item.min !== 'undefined' || typeof item.max !== 'undefined') {
+    return [Number(item.min ?? -Infinity), Number(item.max ?? Infinity)];
+  }
+  return [-Infinity, Infinity];
+}
+
 export default function TableClinic({
   onSelectClinic,
   searchQuery,
@@ -27,42 +38,24 @@ export default function TableClinic({
     const query = searchQuery.toLowerCase();
 
     return clinics.filter((clinic) => {
-      // Search by clinic name
-      if (clinic.clinic_name?.toLowerCase().includes(query)) return true;
+      if (clinic.clinic_name?.toLowerCase().includes(query)) return true; // Name
+      if (clinic.city?.toLowerCase().includes(query)) return true; // City
+      if (clinic.street_address?.toLowerCase().includes(query)) return true; // Address
+      if (clinic.province?.toLowerCase().includes(query)) return true; // Province
 
-      // Search by city
-      if (clinic.city?.toLowerCase().includes(query)) return true;
-
-      // Search by address
-      if (clinic.street_address?.toLowerCase().includes(query)) return true;
-
-      // Search by province
-      if (clinic.province?.toLowerCase().includes(query)) return true;
-
-      // Search by services
+      // Services
       if (Array.isArray(clinic.service_code)) {
         const clinicServices = services.filter((s) => clinic.service_code.includes(s.service_code));
+        if (clinicServices.some((s) => s.service?.toLowerCase().includes(query))) return true;
 
-        const hasMatchingService = clinicServices.some((s) =>
-          s.service?.toLowerCase().includes(query)
-        );
-
-        if (hasMatchingService) return true;
-
-        // Check for category matches
         const categories = services.filter(
           (s) => s.service_code.endsWith('.00') && s.service?.toLowerCase().includes(query)
         );
-
         for (const category of categories) {
           const categoryPrefix = category.service_code.split('.')[0] + '.';
-          const hasServiceInCategory = clinic.service_code.some((code) =>
-            code.startsWith(categoryPrefix)
-          );
-          if (hasServiceInCategory) return true;
+          if (clinic.service_code.some((code) => code.startsWith(categoryPrefix))) return true;
         }
       }
-
       return false;
     });
   }, [searchQuery, clinics, services]);
@@ -71,51 +64,63 @@ export default function TableClinic({
   const filteredClinics = useMemo(() => {
     let result = [...searchFilteredClinics];
 
-    // Apply exam fee filters
-    if (activeFilters.exam && activeFilters.exam.length > 0) {
+    // Exam fee filters
+    if (activeFilters?.exam?.length) {
       result = result.filter((clinic) => {
-        if (!clinic.exam_fee) return false;
-        return activeFilters.exam.some((filter) => {
-          const [min, max] = filter.range;
+        if (clinic.exam_fee == null) return false;
+        return activeFilters.exam.some((f) => {
+          const [min, max] = toRange(f);
           return clinic.exam_fee >= min && clinic.exam_fee <= max;
         });
       });
     }
 
-    // Apply vaccine fee filters (using average of rabies and da2pp)
-    if (activeFilters.vaccine && activeFilters.vaccine.length > 0) {
+    // Vaccine fee filters (average of rabies + core)
+    if (activeFilters?.vaccine?.length) {
       result = result.filter((clinic) => {
-        if (!clinic.rabies_vaccine && !clinic.da2pp_vaccine) return false;
+        if (clinic.rabies_vaccine == null && clinic.da2pp_vaccine == null) return false;
 
-        // Calculate average vaccine cost
         let vaccineCount = 0;
         let vaccineTotal = 0;
-        if (clinic.rabies_vaccine) {
+        if (typeof clinic.rabies_vaccine === 'number') {
           vaccineTotal += clinic.rabies_vaccine;
           vaccineCount++;
         }
-        if (clinic.da2pp_vaccine) {
+        if (typeof clinic.da2pp_vaccine === 'number') {
           vaccineTotal += clinic.da2pp_vaccine;
           vaccineCount++;
         }
         const avgVaccine = vaccineCount > 0 ? vaccineTotal / vaccineCount : 0;
 
-        return activeFilters.vaccine.some((filter) => {
-          const [min, max] = filter.range;
+        return activeFilters.vaccine.some((f) => {
+          const [min, max] = toRange(f);
           return avgVaccine >= min && avgVaccine <= max;
         });
       });
     }
 
-    // Apply rating filters
-    if (activeFilters.rating && activeFilters.rating.length > 0) {
+    // Rating filters
+    if (activeFilters?.rating?.length) {
       result = result.filter((clinic) => {
-        const rating = clinic.rating || 0;
-        return activeFilters.rating.some((filter) => {
-          const [min, max] = filter.range;
+        const rating = typeof clinic.rating === 'number' ? clinic.rating : 0;
+        return activeFilters.rating.some((f) => {
+          const [min, max] = toRange(f);
           return rating >= min && rating <= max;
         });
       });
+    }
+
+    // City filters (new)
+    if (activeFilters?.city?.length) {
+      const allowedCities = new Set(
+        activeFilters.city
+          .map((c) => (typeof c === 'string' ? c : c?.value))
+          .filter(Boolean)
+          .map((s) => String(s).toLowerCase())
+      );
+      result = result.filter(
+        (clinic) => clinic.city && allowedCities.has(String(clinic.city).toLowerCase())
+      );
     }
 
     return result;
@@ -139,21 +144,21 @@ export default function TableClinic({
         sorted.sort((a, b) => (b.city || '').localeCompare(a.city || ''));
         break;
       case 'nearest':
-        // This would require user location - for now, sort by city
+        // Placeholder (needs user location)
         sorted.sort((a, b) => (a.city || '').localeCompare(b.city || ''));
         break;
       case 'exam-low':
-        sorted.sort((a, b) => (a.exam_fee || 999999) - (b.exam_fee || 999999));
+        sorted.sort((a, b) => (a.exam_fee ?? 999999) - (b.exam_fee ?? 999999));
         break;
-      case 'vaccine-low':
-        sorted.sort((a, b) => {
-          const aVaccine = ((a.rabies_vaccine || 0) + (a.da2pp_vaccine || 0)) / 2 || 999999;
-          const bVaccine = ((b.rabies_vaccine || 0) + (b.da2pp_vaccine || 0)) / 2 || 999999;
-          return aVaccine - bVaccine;
-        });
+      case 'vaccine-low': {
+        const avg = (c) =>
+          ((c.rabies_vaccine ?? 0) + (c.da2pp_vaccine ?? 0)) /
+          (Number.isFinite(c.rabies_vaccine) + Number.isFinite(c.da2pp_vaccine) || 1);
+        sorted.sort((a, b) => (avg(a) || 999999) - (avg(b) || 999999));
         break;
+      }
       case 'rating-high':
-        sorted.sort((a, b) => (b.rating || 0) - (a.rating || 0));
+        sorted.sort((a, b) => (b.rating ?? 0) - (a.rating ?? 0));
         break;
       default:
         break;
@@ -162,14 +167,13 @@ export default function TableClinic({
     return sorted;
   }, [filteredClinics, sortOption]);
 
-  // Update total results
+  // Update totals
   useEffect(() => {
     onTotalResults(sortedClinics.length);
-    const totalPages = Math.ceil(sortedClinics.length / CLINICS_PER_PAGE);
-    onTotalPages(totalPages);
+    onTotalPages(Math.ceil(sortedClinics.length / CLINICS_PER_PAGE));
   }, [sortedClinics, onTotalResults, onTotalPages]);
 
-  // Paginate results
+  // Pagination
   const startIdx = (currentPage - 1) * CLINICS_PER_PAGE;
   const paginatedClinics = sortedClinics.slice(startIdx, startIdx + CLINICS_PER_PAGE);
 
@@ -190,54 +194,151 @@ export default function TableClinic({
         <table className="divide-table-header-bg w-full table-fixed divide-y">
           <thead>
             <tr>
-              <th className="text-table-header w-56 px-3 py-[14px] text-left text-xs first:pl-4 sm:first:pl-0">
+              <th
+                scope="col"
+                className="text-table-header w-56 px-3 py-[14px] pl-4 text-left text-xs"
+              >
                 Name
               </th>
-              <th className="text-table-header w-24 px-3 py-[14px] text-left text-xs">City</th>
-              <th className="text-table-header w-18 px-3 py-[14px] text-center text-xs">Exam</th>
-              <th className="text-table-header w-18 px-3 py-[14px] text-center text-xs">Rabies</th>
-              <th className="text-table-header w-18 px-3 py-[14px] text-center text-xs">DA2PP</th>
-              <th className="text-table-header w-20 px-3 py-[14px] text-center text-xs">Rating</th>
-              <th className="text-table-header w-16 px-3 py-[14px] text-center text-xs">Website</th>
+              <th
+                scope="col"
+                className="text-table-header hidden w-24 px-3 py-[14px] text-left text-xs sm:table-cell"
+              >
+                City
+              </th>
+              <th
+                scope="col"
+                className="text-table-header hidden w-18 px-3 py-[14px] text-center text-xs sm:table-cell"
+              >
+                Exam
+              </th>
+              <th
+                scope="col"
+                className="text-table-header hidden w-18 px-3 py-[14px] text-center text-xs sm:table-cell"
+              >
+                Rabies
+              </th>
+              <th
+                scope="col"
+                className="text-table-header hidden w-18 px-3 py-[14px] text-center text-xs sm:table-cell"
+              >
+                Core Vaccine
+              </th>
+              <th
+                scope="col"
+                className="text-table-header hidden w-20 px-3 py-[14px] text-center text-xs sm:table-cell"
+              >
+                Rating
+              </th>
+              <th
+                scope="col"
+                className="text-table-header hidden w-16 px-3 py-[14px] text-center text-xs sm:table-cell"
+              >
+                Website
+              </th>
             </tr>
           </thead>
+
           <tbody className="divide-table-header-bg divide-y">
             {paginatedClinics.map((clinic) => (
               <tr
                 key={clinic.clinic_id}
-                className="cursor-pointer even:bg-gray-50 hover:bg-blue-50"
+                className="group cursor-pointer text-slate-800 transition-colors odd:bg-slate-200 even:bg-slate-100 hover:bg-slate-300 active:bg-slate-300"
               >
+                {/* Name + mobile stacked labels */}
                 <td
                   onClick={() => onSelectClinic(clinic)}
-                  className="w-56 py-4 pr-3 pl-4 text-left font-sans text-xs font-medium hover:text-blue-600 sm:pl-0"
+                  className="w-56 py-4 pr-3 pl-4 text-left font-sans text-xs font-medium sm:w-auto"
                   style={{ wordBreak: 'break-word' }}
                 >
-                  {clinic.clinic_name}
+                  <span className="font-semibold sm:hidden">Name: </span>
+                  <span className="group-hover:text-blue-500 group-active:text-blue-500">
+                    {clinic.clinic_name}
+                  </span>
+
+                  {/* Mobile stacked details */}
+                  <div className="mt-2 grid grid-cols-2 gap-x-2 gap-y-1 text-xs text-slate-800 sm:hidden">
+                    <span className="font-semibold">City:</span>
+                    <span className="truncate">{clinic.city || '—'}</span>
+
+                    <span className="font-semibold">Exam:</span>
+                    <span>
+                      {Number.isFinite(clinic.exam_fee) ? `$${clinic.exam_fee.toFixed(0)}` : '—'}
+                    </span>
+
+                    <span className="font-semibold">Rabies:</span>
+                    <span>
+                      {Number.isFinite(clinic.rabies_vaccine)
+                        ? `$${clinic.rabies_vaccine.toFixed(0)}`
+                        : '—'}
+                    </span>
+
+                    <span className="font-semibold">Core Vaccine:</span>
+                    <span>
+                      {Number.isFinite(clinic.da2pp_vaccine)
+                        ? `$${clinic.da2pp_vaccine.toFixed(0)}`
+                        : '—'}
+                    </span>
+
+                    <span className="font-semibold">Rating:</span>
+                    <span>
+                      {Number.isFinite(clinic.rating)
+                        ? `${clinic.rating.toFixed(1)} (${clinic.total_reviews || 0})`
+                        : '—'}
+                    </span>
+
+                    <span className="font-semibold">Website:</span>
+                    <span>
+                      {clinic.website ? (
+                        <a
+                          href={clinic.website}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center hover:underline"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          Visit
+                          <ArrowTopRightOnSquareIcon
+                            className="ml-1 h-3.5 w-3.5"
+                            aria-hidden="true"
+                          />
+                        </a>
+                      ) : (
+                        '—'
+                      )}
+                    </span>
+                  </div>
                 </td>
-                <td className="w-24 text-left font-sans text-xs font-medium whitespace-nowrap">
+
+                {/* Desktop-only cells */}
+                <td className="hidden w-24 text-left font-sans text-xs font-medium whitespace-nowrap sm:table-cell">
                   {clinic.city || '—'}
                 </td>
-                <td className="w-18 text-center font-sans text-xs font-medium whitespace-nowrap">
-                  {clinic.exam_fee ? `$${clinic.exam_fee.toFixed(0)}` : '—'}
+                <td className="hidden w-18 text-center font-sans text-xs font-medium whitespace-nowrap sm:table-cell">
+                  {Number.isFinite(clinic.exam_fee) ? `$${clinic.exam_fee.toFixed(0)}` : '—'}
                 </td>
-                <td className="w-18 text-center font-sans text-xs font-medium whitespace-nowrap">
-                  {clinic.rabies_vaccine ? `$${clinic.rabies_vaccine.toFixed(0)}` : '—'}
+                <td className="hidden w-18 text-center font-sans text-xs font-medium whitespace-nowrap sm:table-cell">
+                  {Number.isFinite(clinic.rabies_vaccine)
+                    ? `$${clinic.rabies_vaccine.toFixed(0)}`
+                    : '—'}
                 </td>
-                <td className="w-18 text-center font-sans text-xs font-medium whitespace-nowrap">
-                  {clinic.da2pp_vaccine ? `$${clinic.da2pp_vaccine.toFixed(0)}` : '—'}
+                <td className="hidden w-18 text-center font-sans text-xs font-medium whitespace-nowrap sm:table-cell">
+                  {Number.isFinite(clinic.da2pp_vaccine)
+                    ? `$${clinic.da2pp_vaccine.toFixed(0)}`
+                    : '—'}
                 </td>
-                <td className="w-20 text-center font-sans text-xs font-medium whitespace-nowrap">
-                  {clinic.rating
+                <td className="hidden w-20 text-center font-sans text-xs font-medium whitespace-nowrap sm:table-cell">
+                  {Number.isFinite(clinic.rating)
                     ? `${clinic.rating.toFixed(1)} (${clinic.total_reviews || 0})`
                     : '—'}
                 </td>
-                <td className="w-16 text-center font-sans text-xs font-medium whitespace-nowrap">
+                <td className="hidden w-16 text-center font-sans text-xs font-medium whitespace-nowrap sm:table-cell">
                   {clinic.website ? (
                     <a
                       href={clinic.website}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center text-blue-600 hover:underline"
+                      className="inline-flex items-center hover:underline"
                       onClick={(e) => e.stopPropagation()}
                     >
                       <ArrowTopRightOnSquareIcon className="h-4 w-4" aria-hidden="true" />

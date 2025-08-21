@@ -1,7 +1,7 @@
 export default function Footer() {
   return (
-    <footer className="border-t border-gray-100 bg-white">
-      <div className="mx-auto max-w-7xl px-6 py-12 md:flex md:items-center md:justify-between lg:px-8">
+    <footer className="border-t border-gray-100 bg-slate-100">
+      <div className="mx-auto max-w-7xl px-6 py-6 md:flex md:items-center md:justify-between lg:px-8">
         {/* Left Column */}
         <div className="text-center md:w-1/3 md:text-left">
           <p className="text-xs text-gray-400">&copy; 2025 Amwarr Consulting Ltd.</p>
@@ -22,10 +22,10 @@ export default function Footer() {
 
         {/* Right Column */}
         <div className="mt-8 flex justify-center md:mt-0 md:w-1/3 md:justify-end">
-          <p className="text-xs text-gray-400">v0.4.1</p>
+          <p className="text-xs text-gray-400">v0.5.0</p>
         </div>
       </div>
-      <p className="text-right text-xs text-gray-400">v0.4.1</p>
+      <p className="text-right text-xs text-gray-400">v0.5.0</p>
     </footer>
   );
 }

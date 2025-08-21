@@ -7,7 +7,7 @@ export default function SearchBar({
   clinics = [],
   services = [],
   onSearchChange,
-  placeholder = 'enter a clinic name, location or procedure...',
+  placeholder = 'enter a clinic name, city or treatment...',
 }) {
   const [query, setQuery] = useState('');
   const [showSuggestions, setShowSuggestions] = useState(false);
