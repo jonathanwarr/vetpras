@@ -1,0 +1,7 @@
+@import 'tailwindcss';
+
+/* Enable smooth scrolling across the site */
+html,
+body {
+  scroll-behavior: smooth;
+}

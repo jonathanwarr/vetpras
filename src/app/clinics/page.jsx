@@ -1,0 +1,135 @@
+'use client';
+
+import { useEffect, useState } from 'react';
+import { supabase } from '@/lib/supabase';
+
+import ContainerConstrained from '@/components/layout/container-constrained';
+import Header from '@/components/layout/header';
+import Footer from '@/components/layout/footer';
+import ScrollToTop from '@/components/ui/scroll-to-top';
+
+import TableClinic from '@/components/clinics/table-clinic';
+import DrawerClinic from '@/components/clinics/drawer-clinic';
+import Pagination from '@/components/clinics/pagination';
+
+// New components
+import SearchBar from '@/components/search/search-bar';
+import SortFilterControls from '@/components/search/sort-filter-controls';
+
+export default function ClinicsPage() {
+  const [selectedClinic, setSelectedClinic] = useState(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchType, setSearchType] = useState('');
+  const [clinics, setClinics] = useState([]);
+  const [services, setServices] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalResults, setTotalResults] = useState(0);
+  const [sortOption, setSortOption] = useState('clinic-asc');
+  const [activeFilters, setActiveFilters] = useState({ exam: [], vaccine: [], rating: [] });
+
+  useEffect(() => {
+    async function fetchData() {
+      const [{ data: clinicList, error: clinicError }, { data: serviceList, error: serviceError }] =
+        await Promise.all([
+          supabase.from('vet_clinics').select('*'),
+          supabase
+            .from('vet_services')
+            .select('service, service_code, parent_code, sort_order')
+            .order('sort_order', { ascending: true }),
+        ]);
+
+      if (clinicError) {
+        console.error('[Supabase] Error loading clinics:', clinicError);
+      } else {
+        setClinics(clinicList || []);
+      }
+
+      if (serviceError) {
+        console.error('[Supabase] Error loading services:', serviceError);
+      } else {
+        setServices(serviceList || []);
+      }
+    }
+
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery, searchType, sortOption, activeFilters]);
+
+  const handleCloseDrawer = () => setSelectedClinic(null);
+
+  const handleSearchChange = ({ query, type }) => {
+    setSearchQuery(query);
+    setSearchType(type);
+  };
+
+  const handleSortChange = (newSort) => {
+    setSortOption(newSort);
+  };
+
+  const handleFilterChange = (filters) => {
+    setActiveFilters(filters);
+  };
+
+  return (
+    <div className="pt-12 pb-20 sm:pt-24 sm:pb-12">
+      <ContainerConstrained>
+        <div className="mb-10">
+          <h2 className="mt-20 mb-6 flex justify-center font-serif text-4xl font-semibold tracking-tight text-slate-900 sm:text-5xl lg:text-balance">
+            Find a Vet
+          </h2>
+          <p className="flex justify-center space-y-5 font-sans text-lg font-light text-slate-900">
+            Search for clinics by name, location, or the specific services your pet needs.
+          </p>
+          <p className="flex justify-center space-y-5 font-sans text-lg font-light text-slate-900">
+            Filter and sort results to find the perfect match for your requirements.
+          </p>
+        </div>
+
+        {/* New Search Bar */}
+        <div className="mb-6 flex justify-center pb-10">
+          <SearchBar clinics={clinics} services={services} onSearchChange={handleSearchChange} />
+        </div>
+
+        {/* Sort and Filter Controls */}
+        <div className="mb-6">
+          <SortFilterControls
+            clinics={clinics}
+            onSortChange={handleSortChange}
+            onFilterChange={handleFilterChange}
+          />
+        </div>
+      </ContainerConstrained>
+
+      <ContainerConstrained>
+        <TableClinic
+          onSelectClinic={setSelectedClinic}
+          searchQuery={searchQuery}
+          searchType={searchType}
+          sortOption={sortOption}
+          activeFilters={activeFilters}
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+          onTotalPages={setTotalPages}
+          onTotalResults={setTotalResults}
+          clinics={clinics}
+          services={services}
+        />
+        <div className="mt-15">
+          <Pagination
+            current={currentPage}
+            total={totalResults}
+            perPage={15}
+            onPrev={() => setCurrentPage(currentPage - 1)}
+            onNext={() => setCurrentPage(currentPage + 1)}
+          />
+        </div>
+      </ContainerConstrained>
+
+      <DrawerClinic clinic={selectedClinic} onClose={handleCloseDrawer} services={services} />
+    </div>
+  );
+}
