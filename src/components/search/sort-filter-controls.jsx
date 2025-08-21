@@ -270,9 +270,8 @@ export default function SortFilterControls({ onSortChange, onFilterChange, clini
         </div>
       )}
 
-      {/* Sort and filter controls */}
-      <div className="flex items-center gap-4">
-        {/* Sort dropdown */}
+      {/* Sort on its own line */}
+      <div className="flex items-center">
         <div ref={sortRef} className="relative">
           <button
             onClick={() => setSortOpen(!sortOpen)}
@@ -315,7 +314,10 @@ export default function SortFilterControls({ onSortChange, onFilterChange, clini
             </div>
           )}
         </div>
+      </div>
 
+      {/* Filter controls on their own line */}
+      <div className="flex items-center gap-4">
         {/* City filter */}
         <div ref={cityRef} className="relative">
           <button

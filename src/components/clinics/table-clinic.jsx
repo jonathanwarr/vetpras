@@ -190,7 +190,7 @@ export default function TableClinic({
 
   return (
     <div className="w-full">
-      <div className="overflow-x-auto">
+      <div className="w-full">
         <table className="divide-table-header-bg w-full table-fixed divide-y">
           <thead>
             <tr>

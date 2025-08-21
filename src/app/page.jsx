@@ -81,7 +81,7 @@ export default function ClinicsPage() {
           <h2 className="mt-20 mb-6 flex justify-center font-serif text-4xl font-semibold tracking-tight text-slate-900 sm:text-5xl lg:text-balance">
             Find a Vet
           </h2>
-          <p className="flex justify-center space-y-5 font-sans text-lg font-light text-slate-900">
+          <p className="flex justify-center space-y-5 font-sans text-lg font-light text-slate-900 text-center">
             Search for vets by clinic name, city or even treatment.
           </p>
         </div>
