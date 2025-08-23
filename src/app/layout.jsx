@@ -20,7 +20,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en" className={inter.className}>
-      <body className="bg-slate-50 text-gray-900 antialiased">
+      <body className="bg-white text-gray-900 antialiased">
         {/* Analytics & Tracking */}
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-4YY2JG7YNQ"

@@ -2,9 +2,9 @@
 
 import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
-import { submitBill } from '@/content/submit-bill';
 import UploadReceipt from '@/components/forms/upload-image';
 import SubmissionNotes from '@/components/forms/submission-notes';
+import SubmitBillEmail from '@/components/forms/submit-bill-email'; // Add this import
 import ButtonPrimary from '@/components/ui/button-primary';
 import FormError from '@/components/forms/form-error';
 import ModalSuccess from '@/components/ui/modal-success';
@@ -13,6 +13,7 @@ import DisclaimerBill from '@/components/forms/disclaimer-bill';
 
 export default function SubmitBillPage() {
   const [notes, setNotes] = useState('');
+  const [email, setEmail] = useState(''); // Add email state
   const [file, setFile] = useState(null);
 
   const [success, setSuccess] = useState(false);
@@ -56,6 +57,7 @@ export default function SubmitBillPage() {
 
     const payload = {
       image_url: fileData?.path ?? null,
+      email: email.trim() || null, // Add email to payload
       notes,
       submission_date: new Date().toISOString(),
       // add any other required columns here
@@ -74,6 +76,7 @@ export default function SubmitBillPage() {
     } else {
       setSuccess(true);
       setNotes('');
+      setEmail(''); // Reset email on success
       setFile(null);
     }
 
@@ -83,10 +86,9 @@ export default function SubmitBillPage() {
   return (
     <section className="mt-12 flex justify-center px-6 pt-8 pb-20 sm:px-10 sm:pt-24 sm:pb-24 md:px-16">
       <ContainerNarrow className="mt-8">
-        <p className="mb-6 flex justify-center font-serif text-4xl font-semibold tracking-tight text-slate-900 sm:text-5xl lg:text-balance">
-          Submit a Bill
+        <p className="mb-6 flex justify-center text-center font-serif text-4xl font-semibold tracking-tight text-slate-900 sm:text-5xl lg:text-balance">
+          Help Make Vet Costs Transparent
         </p>
-        <p className={submitBill.introClass}>{submitBill.intro}</p>
 
         <div className="mt-12 flex justify-center">
           <div className="w-full max-w-lg">
@@ -97,6 +99,11 @@ export default function SubmitBillPage() {
                   Receipt
                 </label>
                 <UploadReceipt file={file} setFile={setFile} />
+              </div>
+
+              {/* Add the email component here, between Receipt and Notes */}
+              <div className="w-full">
+                <SubmitBillEmail value={email} onChange={setEmail} />
               </div>
 
               <div className="w-full">

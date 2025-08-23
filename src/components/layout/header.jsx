@@ -27,7 +27,7 @@ export default function Header() {
         {/* Desktop Nav */}
         <nav className="hidden items-center space-x-10 font-sans text-xs font-bold text-slate-900 uppercase md:flex">
           <a href="/about-us" className="hover:text-blue-600">
-            About Us
+            Our Mission
           </a>
           <a href="/submit-bill" className="hover:text-blue-600">
             Submit a Bill
@@ -69,7 +69,7 @@ export default function Header() {
               className="hover:text-blue-600"
               onClick={() => setMobileMenuOpen(false)}
             >
-              About Us
+              Our Mission
             </a>
             <a
               href="/submit-bill"

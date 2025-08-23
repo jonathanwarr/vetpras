@@ -14,8 +14,21 @@ export default function PrivacyPolicyPage() {
               How We Handle Your Information
             </h2>
             <p>
-              At Vetpras, your privacy is important to us. We only collect the minimum information
-              necessary to support our mission of bringing clarity to pet care costs.
+              When you visit Vetpras.com, our servers automatically record technical information
+              about your visit. This may include your device’s IP address, browser type, time and
+              date of access, and referring webpage.
+            </p>
+            <br></br>
+            <p>
+              We use your IP address to help determine your approximate location so that we can show
+              you nearby veterinary clinics and improve your browsing experience.
+            </p>
+            <br></br>
+            <p>
+              Your IP address is considered personal information under Canadian law. We only use
+              this information for the legitimate business purpose of providing location-based
+              services. We do not use your IP address to personally identify you, nor do we share it
+              with third parties except as required to deliver our services or if mandated by law.
             </p>
           </section>
 
@@ -30,11 +43,10 @@ export default function PrivacyPolicyPage() {
                 We <strong>do not</strong> collect or store any personal information, such as pet
                 names, owner names, addresses, or contact details.
               </li>
+              <li>
+                Your email (if provided) is used <strong>solely</strong> for the monthly draw
+              </li>
             </ul>
-            <p className="mt-4">
-              We recommend <strong>blurring or covering</strong> any sensitive information before
-              uploading.
-            </p>
             <p className="mt-4">Submitted receipts are:</p>
             <ul className="mt-2 list-inside list-disc space-y-2">
               <li>Stored securely</li>
@@ -46,22 +58,9 @@ export default function PrivacyPolicyPage() {
                 <strong>Never shared</strong> with third parties
               </li>
             </ul>
-          </section>
-
-          <section>
-            <h2 className="mb-4 text-lg font-bold text-slate-900">Browsing and Using the Site</h2>
-            <p>When you browse Vetpras:</p>
-            <ul className="mt-2 list-inside list-disc space-y-2">
-              <li>We do not track or collect personally identifiable information.</li>
-              <li>We may collect anonymized analytics to help improve the experience.</li>
-            </ul>
-          </section>
-
-          <section>
-            <h2 className="mb-4 text-lg font-bold text-slate-900">Third-Party Services</h2>
-            <p>
-              We do not sell, share, or trade your data with third-party marketing platforms. Our
-              goal is to create a trusted, transparent community — not an ad-driven marketplace.
+            <p className="mt-4">
+              We recommend <strong>blurring or covering</strong> any sensitive information before
+              uploading.
             </p>
           </section>
         </div>

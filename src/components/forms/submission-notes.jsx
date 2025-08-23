@@ -22,7 +22,7 @@ export default function SubmissionNotes({ value, onChange }) {
             onChange(e.target.value);
           }
         }}
-        placeholder="Add any details about the service or custom name here..."
+        placeholder="If you wish to add any details about your pet's treatment or services, please do so here."
         className="w-full resize-none rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-800 placeholder:text-gray-400"
         style={{ height: '100px' }}
       />

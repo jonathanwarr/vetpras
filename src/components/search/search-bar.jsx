@@ -209,7 +209,7 @@ export default function SearchBar({
   }, [highlightedIndex]);
 
   return (
-    <div className="relative w-full" style={{ width: '30%', minWidth: '300px' }}>
+    <div className="relative w-full" style={{ width: '40%', minWidth: '300px' }}>
       <div className="relative">
         <MagnifyingGlassIcon
           className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2"
@@ -226,8 +226,8 @@ export default function SearchBar({
           placeholder={placeholder}
           className="w-full pr-3 pl-10 text-sm transition-all duration-200"
           style={{
-            height: '36px',
-            backgroundColor: '#F1F5F9',
+            height: '40px',
+            backgroundColor: '#F8FAFC',
             color: '#0F172B',
             border: `1px solid ${isFocused ? '#2C7FFF' : '#62748E'}`,
             borderRadius: '5px',

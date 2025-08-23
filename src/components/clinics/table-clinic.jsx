@@ -243,7 +243,7 @@ export default function TableClinic({
             {paginatedClinics.map((clinic) => (
               <tr
                 key={clinic.clinic_id}
-                className="group cursor-pointer text-slate-800 transition-colors odd:bg-slate-200 even:bg-slate-100 hover:bg-slate-300 active:bg-slate-300"
+                className="group cursor-pointer text-slate-800 transition-colors odd:bg-slate-100 even:bg-slate-50 hover:bg-slate-200 active:bg-slate-200"
               >
                 {/* Name + mobile stacked labels */}
                 <td
