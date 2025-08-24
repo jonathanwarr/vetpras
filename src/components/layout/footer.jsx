@@ -18,6 +18,12 @@ export default function Footer() {
           <a href="/privacy-policy" className="hover:text-primary text-sm text-gray-700 transition">
             Privacy Policy
           </a>
+          <a
+            href="/terms-and-conditions"
+            className="hover:text-primary text-sm text-gray-700 transition"
+          >
+            Terms and Conditions
+          </a>
         </div>
 
         {/* Right Column */}

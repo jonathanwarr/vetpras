@@ -11,7 +11,7 @@ export default function SubmitBillEmail({ value, onChange }) {
       </label>
       <p className="mb-2 text-xs text-gray-500">
         All bill submissions are entered for a monthly draw to win a $50 Doordash digital gift card.
-        In order to be eligible, users will need to provide an email.
+        In order to be eligible, users will need to provide an email. Terms and conditions apply.
       </p>
       <input
         type="email"
