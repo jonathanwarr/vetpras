@@ -10,6 +10,7 @@ import FormError from '@/components/forms/form-error';
 import ModalSuccess from '@/components/ui/modal-success';
 import ContainerNarrow from '@/components/layout/container-narrow';
 import DisclaimerBill from '@/components/forms/disclaimer-bill';
+import { Analytics } from '@vercel/analytics/next';
 
 export default function SubmitBillPage() {
   const [notes, setNotes] = useState('');

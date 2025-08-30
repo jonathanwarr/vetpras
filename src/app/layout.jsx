@@ -2,6 +2,7 @@
 
 import '@/styles/tailwind.css';
 import { Inter } from 'next/font/google';
+import { Analytics } from '@vercel/analytics/react';
 import Footer from '@/components/layout/footer';
 import Header from '@/components/layout/header';
 import ScrollToTop from '@/components/ui/scroll-to-top';
@@ -56,6 +57,9 @@ export default function RootLayout({ children }) {
           <Footer />
           <ScrollToTop />
         </SupabaseProvider>
+
+        {/* ✅ Vercel Analytics - placed at the end of body */}
+        <Analytics />
       </body>
     </html>
   );
