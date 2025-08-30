@@ -3,6 +3,8 @@ import { supabase } from '@/lib/supabase';
 import ContainerNarrow from '@/components/layout/container-narrow';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 async function getExplainer(slug) {
   const { data, error } = await supabase
@@ -156,10 +158,9 @@ export default async function ExplainerPage({ params }) {
               </div>
             )}
 
-            <div
-              className="prose prose-lg max-w-none"
-              dangerouslySetInnerHTML={{ __html: explainer.content }}
-            />
+            <div className="prose prose-lg prose-headings:font-serif prose-a:text-blue-600 max-w-none">
+              <ReactMarkdown remarkPlugins={[remarkGfm]}>{explainer.content || ''}</ReactMarkdown>
+            </div>
           </div>
 
           {/* Key Takeaways */}

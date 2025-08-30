@@ -3,6 +3,8 @@ import { supabase } from '@/lib/supabase';
 import ContainerConstrained from '@/components/layout/container-constrained';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 async function getPriceGuide(slug) {
   const { data, error } = await supabase
@@ -116,11 +118,11 @@ export default async function PriceGuidePage({ params }) {
 
           {/* Main Content */}
           <div className="mx-auto max-w-4xl">
+            {/* Main Content */}
             {guide.content && (
-              <div
-                className="prose prose-lg mb-12 max-w-none"
-                dangerouslySetInnerHTML={{ __html: guide.content }}
-              />
+              <div className="prose prose-lg prose-headings:font-serif prose-a:text-blue-600 mb-12 max-w-none">
+                <ReactMarkdown remarkPlugins={[remarkGfm]}>{guide.content}</ReactMarkdown>
+              </div>
             )}
 
             {/* Cost Factors Section */}

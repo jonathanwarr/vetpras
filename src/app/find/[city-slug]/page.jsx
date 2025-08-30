@@ -3,6 +3,8 @@ import { supabase } from '@/lib/supabase';
 import ContainerConstrained from '@/components/layout/container-constrained';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 async function getCityHub(slug) {
   const { data, error } = await supabase
@@ -80,10 +82,9 @@ export default async function CityHubPage({ params }) {
         {/* Main Content */}
         {hub.content && (
           <div className="mx-auto mb-12 max-w-4xl">
-            <div
-              className="prose prose-lg max-w-none"
-              dangerouslySetInnerHTML={{ __html: hub.content }}
-            />
+            <div className="prose prose-lg prose-headings:font-serif prose-a:text-blue-600 max-w-none">
+              <ReactMarkdown remarkPlugins={[remarkGfm]}>{hub.content}</ReactMarkdown>
+            </div>
           </div>
         )}
 

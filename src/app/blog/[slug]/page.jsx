@@ -3,6 +3,8 @@ import { supabase } from '@/lib/supabase';
 import ContainerNarrow from '@/components/layout/container-narrow';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 async function getPost(slug) {
   const { data, error } = await supabase
@@ -120,11 +122,10 @@ export default async function BlogPostPage({ params }) {
             </div>
           )}
 
-          {/* Article Content */}
-          <div
-            className="prose prose-lg max-w-none"
-            dangerouslySetInnerHTML={{ __html: post.content }}
-          />
+          {/* Article Content - Now using ReactMarkdown */}
+          <div className="prose prose-lg prose-headings:font-serif prose-h1:text-3xl prose-h2:text-2xl prose-h3:text-xl prose-p:text-gray-700 prose-a:text-blue-600 prose-strong:text-gray-900 max-w-none">
+            <ReactMarkdown remarkPlugins={[remarkGfm]}>{post.content || ''}</ReactMarkdown>
+          </div>
 
           {/* FAQ Section */}
           {post.faq_content?.questions && post.faq_content.questions.length > 0 && (
