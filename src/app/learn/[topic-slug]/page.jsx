@@ -34,17 +34,81 @@ export async function generateMetadata({ params }) {
   if (!explainer) {
     return {
       title: 'Topic Not Found | Vetpras',
+      description: 'The requested educational guide could not be found.',
     };
   }
 
+  const baseUrl = 'https://vetpras.com';
+  const canonicalUrl = `${baseUrl}/learn/${params['topic-slug']}`;
+
+  const description =
+    explainer.meta_description ||
+    explainer.excerpt ||
+    `Learn about ${explainer.title}. Expert guidance on pet care, veterinary procedures, and making informed decisions for your pet's health.`;
+
   return {
-    title: `${explainer.title} | Vetpras`,
-    description: explainer.meta_description || explainer.excerpt,
+    title: `${explainer.title} - Pet Care Guide | Vetpras`,
+    description: description,
     keywords: explainer.target_keywords?.join(', '),
+    authors: [{ name: explainer.author || 'Vetpras Team' }],
+
+    // Open Graph
     openGraph: {
-      title: explainer.title,
-      description: explainer.excerpt,
-      images: explainer.featured_image ? [explainer.featured_image] : [],
+      title: `${explainer.title} - Educational Guide`,
+      description: description,
+      url: canonicalUrl,
+      siteName: 'Vetpras',
+      type: 'article',
+      publishedTime: explainer.published_date,
+      modifiedTime: explainer.updated_at,
+      authors: [explainer.author || 'Vetpras Team'],
+      images: explainer.featured_image
+        ? [
+            {
+              url: explainer.featured_image,
+              width: 1200,
+              height: 630,
+              alt: `${explainer.title} Guide`,
+            },
+          ]
+        : [
+            {
+              url: `${baseUrl}/images/vetpras-og-learn.jpg`,
+              width: 1200,
+              height: 630,
+              alt: 'Vetpras Learning Center',
+            },
+          ],
+      locale: 'en_CA',
+    },
+
+    // Twitter Card
+    twitter: {
+      card: 'summary_large_image',
+      title: `${explainer.title} Guide`,
+      description: description,
+      images: explainer.featured_image
+        ? [explainer.featured_image]
+        : [`${baseUrl}/images/vetpras-og-learn.jpg`],
+      creator: '@vetpras',
+      site: '@vetpras',
+    },
+
+    // Other important meta
+    alternates: {
+      canonical: canonicalUrl,
+    },
+
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        'max-video-preview': -1,
+        'max-image-preview': 'large',
+        'max-snippet': -1,
+      },
     },
   };
 }
@@ -81,9 +145,143 @@ export default async function ExplainerPage({ params }) {
     );
   };
 
+  // Render HowTo Schema for educational content
+  const renderHowToSchema = () => {
+    const schema = {
+      '@context': 'https://schema.org',
+      '@type': 'HowTo',
+      name: explainer.title,
+      description: explainer.meta_description || explainer.excerpt,
+      image: explainer.featured_image,
+      author: {
+        '@type': 'Organization',
+        name: 'Vetpras',
+      },
+      datePublished: explainer.published_date,
+      dateModified: explainer.updated_at || explainer.published_date,
+      supply: [
+        {
+          '@type': 'HowToSupply',
+          name: 'Understanding of veterinary costs',
+        },
+        {
+          '@type': 'HowToSupply',
+          name: 'Knowledge of pet care options',
+        },
+      ],
+      tool: [
+        {
+          '@type': 'HowToTool',
+          name: 'Vetpras clinic search',
+        },
+      ],
+      step: [
+        {
+          '@type': 'HowToStep',
+          name: 'Understand the basics',
+          text: 'Learn fundamental concepts about this pet care topic',
+        },
+        {
+          '@type': 'HowToStep',
+          name: 'Compare options',
+          text: 'Review different approaches and their costs',
+        },
+        {
+          '@type': 'HowToStep',
+          name: 'Make informed decisions',
+          text: 'Use your knowledge to choose the best care for your pet',
+        },
+      ],
+    };
+
+    return (
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+      />
+    );
+  };
+
+  // Render Article Schema
+  const renderArticleSchema = () => {
+    const schema = {
+      '@context': 'https://schema.org',
+      '@type': 'Article',
+      headline: explainer.title,
+      description: explainer.excerpt || explainer.meta_description,
+      image: explainer.featured_image ? [explainer.featured_image] : undefined,
+      author: {
+        '@type': 'Person',
+        name: explainer.author || 'Vetpras Team',
+      },
+      publisher: {
+        '@type': 'Organization',
+        name: 'Vetpras',
+        logo: {
+          '@type': 'ImageObject',
+          url: 'https://vetpras.com/images/vetpras-logo.svg',
+        },
+      },
+      datePublished: explainer.published_date,
+      dateModified: explainer.updated_at || explainer.published_date,
+      mainEntityOfPage: {
+        '@type': 'WebPage',
+        '@id': `https://vetpras.com/learn/${explainer.slug}`,
+      },
+      keywords: explainer.target_keywords?.join(', '),
+      educationalLevel: 'beginner',
+      learningResourceType: 'guide',
+    };
+
+    return (
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+      />
+    );
+  };
+
+  // Render BreadcrumbList Schema
+  const renderBreadcrumbSchema = () => {
+    const schema = {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        {
+          '@type': 'ListItem',
+          position: 1,
+          name: 'Home',
+          item: 'https://vetpras.com',
+        },
+        {
+          '@type': 'ListItem',
+          position: 2,
+          name: 'Learning Center',
+          item: 'https://vetpras.com/learn',
+        },
+        {
+          '@type': 'ListItem',
+          position: 3,
+          name: explainer.title,
+          item: `https://vetpras.com/learn/${explainer.slug}`,
+        },
+      ],
+    };
+
+    return (
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+      />
+    );
+  };
+
   return (
     <>
       {renderFAQSchema()}
+      {renderHowToSchema()}
+      {renderArticleSchema()}
+      {renderBreadcrumbSchema()}
       <article className="min-h-screen bg-white pt-24 pb-16">
         <ContainerNarrow>
           {/* Header */}

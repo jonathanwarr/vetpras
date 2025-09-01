@@ -33,17 +33,83 @@ export async function generateMetadata({ params }) {
   if (!post) {
     return {
       title: 'Post Not Found | Vetpras',
+      description: 'The requested blog post could not be found.',
     };
   }
 
+  const baseUrl = 'https://vetpras.com'; // Update with your actual domain
+  const canonicalUrl = `${baseUrl}/blog/${params.slug}`;
+
+  // Generate a clean excerpt if not provided
+  const description =
+    post.meta_description ||
+    post.excerpt ||
+    (post.content ? post.content.substring(0, 160).replace(/[#*\n]/g, '') + '...' : '');
+
   return {
-    title: `${post.title} | Vetpras`,
-    description: post.meta_description || post.excerpt,
+    title: `${post.title} | Vetpras Blog`,
+    description: description,
     keywords: post.target_keywords?.join(', '),
+    authors: [{ name: post.author || 'Vetpras Team' }],
+
+    // Open Graph
     openGraph: {
       title: post.title,
-      description: post.excerpt,
-      images: post.featured_image ? [post.featured_image] : [],
+      description: description,
+      url: canonicalUrl,
+      siteName: 'Vetpras',
+      type: 'article',
+      publishedTime: post.published_date,
+      modifiedTime: post.updated_at,
+      authors: [post.author || 'Vetpras Team'],
+      images: post.featured_image
+        ? [
+            {
+              url: post.featured_image,
+              width: 1200,
+              height: 630,
+              alt: post.title,
+            },
+          ]
+        : [
+            {
+              url: `${baseUrl}/images/vetpras-og-default.jpg`, // Create a default OG image
+              width: 1200,
+              height: 630,
+              alt: 'Vetpras - Transparent Vet Pricing',
+            },
+          ],
+      locale: 'en_CA',
+    },
+
+    // Twitter Card
+    twitter: {
+      card: 'summary_large_image',
+      title: post.title,
+      description: description,
+      images: post.featured_image
+        ? [post.featured_image]
+        : [`${baseUrl}/images/vetpras-og-default.jpg`],
+      creator: '@vetpras', // Add your Twitter handle
+      site: '@vetpras',
+    },
+
+    // Other important meta
+    alternates: {
+      canonical: canonicalUrl,
+    },
+
+    robots: {
+      index: true,
+      follow: true,
+      nocache: false,
+      googleBot: {
+        index: true,
+        follow: true,
+        'max-video-preview': -1,
+        'max-image-preview': 'large',
+        'max-snippet': -1,
+      },
     },
   };
 }
@@ -80,9 +146,83 @@ export default async function BlogPostPage({ params }) {
     );
   };
 
+  // Render Article Schema for SEO
+  const renderArticleSchema = () => {
+    const schema = {
+      '@context': 'https://schema.org',
+      '@type': 'Article',
+      headline: post.title,
+      description: post.excerpt || post.meta_description,
+      image: post.featured_image ? [post.featured_image] : undefined,
+      author: {
+        '@type': 'Person',
+        name: post.author || 'Vetpras Team',
+      },
+      publisher: {
+        '@type': 'Organization',
+        name: 'Vetpras',
+        logo: {
+          '@type': 'ImageObject',
+          url: 'https://vetpras.com/images/vetpras-logo.svg',
+        },
+      },
+      datePublished: post.published_date,
+      dateModified: post.updated_at || post.published_date,
+      mainEntityOfPage: {
+        '@type': 'WebPage',
+        '@id': `https://vetpras.com/blog/${post.slug}`,
+      },
+      keywords: post.target_keywords?.join(', '),
+    };
+
+    return (
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+      />
+    );
+  };
+
+  // Render BreadcrumbList Schema
+  const renderBreadcrumbSchema = () => {
+    const schema = {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        {
+          '@type': 'ListItem',
+          position: 1,
+          name: 'Home',
+          item: 'https://vetpras.com',
+        },
+        {
+          '@type': 'ListItem',
+          position: 2,
+          name: 'Blog',
+          item: 'https://vetpras.com/blog',
+        },
+        {
+          '@type': 'ListItem',
+          position: 3,
+          name: post.title,
+          item: `https://vetpras.com/blog/${post.slug}`,
+        },
+      ],
+    };
+
+    return (
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+      />
+    );
+  };
+
   return (
     <>
       {renderFAQSchema()}
+      {renderArticleSchema()}
+      {renderBreadcrumbSchema()}
       <article className="min-h-screen bg-white pt-24 pb-16">
         <ContainerNarrow>
           {/* Article Header */}
