@@ -1,0 +1,182 @@
+// src/components/blog/blog-post-layout.jsx
+import Link from 'next/link';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import { CheckCircleIcon, InformationCircleIcon } from '@heroicons/react/20/solid';
+import ContainerNarrow from '@/components/layout/container-narrow';
+
+export default function BlogPostLayout({
+  post,
+  backLink = '/blog',
+  backLinkText = 'Back to Blog',
+  contentType = 'blog',
+}) {
+  // Enhanced markdown components for better typography
+  const markdownComponents = {
+    h1: ({ children }) => (
+      <h1 className="mt-16 text-4xl font-semibold tracking-tight text-pretty text-gray-900">
+        {children}
+      </h1>
+    ),
+    h2: ({ children }) => (
+      <h2 className="mt-16 text-3xl font-semibold tracking-tight text-pretty text-gray-900">
+        {children}
+      </h2>
+    ),
+    h3: ({ children }) => (
+      <h3 className="mt-8 text-2xl font-semibold tracking-tight text-gray-900">{children}</h3>
+    ),
+    p: ({ children }) => <p className="mt-6 text-gray-600">{children}</p>,
+    ul: ({ children }) => (
+      <ul role="list" className="mt-8 max-w-xl space-y-8 text-gray-600">
+        {children}
+      </ul>
+    ),
+    li: ({ children }) => (
+      <li className="flex gap-x-3">
+        <CheckCircleIcon aria-hidden="true" className="mt-1 size-5 flex-none text-indigo-600" />
+        <span>{children}</span>
+      </li>
+    ),
+    blockquote: ({ children }) => (
+      <figure className="mt-10 border-l border-indigo-600 pl-9">
+        <blockquote className="font-semibold text-gray-900">{children}</blockquote>
+      </figure>
+    ),
+    img: ({ src, alt }) => (
+      <figure className="mt-16">
+        <img
+          src={src}
+          alt={alt || ''}
+          className="aspect-video rounded-xl bg-gray-50 object-cover"
+        />
+        {alt && (
+          <figcaption className="mt-4 flex gap-x-2 text-sm/6 text-gray-500">
+            <InformationCircleIcon
+              aria-hidden="true"
+              className="mt-0.5 size-5 flex-none text-gray-300"
+            />
+            {alt}
+          </figcaption>
+        )}
+      </figure>
+    ),
+    a: ({ href, children }) => (
+      <Link href={href || '#'} className="font-semibold text-indigo-600 hover:text-indigo-500">
+        {children}
+      </Link>
+    ),
+    strong: ({ children }) => <strong className="font-semibold text-gray-900">{children}</strong>,
+  };
+
+  const formatDate = (date) => {
+    return new Date(date).toLocaleDateString('en-CA', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    });
+  };
+
+  return (
+    <article className="bg-white px-6 py-32 lg:px-8">
+      <div className="mx-auto max-w-3xl text-base/7 text-gray-700">
+        {/* Back Link */}
+        <div className="mb-8">
+          <Link
+            href={backLink}
+            className="text-sm font-semibold text-indigo-600 hover:text-indigo-500"
+          >
+            ← {backLinkText}
+          </Link>
+        </div>
+
+        {/* Category Badge */}
+        {contentType && (
+          <p className="text-base/7 font-semibold text-indigo-600">
+            {contentType === 'city_hub'
+              ? 'City Guide'
+              : contentType === 'price_guide'
+                ? 'Cost Guide'
+                : contentType === 'explainer'
+                  ? 'Educational'
+                  : 'Article'}
+          </p>
+        )}
+
+        {/* Title */}
+        <h1 className="mt-2 text-4xl font-semibold tracking-tight text-pretty text-gray-900 sm:text-5xl">
+          {post.title}
+        </h1>
+
+        {/* Excerpt/Lead */}
+        {(post.excerpt || post.meta_description) && (
+          <p className="mt-6 text-xl/8">{post.excerpt || post.meta_description}</p>
+        )}
+
+        {/* Meta Information */}
+        <div className="mt-6 flex items-center gap-x-4 text-xs text-gray-500">
+          <span>By {post.author || 'Vetpras Team'}</span>
+          <span>•</span>
+          <time dateTime={post.published_date}>{formatDate(post.published_date)}</time>
+          {post.view_count > 0 && (
+            <>
+              <span>•</span>
+              <span>{post.view_count.toLocaleString()} views</span>
+            </>
+          )}
+        </div>
+
+        {/* Featured Image */}
+        {post.featured_image && (
+          <figure className="mt-10">
+            <img
+              src={post.featured_image}
+              alt={post.title}
+              className="aspect-video rounded-xl bg-gray-50 object-cover"
+            />
+          </figure>
+        )}
+
+        {/* Main Content */}
+        <div className="mt-10 max-w-2xl">
+          <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents}>
+            {post.content || ''}
+          </ReactMarkdown>
+        </div>
+
+        {/* FAQ Section */}
+        {post.faq_content?.questions && post.faq_content.questions.length > 0 && (
+          <div className="mt-16 border-t border-gray-200 pt-16">
+            <h2 className="text-3xl font-semibold tracking-tight text-pretty text-gray-900">
+              Frequently Asked Questions
+            </h2>
+            <div className="mt-10 space-y-8">
+              {post.faq_content.questions.map((item, index) => (
+                <div key={index}>
+                  <h3 className="text-lg font-semibold text-gray-900">{item.q}</h3>
+                  <p className="mt-2 text-gray-600">{item.a}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Internal Links */}
+        {post.internal_links && post.internal_links.length > 0 && (
+          <div className="mt-16 rounded-lg bg-gray-50 p-8">
+            <h3 className="text-lg font-semibold text-gray-900">Related Resources</h3>
+            <ul className="mt-4 space-y-3">
+              {post.internal_links.map((link, index) => (
+                <li key={index}>
+                  <Link href={link} className="font-medium text-indigo-600 hover:text-indigo-500">
+                    {link.replace(/^\//, '').replace(/-/g, ' ').replace(/\//g, ' → ')}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </div>
+    </article>
+  );
+}
