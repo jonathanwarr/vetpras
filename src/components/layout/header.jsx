@@ -75,7 +75,7 @@ export default function Header() {
               Our Mission
             </a>
             <a
-              href="/submit-bill"
+              href="/blog"
               className="hover:text-blue-600"
               onClick={() => setMobileMenuOpen(false)}
             >
