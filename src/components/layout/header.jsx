@@ -29,6 +29,9 @@ export default function Header() {
           <a href="/about-us" className="hover:text-blue-600">
             Our Mission
           </a>
+          <a href="/blog" className="hover:text-blue-600">
+            Blog
+          </a>
           <a href="/submit-bill" className="hover:text-blue-600">
             Submit a Bill
           </a>
@@ -70,6 +73,13 @@ export default function Header() {
               onClick={() => setMobileMenuOpen(false)}
             >
               Our Mission
+            </a>
+            <a
+              href="/submit-bill"
+              className="hover:text-blue-600"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              Blog
             </a>
             <a
               href="/submit-bill"
