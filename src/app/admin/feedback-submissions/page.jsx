@@ -15,6 +15,7 @@ export default function AdminFeedbackSubmissions() {
   const [feedback, setFeedback] = useState([]);
   const [markedReviewed, setMarkedReviewed] = useState([]);
   const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
   const perPage = 10;
 
   // 🔐 Load session manually and check admin
@@ -51,22 +52,27 @@ export default function AdminFeedbackSubmissions() {
     if (!ready || !session) return;
 
     const fetchFeedback = async () => {
-      const { data, error } = await supabase
+      const from = (page - 1) * perPage;
+      const to = from + perPage - 1;
+
+      const { data, error, count } = await supabase
         .from('feedback_submissions')
-        .select('*')
-        .order('submitted_at', { ascending: false });
+        .select('*', { count: 'exact' })
+        .order('submitted_at', { ascending: false })
+        .range(from, to);
 
       if (error) {
         console.error('[🔥 Supabase Error]', error.message);
       } else {
         setFeedback(data || []);
+        setTotalPages(Math.ceil((count || 0) / perPage));
       }
     };
 
     fetchFeedback();
     const stored = localStorage.getItem('feedbackReviewed');
     setMarkedReviewed(stored ? JSON.parse(stored) : []);
-  }, [ready, session]);
+  }, [ready, session, page]);
 
   const handleMarkReviewed = (id) => {
     const updated = [...markedReviewed, id];
@@ -75,8 +81,6 @@ export default function AdminFeedbackSubmissions() {
   };
 
   const formatDate = (iso) => new Date(iso).toLocaleDateString();
-  const totalPages = Math.ceil(feedback.length / perPage);
-  const currentPageData = feedback.slice((page - 1) * perPage, page * perPage);
 
   if (!ready) {
     return (
@@ -90,11 +94,11 @@ export default function AdminFeedbackSubmissions() {
     <ContainerConstrained className="pt-[200px]">
       <h1 className="text-h2 font-playfair text-heading-1 mb-4">Feedback Submissions</h1>
 
-      {currentPageData.length === 0 ? (
+      {feedback.length === 0 ? (
         <p className="text-sm text-gray-500">No feedback submissions found.</p>
       ) : (
         <div className="space-y-6">
-          {currentPageData.map((item) => {
+          {feedback.map((item) => {
             const isReviewed = markedReviewed.includes(item.id);
 
             return (

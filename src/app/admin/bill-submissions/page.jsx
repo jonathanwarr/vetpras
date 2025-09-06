@@ -17,6 +17,7 @@ export default function AdminBillSubmissions() {
   const [services, setServices] = useState([]);
   const [markedIds, setMarkedIds] = useState([]);
   const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
   const perPage = 10;
 
   // 🔐 Load session manually and check admin
@@ -53,21 +54,27 @@ export default function AdminBillSubmissions() {
     if (!ready || !session) return;
 
     const fetchData = async () => {
+      const from = (page - 1) * perPage;
+      const to = from + perPage - 1;
+
       const [
-        { data: pendingData, error: pendingError },
+        { data: pendingData, error: pendingError, count: pendingCount },
         { data: clinicData, error: clinicError },
         { data: serviceData, error: serviceError },
       ] = await Promise.all([
         supabase
           .from('bill_submissions_pending')
-          .select('*')
-          .order('submitted_at', { ascending: false }),
+          .select('*', { count: 'exact' })
+          .order('submitted_at', { ascending: false })
+          .range(from, to),
         supabase.from('clinics').select('clinic_id, clinic_name'),
         supabase.from('services').select('service_code, service'),
       ]);
 
-      if (!pendingError) setSubmissions(pendingData || []);
-      else console.error('[🔥 ERROR] Fetching bills:', pendingError);
+      if (!pendingError) {
+        setSubmissions(pendingData || []);
+        setTotalPages(Math.ceil((pendingCount || 0) / perPage));
+      } else console.error('[🔥 ERROR] Fetching bills:', pendingError);
 
       if (!clinicError) setClinics(clinicData || []);
       else console.error('[🔥 ERROR] Fetching clinics:', clinicError);
@@ -79,12 +86,10 @@ export default function AdminBillSubmissions() {
     fetchData();
     const saved = localStorage.getItem('markedAdded');
     setMarkedIds(saved ? JSON.parse(saved) : []);
-  }, [ready, session]);
+  }, [ready, session, page]);
 
   const getClinicName = (id) => clinics.find((c) => c.clinic_id === id)?.clinic_name || id;
   const formatDate = (iso) => new Date(iso).toLocaleDateString();
-  const totalPages = Math.ceil(submissions.length / perPage);
-  const currentPageData = submissions.slice((page - 1) * perPage, page * perPage);
 
   const handleMarkAsAdded = (id) => {
     const updated = [...markedIds, id];
@@ -104,11 +109,11 @@ export default function AdminBillSubmissions() {
     <ContainerConstrained className="pt-[200px]">
       <h1 className="text-h2 font-playfair text-heading-1 mb-4">Pending Bill Submissions</h1>
 
-      {currentPageData.length === 0 ? (
+      {submissions.length === 0 ? (
         <p className="text-sm text-gray-500">No pending submissions found.</p>
       ) : (
         <div className="space-y-6">
-          {currentPageData.map((sub) => {
+          {submissions.map((sub) => {
             const isMarked = markedIds.includes(sub.id);
 
             return (
