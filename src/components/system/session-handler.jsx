@@ -3,6 +3,7 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
+import { logger } from '@/lib/utils/logger';
 
 export default function SessionHandler() {
   const router = useRouter();
@@ -22,7 +23,7 @@ export default function SessionHandler() {
         if (error) {
           console.error('❌ setSession error:', error.message);
         } else {
-          console.log('✅ Session saved to Supabase');
+          logger.log('✅ Session saved to Supabase');
           router.replace('/admin/dashboard');
         }
       });

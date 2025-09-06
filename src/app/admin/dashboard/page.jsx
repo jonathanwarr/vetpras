@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase';
 import { useRouter } from 'next/navigation';
+import { logger } from '@/lib/utils/logger';
 
 export default function AdminDashboardPage() {
   const [session, setSession] = useState(null);
@@ -27,21 +28,21 @@ export default function AdminDashboardPage() {
     if (!ready) return;
 
     if (!session) {
-      console.log('❌ No session, redirecting to login');
+      logger.log('❌ No session, redirecting to login');
       router.replace('/admin/login');
       return;
     }
 
     const user = session.user;
-    console.log('👤 Logged in as:', user?.email);
+    logger.log('👤 Logged in as:', user?.email);
 
     const isAdmin =
       user?.email === 'jonathan.e.g.warr@gmail.com' || user?.email === 'negamiri@gmail.com';
 
-    console.log('🛡 isAdmin:', isAdmin);
+    logger.log('🛡 isAdmin:', isAdmin);
 
     if (!isAdmin) {
-      console.log('🚫 Not admin, redirecting to /');
+      logger.log('🚫 Not admin, redirecting to /');
       router.replace('/');
     }
   }, [ready, session, router]);

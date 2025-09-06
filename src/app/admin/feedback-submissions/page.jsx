@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import ContainerConstrained from '@/components/layout/container-constrained';
 import Pagination from '@/components/clinics/pagination';
+import { logger } from '@/lib/utils/logger';
 
 export default function AdminFeedbackSubmissions() {
   const router = useRouter();
@@ -26,19 +27,19 @@ export default function AdminFeedbackSubmissions() {
       setReady(true);
 
       if (!currentSession) {
-        console.log('❌ No session, redirecting to login');
+        logger.log('❌ No session, redirecting to login');
         router.replace('/admin/login');
         return;
       }
 
       const user = currentSession.user;
-      console.log('👤 Logged in as:', user?.email);
+      logger.log('👤 Logged in as:', user?.email);
       const isAdmin =
         user?.email === 'jonathan.e.g.warr@gmail.com' || user?.email === 'negamiri@gmail.com';
 
-      console.log('🛡 isAdmin:', isAdmin);
+      logger.log('🛡 isAdmin:', isAdmin);
       if (!isAdmin) {
-        console.log('🚫 Not admin, redirecting to /');
+        logger.log('🚫 Not admin, redirecting to /');
         router.replace('/');
       }
     };
