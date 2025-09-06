@@ -123,7 +123,9 @@ export default function AdminFeedbackSubmissions() {
                 {item.context_data?.image_url ? (
                   <p className="mb-2 text-xs">
                     <a
-                      href={`https://nerlrwamwlhnkacxredz.supabase.co/storage/v1/object/public/receipts/${item.context_data.image_url}`}
+                      href={supabase.storage
+                        .from('receipts')
+                        .getPublicUrl(item.context_data.image_url).data.publicUrl}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-blue-600 underline"

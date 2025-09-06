@@ -6,6 +6,8 @@ import { notFound } from 'next/navigation';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+
 async function getCityHub(slug) {
   const { data, error } = await supabase
     .from('blog_posts')
@@ -55,7 +57,6 @@ export async function generateMetadata({ params }) {
     };
   }
 
-  const baseUrl = 'https://vetpras.com';
   const canonicalUrl = hub.canonical_url || `${baseUrl}/find/${params['city-slug']}`;
 
   // Format city name for display
@@ -129,7 +130,6 @@ export async function generateMetadata({ params }) {
 
 // Generate JSON-LD structured data for local SEO
 function generateStructuredData(hub, slug) {
-  const baseUrl = 'https://vetpras.com';
   const cityName = hub.target_city || hub.title.replace(' Veterinarians', '').replace(' Vets', '');
   const provinceName = hub.target_province ? provinceNames[hub.target_province] : '';
   const fullLocation = provinceName ? `${cityName}, ${provinceName}` : cityName;

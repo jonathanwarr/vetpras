@@ -3,6 +3,8 @@ import { supabase } from '@/lib/supabase';
 import ContainerConstrained from '@/components/layout/container-constrained';
 import Link from 'next/link';
 
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+
 export const metadata = {
   title: 'Veterinary Cost Guides | Pet Care Pricing in Canada | Vetpras',
   description:
@@ -11,7 +13,7 @@ export const metadata = {
     title: 'Veterinary Cost Guides - Transparent Pet Care Pricing',
     description:
       'Complete pricing guides for veterinary services including vaccinations, surgeries, dental care, and emergency visits.',
-    url: 'https://vetpras.com/cost',
+    url: `${baseUrl}/cost`,
     siteName: 'Vetpras',
     type: 'website',
     locale: 'en_CA',

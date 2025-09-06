@@ -6,6 +6,8 @@ import { notFound } from 'next/navigation';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+
 async function getExplainer(slug) {
   const { data, error } = await supabase
     .from('blog_posts')
@@ -38,7 +40,6 @@ export async function generateMetadata({ params }) {
     };
   }
 
-  const baseUrl = 'https://vetpras.com';
   const canonicalUrl = `${baseUrl}/learn/${params['topic-slug']}`;
 
   const description =
@@ -219,14 +220,14 @@ export default async function ExplainerPage({ params }) {
         name: 'Vetpras',
         logo: {
           '@type': 'ImageObject',
-          url: 'https://vetpras.com/images/vetpras-logo.svg',
+          url: `${baseUrl}/images/vetpras-logo.svg`,
         },
       },
       datePublished: explainer.published_date,
       dateModified: explainer.updated_at || explainer.published_date,
       mainEntityOfPage: {
         '@type': 'WebPage',
-        '@id': `https://vetpras.com/learn/${explainer.slug}`,
+        '@id': `${baseUrl}/learn/${explainer.slug}`,
       },
       keywords: explainer.target_keywords?.join(', '),
       educationalLevel: 'beginner',
@@ -251,19 +252,19 @@ export default async function ExplainerPage({ params }) {
           '@type': 'ListItem',
           position: 1,
           name: 'Home',
-          item: 'https://vetpras.com',
+          item: baseUrl,
         },
         {
           '@type': 'ListItem',
           position: 2,
           name: 'Learning Center',
-          item: 'https://vetpras.com/learn',
+          item: `${baseUrl}/learn`,
         },
         {
           '@type': 'ListItem',
           position: 3,
           name: explainer.title,
-          item: `https://vetpras.com/learn/${explainer.slug}`,
+          item: `${baseUrl}/learn/${explainer.slug}`,
         },
       ],
     };

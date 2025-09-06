@@ -3,6 +3,8 @@ import { supabase } from '@/lib/supabase';
 import ContainerConstrained from '@/components/layout/container-constrained';
 import Link from 'next/link';
 
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+
 export const metadata = {
   title: 'Blog | Vetpras',
   description:
@@ -11,7 +13,7 @@ export const metadata = {
     title: 'Vetpras Blog - Pet Care Insights & Veterinary Resources',
     description:
       'Stay informed with our latest articles on pet health, veterinary costs, and making the best decisions for your pet.',
-    url: 'https://vetpras.com/blog',
+    url: `${baseUrl}/blog`,
     siteName: 'Vetpras',
     type: 'website',
     locale: 'en_CA',

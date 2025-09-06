@@ -7,6 +7,8 @@ export const metadata = {
     'Official Rules for the Vetpras Monthly Draw (Canada, excluding Quebec unless a full French version is published).',
 };
 
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+
 export default function MonthlyDrawTermsPage() {
   return (
     <div className="pt-24 pb-16">
@@ -67,7 +69,7 @@ export default function MonthlyDrawTermsPage() {
               <li>
                 During a Monthly Entry Period, submit an itemized veterinary bill for{' '}
                 <strong>dog</strong> care via{' '}
-                <span className="whitespace-nowrap">[https://www.vetpras.com/submit-bill]</span> or
+                <span className="whitespace-nowrap">[{`${baseUrl}/submit-bill`}]</span> or
                 the in-app flow.
               </li>
               <li>
@@ -88,7 +90,7 @@ export default function MonthlyDrawTermsPage() {
             <ul className="mt-2 list-inside list-disc space-y-2">
               <li>
                 During a Monthly Entry Period, visit{' '}
-                <span className="whitespace-nowrap">[https://www.vetpras.com/submit-bill]</span> and
+                <span className="whitespace-nowrap">[{`${baseUrl}/submit-bill`}]</span> and
                 submit your full name, mailing address, email, and a short statement (25–50 words)
                 about your dog.
               </li>
