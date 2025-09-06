@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSession } from '@supabase/auth-helpers-react';
 import { supabase } from '@/lib/supabase';
+import { isAdmin } from '@/lib/is-admin';
 
 export default function AdminLoginPage() {
   const router = useRouter();
@@ -15,9 +16,9 @@ export default function AdminLoginPage() {
   // 🚀 If user is already logged in and admin, send them to the dashboard
   useEffect(() => {
     const user = session?.user;
-    const isAdmin = user?.email === 'you@example.com' || user?.email === 'negar@example.com';
+    const isAdminUser = isAdmin(user);
 
-    if (session && isAdmin) {
+    if (session && isAdminUser) {
       router.push('/admin/dashboard');
     }
   }, [session, router]);

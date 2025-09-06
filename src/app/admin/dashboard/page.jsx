@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase';
+import { isAdmin } from '@/lib/is-admin';
 import { useRouter } from 'next/navigation';
 
 export default function AdminDashboardPage() {
@@ -35,12 +36,11 @@ export default function AdminDashboardPage() {
     const user = session.user;
     console.log('👤 Logged in as:', user?.email);
 
-    const isAdmin =
-      user?.email === 'jonathan.e.g.warr@gmail.com' || user?.email === 'negamiri@gmail.com';
+    const isAdminUser = isAdmin(user);
 
-    console.log('🛡 isAdmin:', isAdmin);
+    console.log('🛡 isAdmin:', isAdminUser);
 
-    if (!isAdmin) {
+    if (!isAdminUser) {
       console.log('🚫 Not admin, redirecting to /');
       router.replace('/');
     }

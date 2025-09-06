@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
+import { isAdmin } from '@/lib/is-admin';
 import ContainerConstrained from '@/components/layout/container-constrained';
 import Pagination from '@/components/clinics/pagination';
 
@@ -33,11 +34,10 @@ export default function AdminFeedbackSubmissions() {
 
       const user = currentSession.user;
       console.log('👤 Logged in as:', user?.email);
-      const isAdmin =
-        user?.email === 'jonathan.e.g.warr@gmail.com' || user?.email === 'negamiri@gmail.com';
+      const isAdminUser = isAdmin(user);
 
-      console.log('🛡 isAdmin:', isAdmin);
-      if (!isAdmin) {
+      console.log('🛡 isAdmin:', isAdminUser);
+      if (!isAdminUser) {
         console.log('🚫 Not admin, redirecting to /');
         router.replace('/');
       }
