@@ -3,6 +3,8 @@ import { supabase } from '@/lib/supabase';
 import ContainerConstrained from '@/components/layout/container-constrained';
 import Link from 'next/link';
 
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+
 export const metadata = {
   title: 'Find Veterinarians by City | Vet Clinics Across Canada | Vetpras',
   description:
@@ -11,7 +13,7 @@ export const metadata = {
     title: 'Find Veterinarians Across Canada - City Directory',
     description:
       'Discover veterinary clinics in major Canadian cities. Compare services, read guides, and find the right vet for your pet.',
-    url: 'https://vetpras.com/find',
+    url: `${baseUrl}/find`,
     siteName: 'Vetpras',
     type: 'website',
     locale: 'en_CA',

@@ -3,6 +3,8 @@ import { supabase } from '@/lib/supabase';
 import BlogPostLayout from '@/components/blog/blog-post-layout';
 import { notFound } from 'next/navigation';
 
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+
 async function getPost(slug) {
   const { data, error } = await supabase
     .from('blog_posts')
@@ -34,7 +36,6 @@ export async function generateMetadata({ params }) {
     };
   }
 
-  const baseUrl = 'https://vetpras.com';
   const canonicalUrl = `${baseUrl}/blog/${params.slug}`;
   const description = post.meta_description || post.excerpt || '';
 
@@ -60,8 +61,6 @@ export async function generateMetadata({ params }) {
 
 // Generate structured data
 function generateStructuredData(post, slug) {
-  const baseUrl = 'https://vetpras.com';
-
   const schemas = [];
 
   // Article schema

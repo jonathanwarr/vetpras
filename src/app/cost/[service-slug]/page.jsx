@@ -6,6 +6,8 @@ import { notFound } from 'next/navigation';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+
 async function getPriceGuide(slug) {
   const { data, error } = await supabase
     .from('blog_posts')
@@ -38,7 +40,6 @@ export async function generateMetadata({ params }) {
     };
   }
 
-  const baseUrl = 'https://vetpras.com';
   const canonicalUrl = guide.canonical_url || `${baseUrl}/cost/${params['service-slug']}`;
 
   const description =
@@ -110,8 +111,6 @@ export async function generateMetadata({ params }) {
 
 // Generate JSON-LD structured data
 function generateStructuredData(guide, slug) {
-  const baseUrl = 'https://vetpras.com';
-
   const structuredData = {
     '@context': 'https://schema.org',
     '@type': 'Article',

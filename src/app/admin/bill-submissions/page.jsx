@@ -165,7 +165,7 @@ export default function AdminBillSubmissions() {
                 {sub.image_url ? (
                   <div className="mb-2">
                     <a
-                      href={`https://nerlrwamwlhnkacxredz.supabase.co/storage/v1/object/public/receipts/${sub.image_url}`}
+                      href={supabase.storage.from('receipts').getPublicUrl(sub.image_url).data.publicUrl}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-xs text-blue-600 underline"
