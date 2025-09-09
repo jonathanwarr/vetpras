@@ -15,6 +15,9 @@ const inter = Inter({ subsets: ['latin'] });
 export const metadata = {
   title: 'Vetpras | Transparent Vet Pricing',
   description: 'Vetpras helps pet owners compare prices and find trusted veterinary clinics in BC.',
+  icons: {
+    icon: '/favicon.svg',
+  },
 };
 
 export default function RootLayout({ children }) {
