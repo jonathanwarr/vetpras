@@ -9,6 +9,7 @@ import ScrollToTop from '@/components/ui/scroll-to-top';
 import Script from 'next/script';
 import SessionHandler from '@/components/system/session-handler';
 import SupabaseProvider from '@/components/system/supabase-provider';
+import ExitIntentModal from '@/components/ui/exit-intent-modal';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -87,6 +88,7 @@ export default function RootLayout({ children }) {
           <main className="min-h-screen">{children}</main>
           <Footer />
           <ScrollToTop />
+          <ExitIntentModal />
         </SupabaseProvider>
 
         <Analytics />
