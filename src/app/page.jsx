@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { supabase } from '@/lib/supabase';
 import { Analytics } from '@vercel/analytics/next';
 import Link from 'next/link';
@@ -29,6 +29,8 @@ export default function ClinicsPage() {
   const [totalResults, setTotalResults] = useState(0);
   const [sortOption, setSortOption] = useState('clinic-asc');
   const [activeFilters, setActiveFilters] = useState({ exam: [], vaccine: [], rating: [] });
+  
+  const tableRef = useRef(null);
 
   useEffect(() => {
     async function fetchData() {
@@ -68,6 +70,25 @@ export default function ClinicsPage() {
     setSearchType(type);
   };
 
+  const scrollToTable = () => {
+    if (tableRef.current) {
+      tableRef.current.scrollIntoView({ 
+        behavior: 'smooth', 
+        block: 'start' 
+      });
+    }
+  };
+
+  const handlePaginationPrev = () => {
+    setCurrentPage(currentPage - 1);
+    scrollToTable();
+  };
+
+  const handlePaginationNext = () => {
+    setCurrentPage(currentPage + 1);
+    scrollToTable();
+  };
+
   const handleSortChange = (newSort) => {
     setSortOption(newSort);
   };
@@ -104,7 +125,8 @@ export default function ClinicsPage() {
       </ContainerConstrained>
 
       <ContainerConstrained>
-        <TableClinic
+        <div ref={tableRef}>
+          <TableClinic
           onSelectClinic={setSelectedClinic}
           searchQuery={searchQuery}
           searchType={searchType}
@@ -117,6 +139,7 @@ export default function ClinicsPage() {
           clinics={clinics}
           services={services}
         />
+        </div>
         <div className="mt-4">
           <p className="text-xs italic text-gray-600">
             Cost estimates only. Actual prices may vary based on your pet's specific needs, location, and clinic policies. See{' '}
@@ -131,8 +154,8 @@ export default function ClinicsPage() {
             current={currentPage}
             total={totalResults}
             perPage={15}
-            onPrev={() => setCurrentPage(currentPage - 1)}
-            onNext={() => setCurrentPage(currentPage + 1)}
+            onPrev={handlePaginationPrev}
+            onNext={handlePaginationNext}
           />
         </div>
       </ContainerConstrained>
