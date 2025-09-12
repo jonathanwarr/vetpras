@@ -15,6 +15,10 @@ export default function SortFilterControls({ onSortChange, onFilterChange, clini
   const [ratingFilterOpen, setRatingFilterOpen] = useState(false);
   const [cityFilterOpen, setCityFilterOpen] = useState(false);
 
+  // Mobile filter states
+  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+  const [mobileActiveFilter, setMobileActiveFilter] = useState(null);
+
   const [examFilters, setExamFilters] = useState([]);
   const [vaccineFilters, setVaccineFilters] = useState([]);
   const [ratingFilters, setRatingFilters] = useState([]);
@@ -25,6 +29,7 @@ export default function SortFilterControls({ onSortChange, onFilterChange, clini
   const vaccineRef = useRef(null);
   const ratingRef = useRef(null);
   const cityRef = useRef(null);
+  const mobileFiltersRef = useRef(null);
 
   const sortOptions = [
     { value: 'clinic-asc', label: 'Clinic - Ascending' },
@@ -181,6 +186,22 @@ export default function SortFilterControls({ onSortChange, onFilterChange, clini
     }
   };
 
+  // Mobile filter handlers
+  const handleMobileFilterSelect = (filterType) => {
+    setMobileActiveFilter(filterType);
+  };
+
+  const handleMobileFilterBack = () => {
+    setMobileActiveFilter(null);
+  };
+
+  const filterOptions = {
+    city: { label: 'City', options: cityOptions, current: cityFilters, handler: handleCityFilterToggle },
+    exam: { label: 'Exam', options: examFilterOptions, current: examFilters, handler: handleExamFilterToggle },
+    vaccine: { label: 'Vaccine', options: vaccineFilterOptions, current: vaccineFilters, handler: handleVaccineFilterToggle },
+    rating: { label: 'Rating', options: ratingFilterOptions, current: ratingFilters, handler: handleRatingFilterToggle }
+  };
+
   // Handle keyboard navigation for sort
   const handleSortKeyDown = (e) => {
     if (!sortOpen) return;
@@ -215,6 +236,10 @@ export default function SortFilterControls({ onSortChange, onFilterChange, clini
       if (ratingRef.current && !ratingRef.current.contains(event.target))
         setRatingFilterOpen(false);
       if (cityRef.current && !cityRef.current.contains(event.target)) setCityFilterOpen(false);
+      if (mobileFiltersRef.current && !mobileFiltersRef.current.contains(event.target)) {
+        setMobileFiltersOpen(false);
+        setMobileActiveFilter(null);
+      }
     };
 
     document.addEventListener('mousedown', handleClickOutside);
@@ -270,8 +295,8 @@ export default function SortFilterControls({ onSortChange, onFilterChange, clini
         </div>
       )}
 
-      {/* Sort and Filter controls on same line */}
-      <div className="flex items-center justify-between">
+      {/* Desktop: Sort and Filter controls on same line */}
+      <div className="hidden sm:flex sm:items-center sm:justify-between">
         {/* Sort on left */}
         <div ref={sortRef} className="relative">
           <button
@@ -470,6 +495,141 @@ export default function SortFilterControls({ onSortChange, onFilterChange, clini
                     <span style={{ color: '#475569' }}>{option.label}</span>
                   </label>
                 ))}
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Mobile: Stacked Sort and Filters */}
+      <div className="sm:hidden space-y-3">
+        <div className="flex items-center justify-between">
+          {/* Mobile Sort */}
+          <div ref={sortRef} className="relative">
+            <button
+              onClick={() => setSortOpen(!sortOpen)}
+              onKeyDown={handleSortKeyDown}
+              className="flex items-center gap-1 px-3 py-1.5 text-sm font-medium transition-colors"
+              style={{ color: '#0F172B' }}
+            >
+              <span>Sort</span>
+              {sortOpen ? (
+                <ChevronUpIcon className="h-4 w-4" style={{ color: '#2C7FFF' }} />
+              ) : (
+                <ChevronDownIcon className="h-4 w-4" style={{ color: '#45556C' }} />
+              )}
+            </button>
+
+            {sortOpen && (
+              <div
+                className="absolute z-50 mt-1 w-48 rounded-md shadow-lg"
+                style={{ backgroundColor: '#F1F5F9', border: '1px solid #CBD5E1' }}
+              >
+                {sortOptions.map((option, index) => (
+                  <button
+                    key={option.value}
+                    onClick={() => handleSortSelect(option.value)}
+                    className="w-full px-3 py-2 text-left text-sm transition-colors"
+                    style={{
+                      backgroundColor: index === sortHighlightedIndex ? '#CBD5E1' : 'transparent',
+                      color:
+                        selectedSort === option.value
+                          ? '#2C7FFF'
+                          : index === sortHighlightedIndex
+                            ? '#1E293B'
+                            : '#64748B',
+                    }}
+                    onMouseEnter={() => setSortHighlightedIndex(index)}
+                  >
+                    {option.label}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Mobile Filters Button */}
+          <div ref={mobileFiltersRef} className="relative">
+            <button
+              onClick={() => setMobileFiltersOpen(!mobileFiltersOpen)}
+              className="flex items-center gap-1 px-3 py-1.5 text-sm font-medium transition-colors"
+              style={{ color: '#0F172B' }}
+            >
+              <span>Filters</span>
+              {mobileFiltersOpen ? (
+                <ChevronUpIcon className="h-4 w-4" style={{ color: '#2C7FFF' }} />
+              ) : (
+                <ChevronDownIcon className="h-4 w-4" style={{ color: '#45556C' }} />
+              )}
+            </button>
+
+            {mobileFiltersOpen && (
+              <div
+                className="absolute right-0 z-50 mt-1 w-64 rounded-md shadow-lg"
+                style={{ backgroundColor: '#F1F5F9', border: '1px solid #CBD5E1' }}
+              >
+                {!mobileActiveFilter ? (
+                  // Filter categories list
+                  <div className="p-2">
+                    <div className="px-2 py-1.5 text-sm font-medium" style={{ color: '#0F172B' }}>
+                      Select Filter Type
+                    </div>
+                    {Object.entries(filterOptions).map(([key, filter]) => (
+                      <button
+                        key={key}
+                        onClick={() => handleMobileFilterSelect(key)}
+                        className="w-full flex items-center justify-between px-2 py-2 text-sm text-left rounded hover:bg-slate-200 transition-colors"
+                        style={{ color: '#475569' }}
+                      >
+                        <span>{filter.label}</span>
+                        {filter.current.length > 0 && (
+                          <span 
+                            className="text-xs px-2 py-0.5 rounded-full"
+                            style={{ backgroundColor: '#E2E8F0', color: '#475569' }}
+                          >
+                            {filter.current.length}
+                          </span>
+                        )}
+                      </button>
+                    ))}
+                  </div>
+                ) : (
+                  // Individual filter options
+                  <div className="p-2">
+                    <div className="flex items-center justify-between px-2 py-1.5 border-b border-slate-200 mb-2">
+                      <button
+                        onClick={handleMobileFilterBack}
+                        className="text-sm font-medium transition-colors hover:opacity-70"
+                        style={{ color: '#2C7FFF' }}
+                      >
+                        ← Back
+                      </button>
+                      <span className="text-sm font-medium" style={{ color: '#0F172B' }}>
+                        {filterOptions[mobileActiveFilter].label}
+                      </span>
+                    </div>
+                    <div className="max-h-64 overflow-auto">
+                      {filterOptions[mobileActiveFilter].options.length === 0 ? (
+                        <div className="px-2 py-1.5 text-sm text-slate-500">No options available</div>
+                      ) : (
+                        filterOptions[mobileActiveFilter].options.map((option) => (
+                          <label
+                            key={option.value}
+                            className="flex cursor-pointer items-center gap-2 rounded px-2 py-1.5 text-sm hover:bg-slate-200"
+                          >
+                            <input
+                              type="checkbox"
+                              checked={filterOptions[mobileActiveFilter].current.includes(option.value)}
+                              onChange={() => filterOptions[mobileActiveFilter].handler(option.value)}
+                              className="rounded border-gray-300"
+                            />
+                            <span style={{ color: '#475569' }}>{option.label}</span>
+                          </label>
+                        ))
+                      )}
+                    </div>
+                  </div>
+                )}
               </div>
             )}
           </div>

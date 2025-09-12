@@ -209,7 +209,7 @@ export default function SearchBar({
   }, [highlightedIndex]);
 
   return (
-    <div className="relative w-full" style={{ width: '40%', minWidth: '300px' }}>
+    <div className="relative w-full sm:w-2/5 sm:min-w-[300px]">
       <div 
         className="relative p-[2px] rounded-[12px] transition-all duration-200"
         style={{
