@@ -30,7 +30,7 @@ export default function ClinicsPage() {
   const [sortOption, setSortOption] = useState('clinic-asc');
   const [activeFilters, setActiveFilters] = useState({ exam: [], vaccine: [], rating: [] });
   
-  const tableRef = useRef(null);
+  const searchAreaRef = useRef(null);
 
   useEffect(() => {
     async function fetchData() {
@@ -70,9 +70,9 @@ export default function ClinicsPage() {
     setSearchType(type);
   };
 
-  const scrollToTable = () => {
-    if (tableRef.current) {
-      tableRef.current.scrollIntoView({ 
+  const scrollToSearchArea = () => {
+    if (searchAreaRef.current) {
+      searchAreaRef.current.scrollIntoView({ 
         behavior: 'smooth', 
         block: 'start' 
       });
@@ -81,12 +81,12 @@ export default function ClinicsPage() {
 
   const handlePaginationPrev = () => {
     setCurrentPage(currentPage - 1);
-    scrollToTable();
+    scrollToSearchArea();
   };
 
   const handlePaginationNext = () => {
     setCurrentPage(currentPage + 1);
-    scrollToTable();
+    scrollToSearchArea();
   };
 
   const handleSortChange = (newSort) => {
@@ -110,7 +110,7 @@ export default function ClinicsPage() {
         </div>
 
         {/* New Search Bar */}
-        <div className="mb-6 flex justify-center pb-10">
+        <div ref={searchAreaRef} className="mb-6 flex justify-center pb-10">
           <SearchBar clinics={clinics} services={services} onSearchChange={handleSearchChange} />
         </div>
 
@@ -125,8 +125,7 @@ export default function ClinicsPage() {
       </ContainerConstrained>
 
       <ContainerConstrained>
-        <div ref={tableRef}>
-          <TableClinic
+        <TableClinic
           onSelectClinic={setSelectedClinic}
           searchQuery={searchQuery}
           searchType={searchType}
@@ -139,7 +138,6 @@ export default function ClinicsPage() {
           clinics={clinics}
           services={services}
         />
-        </div>
         <div className="mt-4">
           <p className="text-xs italic text-gray-600">
             Cost estimates only. Actual prices may vary based on your pet's specific needs, location, and clinic policies. See{' '}
