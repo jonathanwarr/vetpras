@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase';
 import { Analytics } from '@vercel/analytics/next';
+import Link from 'next/link';
 
 import ContainerConstrained from '@/components/layout/container-constrained';
 import Header from '@/components/layout/header';
@@ -83,7 +84,7 @@ export default function ClinicsPage() {
             Find a Vet
           </h2>
           <p className="flex justify-center space-y-5 text-center font-sans text-lg font-light text-slate-900">
-            Search for vets by clinic name, city or even treatment.
+            Search for vets by clinic name, city or treatment.
           </p>
         </div>
 
@@ -116,6 +117,15 @@ export default function ClinicsPage() {
           clinics={clinics}
           services={services}
         />
+        <div className="mt-4">
+          <p className="text-xs italic text-gray-600">
+            Cost estimates only. Actual prices may vary based on your pet's specific needs, location, and clinic policies. See{' '}
+            <Link href="/terms-and-conditions" className="text-blue-600 hover:text-blue-700 underline">
+              Terms & Conditions
+            </Link>{' '}
+            for details.
+          </p>
+        </div>
         <div className="mt-15">
           <Pagination
             current={currentPage}

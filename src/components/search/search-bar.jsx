@@ -210,31 +210,40 @@ export default function SearchBar({
 
   return (
     <div className="relative w-full" style={{ width: '40%', minWidth: '300px' }}>
-      <div className="relative">
-        <MagnifyingGlassIcon
-          className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2"
-          style={{ color: '#62748E' }}
-        />
-        <input
-          ref={inputRef}
-          type="text"
-          value={query}
-          onChange={handleInputChange}
-          onKeyDown={handleKeyDown}
-          onFocus={handleFocus}
-          onBlur={handleBlur}
-          placeholder={placeholder}
-          className="w-full pr-3 pl-10 text-sm transition-all duration-200"
-          style={{
-            height: '40px',
-            backgroundColor: '#F8FAFC',
-            color: '#0F172B',
-            border: `1px solid ${isFocused ? '#2C7FFF' : '#62748E'}`,
-            borderRadius: '5px',
-            boxShadow: '0 1px 1px rgba(0, 0, 0, 0.25)',
-            outline: 'none',
-          }}
-        />
+      <div 
+        className="relative p-[2px] rounded-[12px] transition-all duration-200"
+        style={{
+          background: isFocused 
+            ? 'conic-gradient(from 0deg, #47ECD5, #009689, #47ECD5, #009689, #47ECD5)'
+            : 'conic-gradient(from 0deg, #47ECD5, #009689, #47ECD5, #009689, #47ECD5)',
+          opacity: isFocused ? 1 : 0.7,
+          boxShadow: '0 3px 6px rgba(0, 0, 0, 0.15)',
+        }}
+      >
+        <div className="relative bg-gray-50 rounded-[12px]">
+          <MagnifyingGlassIcon
+            className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2"
+            style={{ color: '#62748E' }}
+          />
+          <input
+            ref={inputRef}
+            type="text"
+            value={query}
+            onChange={handleInputChange}
+            onKeyDown={handleKeyDown}
+            onFocus={handleFocus}
+            onBlur={handleBlur}
+            placeholder={placeholder}
+            className="w-full pr-3 pl-10 text-sm transition-all duration-200 bg-gray-50 rounded-[12px]"
+            style={{
+              height: '50px',
+              backgroundColor: '#F9FAFB',
+              color: '#0F172B',
+              border: 'none',
+              outline: 'none',
+            }}
+          />
+        </div>
       </div>
 
       {/* Suggestions dropdown */}
@@ -245,8 +254,8 @@ export default function SearchBar({
           style={{
             maxHeight: '300px',
             backgroundColor: '#FFFFFF',
-            border: '1px solid #62748E',
-            borderRadius: '5px',
+            border: '1px solid #E5E7EB',
+            borderRadius: '12px',
           }}
         >
           {suggestions.map((suggestion, index) => (

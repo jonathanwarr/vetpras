@@ -270,8 +270,9 @@ export default function SortFilterControls({ onSortChange, onFilterChange, clini
         </div>
       )}
 
-      {/* Sort on its own line */}
-      <div className="flex items-center">
+      {/* Sort and Filter controls on same line */}
+      <div className="flex items-center justify-between">
+        {/* Sort on left */}
         <div ref={sortRef} className="relative">
           <button
             onClick={() => setSortOpen(!sortOpen)}
@@ -314,164 +315,164 @@ export default function SortFilterControls({ onSortChange, onFilterChange, clini
             </div>
           )}
         </div>
-      </div>
 
-      {/* Filter controls on their own line */}
-      <div className="flex items-center gap-4">
-        {/* City filter */}
-        <div ref={cityRef} className="relative">
-          <button
-            onClick={() => setCityFilterOpen(!cityFilterOpen)}
-            className="flex items-center gap-1 px-3 py-1.5 text-sm font-medium transition-colors"
-            style={{ color: '#0F172B' }}
-          >
-            <span>City</span>
-            {cityFilterOpen ? (
-              <ChevronUpIcon className="h-4 w-4" style={{ color: '#2C7FFF' }} />
-            ) : (
-              <ChevronDownIcon className="h-4 w-4" style={{ color: '#45556C' }} />
-            )}
-          </button>
-
-          {cityFilterOpen && (
-            <div
-              className="absolute z-50 mt-1 max-h-64 w-56 overflow-auto rounded-md p-2 shadow-lg"
-              style={{ backgroundColor: '#F1F5F9', border: '1px solid #CBD5E1' }}
+        {/* Filter controls on right */}
+        <div className="flex items-center gap-4">
+          {/* City filter */}
+          <div ref={cityRef} className="relative">
+            <button
+              onClick={() => setCityFilterOpen(!cityFilterOpen)}
+              className="flex items-center gap-1 px-3 py-1.5 text-sm font-medium transition-colors"
+              style={{ color: '#0F172B' }}
             >
-              {cityOptions.length === 0 ? (
-                <div className="px-2 py-1.5 text-sm text-slate-500">No cities found</div>
+              {cityFilterOpen ? (
+                <ChevronUpIcon className="h-4 w-4" style={{ color: '#2C7FFF' }} />
               ) : (
-                cityOptions.map((option) => (
+                <ChevronDownIcon className="h-4 w-4" style={{ color: '#45556C' }} />
+              )}
+              <span>City</span>
+            </button>
+
+            {cityFilterOpen && (
+              <div
+                className="absolute right-0 z-50 mt-1 max-h-64 w-56 overflow-auto rounded-md p-2 shadow-lg"
+                style={{ backgroundColor: '#F1F5F9', border: '1px solid #CBD5E1' }}
+              >
+                {cityOptions.length === 0 ? (
+                  <div className="px-2 py-1.5 text-sm text-slate-500">No cities found</div>
+                ) : (
+                  cityOptions.map((option) => (
+                    <label
+                      key={option.value}
+                      className="flex cursor-pointer items-center gap-2 rounded px-2 py-1.5 text-sm hover:bg-slate-200"
+                    >
+                      <input
+                        type="checkbox"
+                        checked={cityFilters.includes(option.value)}
+                        onChange={() => handleCityFilterToggle(option.value)}
+                        className="rounded border-gray-300"
+                      />
+                      <span style={{ color: '#475569' }}>{option.label}</span>
+                    </label>
+                  ))
+                )}
+              </div>
+            )}
+          </div>
+
+          {/* Exam filter */}
+          <div ref={examRef} className="relative">
+            <button
+              onClick={() => setExamFilterOpen(!examFilterOpen)}
+              className="flex items-center gap-1 px-3 py-1.5 text-sm font-medium transition-colors"
+              style={{ color: '#0F172B' }}
+            >
+              {examFilterOpen ? (
+                <ChevronUpIcon className="h-4 w-4" style={{ color: '#2C7FFF' }} />
+              ) : (
+                <ChevronDownIcon className="h-4 w-4" style={{ color: '#45556C' }} />
+              )}
+              <span>Exam</span>
+            </button>
+
+            {examFilterOpen && (
+              <div
+                className="absolute right-0 z-50 mt-1 w-48 rounded-md p-2 shadow-lg"
+                style={{ backgroundColor: '#F1F5F9', border: '1px solid #CBD5E1' }}
+              >
+                {examFilterOptions.map((option) => (
                   <label
                     key={option.value}
                     className="flex cursor-pointer items-center gap-2 rounded px-2 py-1.5 text-sm hover:bg-slate-200"
                   >
                     <input
                       type="checkbox"
-                      checked={cityFilters.includes(option.value)}
-                      onChange={() => handleCityFilterToggle(option.value)}
+                      checked={examFilters.includes(option.value)}
+                      onChange={() => handleExamFilterToggle(option.value)}
                       className="rounded border-gray-300"
                     />
                     <span style={{ color: '#475569' }}>{option.label}</span>
                   </label>
-                ))
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Vaccine filter */}
+          <div ref={vaccineRef} className="relative">
+            <button
+              onClick={() => setVaccineFilterOpen(!vaccineFilterOpen)}
+              className="flex items-center gap-1 px-3 py-1.5 text-sm font-medium transition-colors"
+              style={{ color: '#0F172B' }}
+            >
+              {vaccineFilterOpen ? (
+                <ChevronUpIcon className="h-4 w-4" style={{ color: '#2C7FFF' }} />
+              ) : (
+                <ChevronDownIcon className="h-4 w-4" style={{ color: '#45556C' }} />
               )}
-            </div>
-          )}
-        </div>
+              <span>Vaccine</span>
+            </button>
 
-        {/* Exam filter */}
-        <div ref={examRef} className="relative">
-          <button
-            onClick={() => setExamFilterOpen(!examFilterOpen)}
-            className="flex items-center gap-1 px-3 py-1.5 text-sm font-medium transition-colors"
-            style={{ color: '#0F172B' }}
-          >
-            <span>Exam</span>
-            {examFilterOpen ? (
-              <ChevronUpIcon className="h-4 w-4" style={{ color: '#2C7FFF' }} />
-            ) : (
-              <ChevronDownIcon className="h-4 w-4" style={{ color: '#45556C' }} />
+            {vaccineFilterOpen && (
+              <div
+                className="absolute right-0 z-50 mt-1 w-48 rounded-md p-2 shadow-lg"
+                style={{ backgroundColor: '#F1F5F9', border: '1px solid #CBD5E1' }}
+              >
+                {vaccineFilterOptions.map((option) => (
+                  <label
+                    key={option.value}
+                    className="flex cursor-pointer items-center gap-2 rounded px-2 py-1.5 text-sm hover:bg-slate-200"
+                  >
+                    <input
+                      type="checkbox"
+                      checked={vaccineFilters.includes(option.value)}
+                      onChange={() => handleVaccineFilterToggle(option.value)}
+                      className="rounded border-gray-300"
+                    />
+                    <span style={{ color: '#475569' }}>{option.label}</span>
+                  </label>
+                ))}
+              </div>
             )}
-          </button>
+          </div>
 
-          {examFilterOpen && (
-            <div
-              className="absolute z-50 mt-1 w-48 rounded-md p-2 shadow-lg"
-              style={{ backgroundColor: '#F1F5F9', border: '1px solid #CBD5E1' }}
+          {/* Rating filter */}
+          <div ref={ratingRef} className="relative">
+            <button
+              onClick={() => setRatingFilterOpen(!ratingFilterOpen)}
+              className="flex items-center gap-1 px-3 py-1.5 text-sm font-medium transition-colors"
+              style={{ color: '#0F172B' }}
             >
-              {examFilterOptions.map((option) => (
-                <label
-                  key={option.value}
-                  className="flex cursor-pointer items-center gap-2 rounded px-2 py-1.5 text-sm hover:bg-slate-200"
-                >
-                  <input
-                    type="checkbox"
-                    checked={examFilters.includes(option.value)}
-                    onChange={() => handleExamFilterToggle(option.value)}
-                    className="rounded border-gray-300"
-                  />
-                  <span style={{ color: '#475569' }}>{option.label}</span>
-                </label>
-              ))}
-            </div>
-          )}
-        </div>
+              {ratingFilterOpen ? (
+                <ChevronUpIcon className="h-4 w-4" style={{ color: '#2C7FFF' }} />
+              ) : (
+                <ChevronDownIcon className="h-4 w-4" style={{ color: '#45556C' }} />
+              )}
+              <span>Rating</span>
+            </button>
 
-        {/* Vaccine filter */}
-        <div ref={vaccineRef} className="relative">
-          <button
-            onClick={() => setVaccineFilterOpen(!vaccineFilterOpen)}
-            className="flex items-center gap-1 px-3 py-1.5 text-sm font-medium transition-colors"
-            style={{ color: '#0F172B' }}
-          >
-            <span>Vaccine</span>
-            {vaccineFilterOpen ? (
-              <ChevronUpIcon className="h-4 w-4" style={{ color: '#2C7FFF' }} />
-            ) : (
-              <ChevronDownIcon className="h-4 w-4" style={{ color: '#45556C' }} />
+            {ratingFilterOpen && (
+              <div
+                className="absolute right-0 z-50 mt-1 w-48 rounded-md p-2 shadow-lg"
+                style={{ backgroundColor: '#F1F5F9', border: '1px solid #CBD5E1' }}
+              >
+                {ratingFilterOptions.map((option) => (
+                  <label
+                    key={option.value}
+                    className="flex cursor-pointer items-center gap-2 rounded px-2 py-1.5 text-sm hover:bg-slate-200"
+                  >
+                    <input
+                      type="checkbox"
+                      checked={ratingFilters.includes(option.value)}
+                      onChange={() => handleRatingFilterToggle(option.value)}
+                      className="rounded border-gray-300"
+                    />
+                    <span style={{ color: '#475569' }}>{option.label}</span>
+                  </label>
+                ))}
+              </div>
             )}
-          </button>
-
-          {vaccineFilterOpen && (
-            <div
-              className="absolute z-50 mt-1 w-48 rounded-md p-2 shadow-lg"
-              style={{ backgroundColor: '#F1F5F9', border: '1px solid #CBD5E1' }}
-            >
-              {vaccineFilterOptions.map((option) => (
-                <label
-                  key={option.value}
-                  className="flex cursor-pointer items-center gap-2 rounded px-2 py-1.5 text-sm hover:bg-slate-200"
-                >
-                  <input
-                    type="checkbox"
-                    checked={vaccineFilters.includes(option.value)}
-                    onChange={() => handleVaccineFilterToggle(option.value)}
-                    className="rounded border-gray-300"
-                  />
-                  <span style={{ color: '#475569' }}>{option.label}</span>
-                </label>
-              ))}
-            </div>
-          )}
-        </div>
-
-        {/* Rating filter */}
-        <div ref={ratingRef} className="relative">
-          <button
-            onClick={() => setRatingFilterOpen(!ratingFilterOpen)}
-            className="flex items-center gap-1 px-3 py-1.5 text-sm font-medium transition-colors"
-            style={{ color: '#0F172B' }}
-          >
-            <span>Rating</span>
-            {ratingFilterOpen ? (
-              <ChevronUpIcon className="h-4 w-4" style={{ color: '#2C7FFF' }} />
-            ) : (
-              <ChevronDownIcon className="h-4 w-4" style={{ color: '#45556C' }} />
-            )}
-          </button>
-
-          {ratingFilterOpen && (
-            <div
-              className="absolute z-50 mt-1 w-48 rounded-md p-2 shadow-lg"
-              style={{ backgroundColor: '#F1F5F9', border: '1px solid #CBD5E1' }}
-            >
-              {ratingFilterOptions.map((option) => (
-                <label
-                  key={option.value}
-                  className="flex cursor-pointer items-center gap-2 rounded px-2 py-1.5 text-sm hover:bg-slate-200"
-                >
-                  <input
-                    type="checkbox"
-                    checked={ratingFilters.includes(option.value)}
-                    onChange={() => handleRatingFilterToggle(option.value)}
-                    className="rounded border-gray-300"
-                  />
-                  <span style={{ color: '#475569' }}>{option.label}</span>
-                </label>
-              ))}
-            </div>
-          )}
+          </div>
         </div>
       </div>
     </div>

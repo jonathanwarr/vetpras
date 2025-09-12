@@ -75,26 +75,16 @@ export default function TableClinic({
       });
     }
 
-    // Vaccine fee filters (average of rabies + core)
+    // Vaccine fee filters (core vaccine only)
     if (activeFilters?.vaccine?.length) {
       result = result.filter((clinic) => {
-        if (clinic.rabies_vaccine == null && clinic.da2pp_vaccine == null) return false;
+        if (clinic.da2pp_vaccine == null) return false;
 
-        let vaccineCount = 0;
-        let vaccineTotal = 0;
-        if (typeof clinic.rabies_vaccine === 'number') {
-          vaccineTotal += clinic.rabies_vaccine;
-          vaccineCount++;
-        }
-        if (typeof clinic.da2pp_vaccine === 'number') {
-          vaccineTotal += clinic.da2pp_vaccine;
-          vaccineCount++;
-        }
-        const avgVaccine = vaccineCount > 0 ? vaccineTotal / vaccineCount : 0;
+        const vaccinePrice = clinic.da2pp_vaccine;
 
         return activeFilters.vaccine.some((f) => {
           const [min, max] = toRange(f);
-          return avgVaccine >= min && avgVaccine <= max;
+          return vaccinePrice >= min && vaccinePrice <= max;
         });
       });
     }
@@ -126,16 +116,40 @@ export default function TableClinic({
     return result;
   }, [searchFilteredClinics, activeFilters]);
 
+  // Calculate data completeness score for a clinic
+  const getDataCompletenessScore = (clinic) => {
+    let score = 0;
+    if (Number.isFinite(clinic.exam_fee)) score++;
+    if (Number.isFinite(clinic.da2pp_vaccine)) score++;
+    if (Number.isFinite(clinic.spay)) score++;
+    if (Number.isFinite(clinic.neuter)) score++;
+    return score;
+  };
+
   // Sort clinics
   const sortedClinics = useMemo(() => {
     const sorted = [...filteredClinics];
 
     switch (sortOption) {
       case 'clinic-asc':
-        sorted.sort((a, b) => (a.clinic_name || '').localeCompare(b.clinic_name || ''));
+        sorted.sort((a, b) => {
+          // First sort by data completeness (more complete data first)
+          const scoreA = getDataCompletenessScore(a);
+          const scoreB = getDataCompletenessScore(b);
+          if (scoreB !== scoreA) return scoreB - scoreA;
+          // Then sort alphabetically
+          return (a.clinic_name || '').localeCompare(b.clinic_name || '');
+        });
         break;
       case 'clinic-desc':
-        sorted.sort((a, b) => (b.clinic_name || '').localeCompare(a.clinic_name || ''));
+        sorted.sort((a, b) => {
+          // First sort by data completeness (more complete data first)
+          const scoreA = getDataCompletenessScore(a);
+          const scoreB = getDataCompletenessScore(b);
+          if (scoreB !== scoreA) return scoreB - scoreA;
+          // Then sort alphabetically descending
+          return (b.clinic_name || '').localeCompare(a.clinic_name || '');
+        });
         break;
       case 'city-asc':
         sorted.sort((a, b) => (a.city || '').localeCompare(b.city || ''));
@@ -150,17 +164,20 @@ export default function TableClinic({
       case 'exam-low':
         sorted.sort((a, b) => (a.exam_fee ?? 999999) - (b.exam_fee ?? 999999));
         break;
-      case 'vaccine-low': {
-        const avg = (c) =>
-          ((c.rabies_vaccine ?? 0) + (c.da2pp_vaccine ?? 0)) /
-          (Number.isFinite(c.rabies_vaccine) + Number.isFinite(c.da2pp_vaccine) || 1);
-        sorted.sort((a, b) => (avg(a) || 999999) - (avg(b) || 999999));
+      case 'vaccine-low':
+        sorted.sort((a, b) => (a.da2pp_vaccine ?? 999999) - (b.da2pp_vaccine ?? 999999));
         break;
-      }
       case 'rating-high':
         sorted.sort((a, b) => (b.rating ?? 0) - (a.rating ?? 0));
         break;
       default:
+        // Default sort: data completeness first, then alphabetically
+        sorted.sort((a, b) => {
+          const scoreA = getDataCompletenessScore(a);
+          const scoreB = getDataCompletenessScore(b);
+          if (scoreB !== scoreA) return scoreB - scoreA;
+          return (a.clinic_name || '').localeCompare(b.clinic_name || '');
+        });
         break;
     }
 
@@ -191,8 +208,8 @@ export default function TableClinic({
   return (
     <div className="w-full">
       <div className="w-full">
-        <table className="divide-table-header-bg w-full table-fixed divide-y">
-          <thead>
+        <table className="w-full table-fixed">
+          <thead className="border-b border-gray-200">
             <tr>
               <th
                 scope="col"
@@ -216,13 +233,19 @@ export default function TableClinic({
                 scope="col"
                 className="text-table-header hidden w-18 px-3 py-[14px] text-center text-xs sm:table-cell"
               >
-                Rabies
+                Core Vaccine
               </th>
               <th
                 scope="col"
                 className="text-table-header hidden w-18 px-3 py-[14px] text-center text-xs sm:table-cell"
               >
-                Core Vaccine
+                Spay
+              </th>
+              <th
+                scope="col"
+                className="text-table-header hidden w-18 px-3 py-[14px] text-center text-xs sm:table-cell"
+              >
+                Neuter
               </th>
               <th
                 scope="col"
@@ -239,11 +262,11 @@ export default function TableClinic({
             </tr>
           </thead>
 
-          <tbody className="divide-table-header-bg divide-y">
+          <tbody>
             {paginatedClinics.map((clinic) => (
               <tr
                 key={clinic.clinic_id}
-                className="group cursor-pointer text-slate-800 transition-colors odd:bg-slate-100 even:bg-slate-50 hover:bg-slate-200 active:bg-slate-200"
+                className="group cursor-pointer text-slate-800 transition-colors odd:bg-gray-50 even:bg-white hover:bg-slate-200 active:bg-slate-200"
               >
                 {/* Name + mobile stacked labels */}
                 <td
@@ -266,17 +289,24 @@ export default function TableClinic({
                       {Number.isFinite(clinic.exam_fee) ? `$${clinic.exam_fee.toFixed(0)}` : '—'}
                     </span>
 
-                    <span className="font-semibold">Rabies:</span>
-                    <span>
-                      {Number.isFinite(clinic.rabies_vaccine)
-                        ? `$${clinic.rabies_vaccine.toFixed(0)}`
-                        : '—'}
-                    </span>
-
                     <span className="font-semibold">Core Vaccine:</span>
                     <span>
                       {Number.isFinite(clinic.da2pp_vaccine)
                         ? `$${clinic.da2pp_vaccine.toFixed(0)}`
+                        : '—'}
+                    </span>
+
+                    <span className="font-semibold">Spay:</span>
+                    <span>
+                      {Number.isFinite(clinic.spay)
+                        ? `$${clinic.spay.toFixed(0)}`
+                        : '—'}
+                    </span>
+
+                    <span className="font-semibold">Neuter:</span>
+                    <span>
+                      {Number.isFinite(clinic.neuter)
+                        ? `$${clinic.neuter.toFixed(0)}`
                         : '—'}
                     </span>
 
@@ -318,13 +348,18 @@ export default function TableClinic({
                   {Number.isFinite(clinic.exam_fee) ? `$${clinic.exam_fee.toFixed(0)}` : '—'}
                 </td>
                 <td className="hidden w-18 text-center font-sans text-xs font-medium whitespace-nowrap sm:table-cell">
-                  {Number.isFinite(clinic.rabies_vaccine)
-                    ? `$${clinic.rabies_vaccine.toFixed(0)}`
+                  {Number.isFinite(clinic.da2pp_vaccine)
+                    ? `$${clinic.da2pp_vaccine.toFixed(0)}`
                     : '—'}
                 </td>
                 <td className="hidden w-18 text-center font-sans text-xs font-medium whitespace-nowrap sm:table-cell">
-                  {Number.isFinite(clinic.da2pp_vaccine)
-                    ? `$${clinic.da2pp_vaccine.toFixed(0)}`
+                  {Number.isFinite(clinic.spay)
+                    ? `$${clinic.spay.toFixed(0)}`
+                    : '—'}
+                </td>
+                <td className="hidden w-18 text-center font-sans text-xs font-medium whitespace-nowrap sm:table-cell">
+                  {Number.isFinite(clinic.neuter)
+                    ? `$${clinic.neuter.toFixed(0)}`
                     : '—'}
                 </td>
                 <td className="hidden w-20 text-center font-sans text-xs font-medium whitespace-nowrap sm:table-cell">
