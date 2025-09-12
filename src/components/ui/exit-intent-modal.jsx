@@ -14,20 +14,36 @@ export default function ExitIntentModal() {
   const [hasShown, setHasShown] = useState(false);
 
   useEffect(() => {
+    // Check if modal has already been shown in this session
+    const hasShownInSession = sessionStorage.getItem('exitIntentModalShown');
+    if (hasShownInSession === 'true') {
+      setHasShown(true);
+      return;
+    }
+
     let timeoutId;
+    let intentDetected = false;
 
     const handleMouseMove = (e) => {
       // Only trigger if modal hasn't been shown yet
       if (hasShown) return;
 
-      // Detect mouse moving toward top of browser (exit intent)
-      // Trigger when mouse is within 50px of top and moving upward
-      if (e.clientY <= 50 && e.movementY < 0) {
+      // More restrictive trigger area - only very close to top edge
+      // This prevents triggering near navigation menus
+      if (e.clientY <= 10 && e.movementY < -5) {
+        if (!intentDetected) {
+          intentDetected = true;
+          clearTimeout(timeoutId);
+          timeoutId = setTimeout(() => {
+            setIsOpen(true);
+            setHasShown(true);
+            sessionStorage.setItem('exitIntentModalShown', 'true');
+          }, 500); // Increased delay to prevent accidental triggers
+        }
+      } else if (e.clientY > 100) {
+        // Reset intent detection if mouse moves back down
+        intentDetected = false;
         clearTimeout(timeoutId);
-        timeoutId = setTimeout(() => {
-          setIsOpen(true);
-          setHasShown(true);
-        }, 100);
       }
     };
 
@@ -35,10 +51,11 @@ export default function ExitIntentModal() {
       // Only trigger if modal hasn't been shown yet
       if (hasShown) return;
 
-      // Detect mouse leaving the document area toward the top
-      if (e.clientY <= 0) {
+      // Only trigger for genuine exit intent at very top of viewport
+      if (e.clientY <= 0 && e.relatedTarget === null) {
         setIsOpen(true);
         setHasShown(true);
+        sessionStorage.setItem('exitIntentModalShown', 'true');
       }
     };
 
