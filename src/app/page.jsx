@@ -2,19 +2,11 @@
 
 import { useEffect, useState, useRef } from 'react';
 import { supabase } from '@/lib/supabase';
-import { Analytics } from '@vercel/analytics/next';
 import Link from 'next/link';
-
 import ContainerConstrained from '@/components/layout/container-constrained';
-import Header from '@/components/layout/header';
-import Footer from '@/components/layout/footer';
-import ScrollToTop from '@/components/ui/scroll-to-top';
-
 import TableClinic from '@/components/clinics/table-clinic';
 import DrawerClinic from '@/components/clinics/drawer-clinic';
 import Pagination from '@/components/clinics/pagination';
-
-// New components
 import SearchBar from '@/components/search/search-bar';
 import SortFilterControls from '@/components/search/sort-filter-controls';
 
@@ -29,7 +21,7 @@ export default function ClinicsPage() {
   const [totalResults, setTotalResults] = useState(0);
   const [sortOption, setSortOption] = useState('clinic-asc');
   const [activeFilters, setActiveFilters] = useState({ exam: [], vaccine: [], rating: [] });
-  
+
   const searchAreaRef = useRef(null);
 
   useEffect(() => {
@@ -72,9 +64,9 @@ export default function ClinicsPage() {
 
   const scrollToSearchArea = () => {
     if (searchAreaRef.current) {
-      searchAreaRef.current.scrollIntoView({ 
-        behavior: 'smooth', 
-        block: 'start' 
+      searchAreaRef.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
       });
     }
   };
@@ -139,9 +131,13 @@ export default function ClinicsPage() {
           services={services}
         />
         <div className="mt-4">
-          <p className="text-xs italic text-gray-600">
-            Cost estimates only. Actual prices may vary based on your pet's specific needs, location, and clinic policies. See{' '}
-            <Link href="/terms-and-conditions" className="text-blue-600 hover:text-blue-700 underline">
+          <p className="text-xs text-gray-600 italic">
+            Cost estimates only. Actual prices may vary based on your pet's specific needs,
+            location, and clinic policies. See{' '}
+            <Link
+              href="/terms-and-conditions"
+              className="text-blue-600 underline hover:text-blue-700"
+            >
               Terms & Conditions
             </Link>{' '}
             for details.

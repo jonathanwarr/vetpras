@@ -147,9 +147,62 @@ export default function TermsAndConditionsPage() {
           </div>
         </section>
 
+        {/* BILL SUBMISSION AND DATA USE */}
+        <section className="mb-12">
+          <h2 className="mb-6 text-2xl font-bold text-slate-900">
+            5. Bill Submission and Data Use Consent
+          </h2>
+          <div className="space-y-4 text-sm text-gray-700">
+            <div>
+              <h3 className="mb-2 text-base font-semibold text-slate-900">
+                Consent to Data Use:
+              </h3>
+              <p>
+                By submitting veterinary bills or receipts to Vetpras, you provide explicit consent for us to:
+              </p>
+              <ul className="ml-6 list-disc space-y-1">
+                <li>Use your submitted bill data to train and improve our pricing prediction models</li>
+                <li>Publish anonymized pricing information derived from your submission</li>
+                <li>Include your data in aggregated pricing statistics and analysis</li>
+                <li>Share anonymized data with veterinary industry stakeholders for research purposes</li>
+              </ul>
+            </div>
+            <div>
+              <h3 className="mb-2 text-base font-semibold text-slate-900">Data Anonymization:</h3>
+              <p>
+                We take privacy seriously. All submitted bills are anonymized by removing:
+              </p>
+              <ul className="ml-6 list-disc space-y-1">
+                <li>Personal identifying information (names, addresses, phone numbers)</li>
+                <li>Pet identifying information (names, microchip numbers)</li>
+                <li>Account numbers and payment information</li>
+                <li>Any other personally identifiable data</li>
+              </ul>
+            </div>
+            <div>
+              <h3 className="mb-2 text-base font-semibold text-slate-900">Purpose and Benefits:</h3>
+              <p>
+                Your contribution helps build a comprehensive database of veterinary pricing that benefits all pet owners by:
+              </p>
+              <ul className="ml-6 list-disc space-y-1">
+                <li>Improving price transparency in veterinary care</li>
+                <li>Enabling better cost prediction accuracy</li>
+                <li>Supporting informed decision-making for pet owners</li>
+                <li>Contributing to veterinary industry research and analysis</li>
+              </ul>
+            </div>
+            <div>
+              <h3 className="mb-2 text-base font-semibold text-slate-900">Voluntary Submission:</h3>
+              <p>
+                Bill submission is entirely voluntary. You may use Vetpras services without submitting bills, though doing so helps improve our platform for everyone.
+              </p>
+            </div>
+          </div>
+        </section>
+
         {/* LIMITATION OF LIABILITY */}
         <section className="mb-12">
-          <h2 className="mb-6 text-2xl font-bold text-slate-900">5. Limitation of Liability</h2>
+          <h2 className="mb-6 text-2xl font-bold text-slate-900">6. Limitation of Liability</h2>
           <div className="space-y-4 text-sm text-gray-700">
             <div>
               <h3 className="mb-2 text-base font-semibold text-slate-900">
@@ -181,7 +234,7 @@ export default function TermsAndConditionsPage() {
 
         {/* INDEMNIFICATION */}
         <section className="mb-12">
-          <h2 className="mb-6 text-2xl font-bold text-slate-900">6. Indemnification</h2>
+          <h2 className="mb-6 text-2xl font-bold text-slate-900">7. Indemnification</h2>
           <div className="space-y-4 text-sm text-gray-700">
             <p>You agree to protect Vetpras from claims arising from:</p>
             <ul className="ml-6 list-disc space-y-1">
@@ -196,7 +249,7 @@ export default function TermsAndConditionsPage() {
 
         {/* TERMINATION */}
         <section className="mb-12">
-          <h2 className="mb-6 text-2xl font-bold text-slate-900">7. Termination and Suspension</h2>
+          <h2 className="mb-6 text-2xl font-bold text-slate-900">8. Termination and Suspension</h2>
           <div className="space-y-4 text-sm text-gray-700">
             <div>
               <h3 className="mb-2 text-base font-semibold text-slate-900">
@@ -223,7 +276,7 @@ export default function TermsAndConditionsPage() {
         {/* THIRD-PARTY LINKS */}
         <section className="mb-12">
           <h2 className="mb-6 text-2xl font-bold text-slate-900">
-            8. Third-Party Links and Services
+            9. Third-Party Links and Services
           </h2>
           <div className="space-y-4 text-sm text-gray-700">
             <div>
@@ -253,7 +306,7 @@ export default function TermsAndConditionsPage() {
         {/* GOVERNING LAW */}
         <section className="mb-12">
           <h2 className="mb-6 text-2xl font-bold text-slate-900">
-            9. Governing Law and Jurisdiction
+            10. Governing Law and Jurisdiction
           </h2>
           <div className="space-y-4 text-sm text-gray-700">
             <div>
@@ -275,7 +328,7 @@ export default function TermsAndConditionsPage() {
         {/* HEALTH DISCLAIMERS */}
         <section className="mb-12">
           <h2 className="mb-6 text-2xl font-bold text-slate-900">
-            10. Health Information Disclaimers
+            11. Health Information Disclaimers
           </h2>
           <div className="space-y-4 text-sm text-gray-700">
             <div>
@@ -304,7 +357,7 @@ export default function TermsAndConditionsPage() {
 
         {/* FORCE MAJEURE */}
         <section className="mb-12">
-          <h2 className="mb-6 text-2xl font-bold text-slate-900">11. Force Majeure</h2>
+          <h2 className="mb-6 text-2xl font-bold text-slate-900">12. Force Majeure</h2>
           <div className="space-y-4 text-sm text-gray-700">
             <p>
               We are not liable for service disruptions caused by circumstances beyond our control,
@@ -323,7 +376,7 @@ export default function TermsAndConditionsPage() {
         {/* SEVERABILITY */}
         <section className="mb-12">
           <h2 className="mb-6 text-2xl font-bold text-slate-900">
-            12. Severability and Entire Agreement
+            13. Severability and Entire Agreement
           </h2>
           <div className="space-y-4 text-sm text-gray-700">
             <div>
@@ -342,7 +395,7 @@ export default function TermsAndConditionsPage() {
 
         {/* AMENDMENTS */}
         <section className="mb-12">
-          <h2 className="mb-6 text-2xl font-bold text-slate-900">13. Amendment Procedures</h2>
+          <h2 className="mb-6 text-2xl font-bold text-slate-900">14. Amendment Procedures</h2>
           <div className="space-y-4 text-sm text-gray-700">
             <div>
               <h3 className="mb-2 text-base font-semibold text-slate-900">Updates:</h3>
@@ -362,7 +415,7 @@ export default function TermsAndConditionsPage() {
         {/* CONTACT INFO */}
         <section className="mb-12">
           <h2 className="mb-6 text-2xl font-bold text-slate-900">
-            14. Contact Information and Disputes
+            15. Contact Information and Disputes
           </h2>
           <div className="space-y-4 text-sm text-gray-700">
             <div>
@@ -384,7 +437,7 @@ export default function TermsAndConditionsPage() {
         {/* REGULATORY COMPLIANCE */}
         <section className="mb-12">
           <h2 className="mb-6 text-2xl font-bold text-slate-900">
-            15. Compliance with Canadian Healthcare Regulations
+            16. Compliance with Canadian Healthcare Regulations
           </h2>
           <div className="space-y-4 text-sm text-gray-700">
             <div>
@@ -410,7 +463,7 @@ export default function TermsAndConditionsPage() {
 
         {/* AGE RESTRICTIONS */}
         <section className="mb-12">
-          <h2 className="mb-6 text-2xl font-bold text-slate-900">16. Age Restrictions</h2>
+          <h2 className="mb-6 text-2xl font-bold text-slate-900">17. Age Restrictions</h2>
           <div className="space-y-4 text-sm text-gray-700">
             <div>
               <h3 className="mb-2 text-base font-semibold text-slate-900">Minimum Age:</h3>
