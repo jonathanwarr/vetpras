@@ -21,6 +21,7 @@ export default function ClinicsPage() {
   const [totalResults, setTotalResults] = useState(0);
   const [sortOption, setSortOption] = useState('clinic-asc');
   const [activeFilters, setActiveFilters] = useState({ exam: [], vaccine: [], rating: [] });
+  const [shouldScrollToSearch, setShouldScrollToSearch] = useState(false);
 
   const searchAreaRef = useRef(null);
 
@@ -55,6 +56,13 @@ export default function ClinicsPage() {
     setCurrentPage(1);
   }, [searchQuery, searchType, sortOption, activeFilters]);
 
+  useEffect(() => {
+    if (shouldScrollToSearch) {
+      scrollToSearchArea();
+      setShouldScrollToSearch(false);
+    }
+  }, [shouldScrollToSearch]);
+
   const handleCloseDrawer = () => setSelectedClinic(null);
 
   const handleSearchChange = ({ query, type }) => {
@@ -73,12 +81,12 @@ export default function ClinicsPage() {
 
   const handlePaginationPrev = () => {
     setCurrentPage(currentPage - 1);
-    scrollToSearchArea();
+    setShouldScrollToSearch(true);
   };
 
   const handlePaginationNext = () => {
     setCurrentPage(currentPage + 1);
-    scrollToSearchArea();
+    setShouldScrollToSearch(true);
   };
 
   const handleSortChange = (newSort) => {
