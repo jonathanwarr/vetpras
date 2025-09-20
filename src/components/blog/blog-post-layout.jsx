@@ -2,7 +2,7 @@
 import Link from 'next/link';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import { CheckCircleIcon, InformationCircleIcon } from '@heroicons/react/20/solid';
+import { InformationCircleIcon } from '@heroicons/react/20/solid';
 import ContainerNarrow from '@/components/layout/container-narrow';
 
 export default function BlogPostLayout({
@@ -28,15 +28,12 @@ export default function BlogPostLayout({
     ),
     p: ({ children }) => <p className="mt-6 text-gray-600">{children}</p>,
     ul: ({ children }) => (
-      <ul role="list" className="mt-8 max-w-xl space-y-8 text-gray-600">
+      <ul role="list" className="mt-8 max-w-xl space-y-2 text-gray-600 list-disc pl-6">
         {children}
       </ul>
     ),
     li: ({ children }) => (
-      <li className="flex gap-x-3">
-        <CheckCircleIcon aria-hidden="true" className="mt-1 size-5 flex-none text-indigo-600" />
-        <span>{children}</span>
-      </li>
+      <li>{children}</li>
     ),
     blockquote: ({ children }) => (
       <figure className="mt-10 border-l border-indigo-600 pl-9">
