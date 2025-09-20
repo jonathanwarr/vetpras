@@ -64,6 +64,26 @@ export default function BlogPostLayout({
       </Link>
     ),
     strong: ({ children }) => <strong className="font-semibold text-gray-900">{children}</strong>,
+    table: ({ children }) => (
+      <div className="mt-8 overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+        <table className="min-w-full divide-y divide-gray-300">{children}</table>
+      </div>
+    ),
+    thead: ({ children }) => (
+      <thead className="bg-gray-50">{children}</thead>
+    ),
+    tbody: ({ children }) => (
+      <tbody className="divide-y divide-gray-200 bg-white">{children}</tbody>
+    ),
+    tr: ({ children }) => <tr>{children}</tr>,
+    th: ({ children }) => (
+      <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500">
+        {children}
+      </th>
+    ),
+    td: ({ children }) => (
+      <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-900">{children}</td>
+    ),
   };
 
   const formatDate = (date) => {
