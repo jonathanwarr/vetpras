@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState, useMemo, useRef } from 'react';
 import { ArrowTopRightOnSquareIcon } from '@heroicons/react/20/solid';
 
 const CLINICS_PER_PAGE = 15;
@@ -30,6 +30,24 @@ export default function TableClinic({
   services = [],
 }) {
   const [loading, setLoading] = useState(false);
+
+  // Track if this is the first render
+  const isFirstRender = useRef(true);
+  const previousSortOption = useRef(sortOption);
+
+  // Log sort changes (for debugging - remove in production)
+  useEffect(() => {
+    if (!isFirstRender.current && previousSortOption.current !== sortOption) {
+      console.log(
+        'TableClinic: Sort actually changed from',
+        previousSortOption.current,
+        'to',
+        sortOption
+      );
+      previousSortOption.current = sortOption;
+    }
+    isFirstRender.current = false;
+  }, [sortOption]);
 
   // Filter clinics based on search query
   const searchFilteredClinics = useMemo(() => {
@@ -126,28 +144,27 @@ export default function TableClinic({
     return score;
   };
 
-  // Sort clinics
+  // Sort clinics - ONLY when sortOption or filteredClinics actually change
   const sortedClinics = useMemo(() => {
     const sorted = [...filteredClinics];
+
+    // Skip sorting if we have no clinics
+    if (sorted.length === 0) return sorted;
 
     switch (sortOption) {
       case 'clinic-asc':
         sorted.sort((a, b) => {
-          // First sort by data completeness (more complete data first)
           const scoreA = getDataCompletenessScore(a);
           const scoreB = getDataCompletenessScore(b);
           if (scoreB !== scoreA) return scoreB - scoreA;
-          // Then sort alphabetically
           return (a.clinic_name || '').localeCompare(b.clinic_name || '');
         });
         break;
       case 'clinic-desc':
         sorted.sort((a, b) => {
-          // First sort by data completeness (more complete data first)
           const scoreA = getDataCompletenessScore(a);
           const scoreB = getDataCompletenessScore(b);
           if (scoreB !== scoreA) return scoreB - scoreA;
-          // Then sort alphabetically descending
           return (b.clinic_name || '').localeCompare(a.clinic_name || '');
         });
         break;
@@ -158,7 +175,8 @@ export default function TableClinic({
         sorted.sort((a, b) => (b.city || '').localeCompare(a.city || ''));
         break;
       case 'nearest':
-        // Placeholder (needs user location)
+        // For now, fallback to city sort when no location
+        // TODO: Implement actual distance calculation when location is available
         sorted.sort((a, b) => (a.city || '').localeCompare(b.city || ''));
         break;
       case 'exam-low':
@@ -171,7 +189,6 @@ export default function TableClinic({
         sorted.sort((a, b) => (b.rating ?? 0) - (a.rating ?? 0));
         break;
       default:
-        // Default sort: data completeness first, then alphabetically
         sorted.sort((a, b) => {
           const scoreA = getDataCompletenessScore(a);
           const scoreB = getDataCompletenessScore(b);
@@ -184,11 +201,15 @@ export default function TableClinic({
     return sorted;
   }, [filteredClinics, sortOption]);
 
-  // Update totals
+  // Update totals - with debouncing to prevent multiple updates
   useEffect(() => {
-    onTotalResults(sortedClinics.length);
-    onTotalPages(Math.ceil(sortedClinics.length / CLINICS_PER_PAGE));
-  }, [sortedClinics, onTotalResults, onTotalPages]);
+    const timeoutId = setTimeout(() => {
+      onTotalResults(sortedClinics.length);
+      onTotalPages(Math.ceil(sortedClinics.length / CLINICS_PER_PAGE));
+    }, 0);
+
+    return () => clearTimeout(timeoutId);
+  }, [sortedClinics.length]); // Only depend on length, not the full array
 
   // Pagination
   const startIdx = (currentPage - 1) * CLINICS_PER_PAGE;
@@ -297,17 +318,11 @@ export default function TableClinic({
                     </span>
 
                     <span className="font-semibold">Spay:</span>
-                    <span>
-                      {Number.isFinite(clinic.spay)
-                        ? `$${clinic.spay.toFixed(0)}`
-                        : '—'}
-                    </span>
+                    <span>{Number.isFinite(clinic.spay) ? `$${clinic.spay.toFixed(0)}` : '—'}</span>
 
                     <span className="font-semibold">Neuter:</span>
                     <span>
-                      {Number.isFinite(clinic.neuter)
-                        ? `$${clinic.neuter.toFixed(0)}`
-                        : '—'}
+                      {Number.isFinite(clinic.neuter) ? `$${clinic.neuter.toFixed(0)}` : '—'}
                     </span>
 
                     <span className="font-semibold">Rating:</span>
@@ -353,14 +368,10 @@ export default function TableClinic({
                     : '—'}
                 </td>
                 <td className="hidden w-18 text-center font-sans text-xs font-medium whitespace-nowrap sm:table-cell">
-                  {Number.isFinite(clinic.spay)
-                    ? `$${clinic.spay.toFixed(0)}`
-                    : '—'}
+                  {Number.isFinite(clinic.spay) ? `$${clinic.spay.toFixed(0)}` : '—'}
                 </td>
                 <td className="hidden w-18 text-center font-sans text-xs font-medium whitespace-nowrap sm:table-cell">
-                  {Number.isFinite(clinic.neuter)
-                    ? `$${clinic.neuter.toFixed(0)}`
-                    : '—'}
+                  {Number.isFinite(clinic.neuter) ? `$${clinic.neuter.toFixed(0)}` : '—'}
                 </td>
                 <td className="hidden w-20 text-center font-sans text-xs font-medium whitespace-nowrap sm:table-cell">
                   {Number.isFinite(clinic.rating)
