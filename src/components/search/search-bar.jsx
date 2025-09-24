@@ -234,7 +234,7 @@ export default function SearchBar({
             onFocus={handleFocus}
             onBlur={handleBlur}
             placeholder={placeholder}
-            className="w-full pr-3 pl-10 text-sm transition-all duration-200 bg-gray-50 rounded-[12px]"
+            className="w-full pr-3 pl-10 text-base transition-all duration-200 bg-gray-50 rounded-[12px]"
             style={{
               height: '50px',
               backgroundColor: '#F9FAFB',

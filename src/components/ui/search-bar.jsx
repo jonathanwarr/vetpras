@@ -24,7 +24,7 @@ export default function SearchBar({ onSearchChange }) {
         value={query}
         onChange={handleChange}
         placeholder="Search clinics..."
-        className="focus:ring-primary w-full rounded-full border border-gray-300 px-4 py-2 pr-10 text-sm text-gray-900 placeholder:text-gray-400 focus:ring-2 focus:outline-none"
+        className="focus:ring-primary w-full rounded-full border border-gray-300 px-4 py-2 pr-10 text-base text-gray-900 placeholder:text-gray-400 focus:ring-2 focus:outline-none"
         aria-label="Search clinics"
       />
       <button
