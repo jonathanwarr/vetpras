@@ -36,7 +36,6 @@ export default function SortFilterControls({ onSortChange, onFilterChange, clini
     { value: 'clinic-desc', label: 'Clinic - Descending' },
     { value: 'city-asc', label: 'City - Ascending' },
     { value: 'city-desc', label: 'City - Descending' },
-    { value: 'nearest', label: 'Nearest' },
     { value: 'exam-low', label: 'Lowest Exam Fee' },
     { value: 'vaccine-low', label: 'Lowest Vaccine Fee' },
     { value: 'rating-high', label: 'Highest Rating' },
@@ -321,8 +320,11 @@ export default function SortFilterControls({ onSortChange, onFilterChange, clini
               {sortOptions.map((option, index) => (
                 <button
                   key={option.value}
-                  onClick={() => handleSortSelect(option.value)}
-                  className="w-full px-3 py-2 text-left text-sm transition-colors"
+                  onMouseDown={(e) => {
+                    e.preventDefault();
+                    handleSortSelect(option.value);
+                  }}
+                  className="w-full px-3 py-2 text-left text-sm transition-colors cursor-pointer"
                   style={{
                     backgroundColor: index === sortHighlightedIndex ? '#CBD5E1' : 'transparent',
                     color:
@@ -528,8 +530,11 @@ export default function SortFilterControls({ onSortChange, onFilterChange, clini
                 {sortOptions.map((option, index) => (
                   <button
                     key={option.value}
-                    onClick={() => handleSortSelect(option.value)}
-                    className="w-full px-3 py-2 text-left text-sm transition-colors"
+                    onMouseDown={(e) => {
+                      e.preventDefault();
+                      handleSortSelect(option.value);
+                    }}
+                    className="w-full px-3 py-2 text-left text-sm transition-colors cursor-pointer"
                     style={{
                       backgroundColor: index === sortHighlightedIndex ? '#CBD5E1' : 'transparent',
                       color:
