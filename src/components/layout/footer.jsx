@@ -4,7 +4,7 @@ export default function Footer() {
       <div className="mx-auto max-w-7xl px-6 py-6 md:flex md:items-center md:justify-between lg:px-8">
         {/* Left Column */}
         <div className="text-center md:w-1/3 md:text-left">
-          <p className="text-xs text-gray-400">&copy; 2025 Amwarr Consulting Ltd.</p>
+          <p className="text-xs text-gray-400">&copy; © 2025 by Pawcker</p>
         </div>
 
         {/* Middle Column */}
