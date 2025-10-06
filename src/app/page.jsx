@@ -62,6 +62,11 @@ export default function ClinicsPage() {
     setSearchType(type);
   };
 
+  const handleClearSearch = () => {
+    setSearchQuery('');
+    setSearchType('');
+  };
+
   const scrollToSearchArea = () => {
     if (searchAreaRef.current) {
       searchAreaRef.current.scrollIntoView({
@@ -110,8 +115,11 @@ export default function ClinicsPage() {
         <div className="mb-6">
           <SortFilterControls
             clinics={clinics}
+            searchQuery={searchQuery}
+            searchType={searchType}
             onSortChange={handleSortChange}
             onFilterChange={handleFilterChange}
+            onClearSearch={handleClearSearch}
           />
         </div>
       </ContainerConstrained>

@@ -55,7 +55,35 @@ export default function TableClinic({
 
     const query = searchQuery.toLowerCase();
 
+    // When a specific type is selected from dropdown, use exact matching
+    // Otherwise, use partial matching for free-text search
+    const isExactMatch = searchType && searchType !== 'text';
+
     return clinics.filter((clinic) => {
+      // Exact matching when user selected from dropdown
+      if (isExactMatch) {
+        if (searchType === 'clinic' && clinic.clinic_name?.toLowerCase() === query) return true;
+        if (searchType === 'city' && clinic.city?.toLowerCase() === query) return true;
+        if (searchType === 'address' && clinic.street_address?.toLowerCase() === query) return true;
+        if (searchType === 'province' && clinic.province?.toLowerCase() === query) return true;
+
+        // Services - exact match
+        if ((searchType === 'service' || searchType === 'category') && Array.isArray(clinic.service_code)) {
+          const clinicServices = services.filter((s) => clinic.service_code.includes(s.service_code));
+          if (clinicServices.some((s) => s.service?.toLowerCase() === query)) return true;
+
+          const categories = services.filter(
+            (s) => s.service_code.endsWith('.00') && s.service?.toLowerCase() === query
+          );
+          for (const category of categories) {
+            const categoryPrefix = category.service_code.split('.')[0] + '.';
+            if (clinic.service_code.some((code) => code.startsWith(categoryPrefix))) return true;
+          }
+        }
+        return false;
+      }
+
+      // Partial matching for free-text search
       if (clinic.clinic_name?.toLowerCase().includes(query)) return true; // Name
       if (clinic.city?.toLowerCase().includes(query)) return true; // City
       if (clinic.street_address?.toLowerCase().includes(query)) return true; // Address
@@ -76,7 +104,7 @@ export default function TableClinic({
       }
       return false;
     });
-  }, [searchQuery, clinics, services]);
+  }, [searchQuery, searchType, clinics, services]);
 
   // Apply price and rating filters
   const filteredClinics = useMemo(() => {

@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect, useMemo } from 'react';
 import { ChevronDownIcon, ChevronUpIcon, XMarkIcon } from '@heroicons/react/20/solid';
 
-export default function SortFilterControls({ onSortChange, onFilterChange, clinics = [] }) {
+export default function SortFilterControls({ onSortChange, onFilterChange, onClearSearch, searchQuery = '', searchType = '', clinics = [] }) {
   // Sort state
   const [sortOpen, setSortOpen] = useState(false);
   const [selectedSort, setSelectedSort] = useState('clinic-asc');
@@ -146,7 +146,12 @@ export default function SortFilterControls({ onSortChange, onFilterChange, clini
 
   // Remove individual filter
   const removeFilter = (type, value) => {
-    if (type === 'exam') {
+    if (type === 'search') {
+      // Clear search filter
+      if (onClearSearch) {
+        onClearSearch();
+      }
+    } else if (type === 'exam') {
       const newFilters = examFilters.filter((f) => f !== value);
       setExamFilters(newFilters);
       notifyFilterChange({
@@ -246,6 +251,18 @@ export default function SortFilterControls({ onSortChange, onFilterChange, clini
   }, []);
 
   const activeFilters = [
+    // Add search filter if present
+    ...(searchQuery?.trim() ? [{
+      type: 'search',
+      value: searchQuery,
+      label: searchType === 'city' ? `${searchQuery} (City)` :
+             searchType === 'clinic' ? `${searchQuery} (Clinic)` :
+             searchType === 'service' ? `${searchQuery} (Service)` :
+             searchType === 'category' ? `${searchQuery} (Category)` :
+             searchType === 'address' ? `${searchQuery} (Address)` :
+             searchType === 'province' ? `${searchQuery} (Province)` :
+             searchQuery,
+    }] : []),
     ...examFilters.map((f) => ({
       type: 'exam',
       value: f,
@@ -279,8 +296,7 @@ export default function SortFilterControls({ onSortChange, onFilterChange, clini
           {activeFilters.map((filter, index) => (
             <span
               key={`${filter.type}-${filter.value}-${index}`}
-              className="inline-flex items-center gap-1 rounded-full px-2 py-1 text-xs"
-              style={{ backgroundColor: '#E2E8F0', color: '#475569' }}
+              className="inline-flex items-center gap-1 rounded-full bg-blue-500 px-2 py-1 text-xs text-white"
             >
               {filter.label}
               <button
