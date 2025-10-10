@@ -37,11 +37,17 @@ export async function POST(req) {
     .trim()
     .slice(0, 800)
     .replace(/<[^>]*>/g, '');
-  const submission_date = new Date(
-    body?.submission_date && !Number.isNaN(new Date(body.submission_date))
-      ? body.submission_date
-      : Date.now()
-  ).toISOString();
+  const submittedDate = new Date(body?.submission_date);
+  if (isNaN(submittedDate.getTime())) {
+    return json({ error: { message: 'submission_date is invalid' } }, 400);
+  }
+  const minDate = new Date('2000-01-01').getTime();
+  const now = Date.now();
+  const submissionTimestamp = submittedDate.getTime();
+  if (submissionTimestamp < minDate || submissionTimestamp > now) {
+    return json({ error: { message: 'submission_date out of range' } }, 400);
+  }
+  const submission_date = submittedDate.toISOString();
 
   const payload = { image_url, notes, submission_date };
 
