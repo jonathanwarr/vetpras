@@ -4,6 +4,7 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { InformationCircleIcon } from '@heroicons/react/20/solid';
 import ContainerNarrow from '@/components/layout/container-narrow';
+import RelatedArticles from '@/components/blog/related-articles';
 
 export default function BlogPostLayout({
   post,
@@ -178,21 +179,8 @@ export default function BlogPostLayout({
           </div>
         )}
 
-        {/* Internal Links */}
-        {post.internal_links && post.internal_links.length > 0 && (
-          <div className="mt-16 rounded-lg bg-gray-50 p-8">
-            <h3 className="text-lg font-semibold text-gray-900">Related Resources</h3>
-            <ul className="mt-4 space-y-3">
-              {post.internal_links.map((link, index) => (
-                <li key={index}>
-                  <Link href={link} className="font-medium text-indigo-600 hover:text-indigo-500">
-                    {link.replace(/^\//, '').replace(/-/g, ' ').replace(/\//g, ' → ')}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
+        {/* Related Articles */}
+        <RelatedArticles currentPostId={post.id} limit={2} />
       </div>
     </article>
   );
