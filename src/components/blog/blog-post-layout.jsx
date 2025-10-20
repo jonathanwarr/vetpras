@@ -59,11 +59,29 @@ export default function BlogPostLayout({
         )}
       </figure>
     ),
-    a: ({ href, children }) => (
-      <Link href={href || '#'} className="font-semibold text-indigo-600 hover:text-indigo-500">
-        {children}
-      </Link>
-    ),
+    a: ({ href, children }) => {
+      // Check if it's an external link
+      const isExternal = href && (href.startsWith('http://') || href.startsWith('https://'));
+
+      if (isExternal) {
+        return (
+          <a
+            href={href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-semibold text-indigo-600 hover:text-indigo-500"
+          >
+            {children}
+          </a>
+        );
+      }
+
+      return (
+        <Link href={href || '#'} className="font-semibold text-indigo-600 hover:text-indigo-500">
+          {children}
+        </Link>
+      );
+    },
     strong: ({ children }) => <strong className="font-semibold text-gray-900">{children}</strong>,
     table: ({ children }) => (
       <div className="mt-8 overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
