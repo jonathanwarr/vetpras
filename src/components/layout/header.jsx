@@ -1,6 +1,9 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
+import { XMarkIcon } from '@heroicons/react/24/outline';
 
 export default function Header() {
   const [isSticky, setSticky] = useState(false);
@@ -16,84 +19,96 @@ export default function Header() {
   return (
     <header
       className={`fixed top-0 z-50 w-full transition-all duration-300 ${
-        isSticky ? 'bg-white/60 shadow-sm backdrop-blur-lg' : 'bg-transparent'
+        isSticky ? 'bg-white/60 shadow-sm backdrop-blur-lg' : 'bg-white'
       }`}
     >
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 lg:px-8">
-        <a href="/" className="flex items-center">
-          <img src="/images/vetpras-logo.svg" alt="Vetpras Logo" className="h-12 w-12" />
-          <span
-            className="ml-2 text-xl font-semibold text-slate-900"
-            style={{ fontFamily: 'Amiri, serif' }}
-          >
-            Vetpras
-          </span>
-        </a>
+      <nav className='mx-auto max-w-7xl px-6 sm:px-8 lg:px-12'>
+        <div className='flex h-20 sm:h-24 items-center justify-between'>
+          {/* Logo */}
+          <Link href="/" className='flex items-center gap-3'>
+            <Image
+              src='/images/vetpras-logo.svg'
+              alt='Vetpras'
+              width={40}
+              height={40}
+              className='h-9 sm:h-10 w-auto'
+            />
+            <span className='text-xl sm:text-2xl font-normal text-slate-900'>Vetpras</span>
+          </Link>
 
-        {/* Desktop Nav */}
-        <nav className="hidden items-center space-x-10 font-sans text-xs font-bold text-slate-900 uppercase md:flex">
-          <a href="/about-us" className="hover:text-blue-600">
-            Our Mission
-          </a>
-          <a href="/blog" className="hover:text-blue-600">
-            Blog
-          </a>
-          <a href="/submit-bill" className="hover:text-blue-600">
-            Submit a Bill
-          </a>
-        </nav>
+          {/* Desktop Nav Links */}
+          <div className='hidden md:flex items-center gap-6 lg:gap-8'>
+            <Link href='/blog' className='text-slate-900/90 hover:text-slate-900 transition-colors text-sm lg:text-base font-medium'>
+              Blog
+            </Link>
+            <Link href='/submit-bill' className='text-slate-900/90 hover:text-slate-900 transition-colors text-sm lg:text-base font-medium'>
+              Share a Bill
+            </Link>
+            <Link href='/search' className='rounded-lg bg-blue-500 px-5 lg:px-6 py-2.5 text-white hover:bg-blue-600 transition-all duration-200 text-sm lg:text-base font-medium'>
+              Search
+            </Link>
+          </div>
 
-        {/* Mobile Menu Button */}
-        <div className="flex md:hidden">
+          {/* Mobile Menu Button */}
           <button
-            type="button"
-            onClick={() => setMobileMenuOpen((open) => !open)}
-            className="inline-flex items-center justify-center rounded-md p-2 text-slate-900 hover:text-blue-600 focus:ring-2 focus:ring-blue-600 focus:outline-none focus:ring-inset"
-            aria-expanded={isMobileMenuOpen}
-            aria-controls="mobile-menu"
+            onClick={() => setMobileMenuOpen(!isMobileMenuOpen)}
+            className='md:hidden flex flex-col gap-1.5 p-2 cursor-pointer'
+            aria-label='Toggle menu'
           >
-            <span className="sr-only">Open main menu</span>
-            <svg
-              className="h-6 w-6"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
+            <div className='w-8 h-1 bg-slate-900 rounded-full' />
+            <div className='w-8 h-1 bg-slate-900 rounded-full' />
+            <div className='w-8 h-1 bg-slate-900 rounded-full' />
           </button>
         </div>
-      </div>
+      </nav>
 
-      {/* Mobile Nav Menu */}
+      {/* Mobile Menu - Full Screen Overlay */}
       {isMobileMenuOpen && (
-        <div
-          id="mobile-menu"
-          className="absolute top-full left-0 w-full bg-slate-50 shadow-md md:hidden"
-        >
-          <div className="flex flex-col items-start space-y-4 p-6 text-sm font-semibold text-slate-900">
-            <a
-              href="/about-us"
-              className="hover:text-blue-600"
+        <div className="md:hidden fixed inset-0 bg-gray-50 z-50">
+          {/* Mobile Menu Header */}
+          <div className='bg-gray-800 px-6 h-20 sm:h-24 flex items-center justify-between'>
+            <div className='flex items-center gap-3'>
+              <Image
+                src='/images/vetpras-logo-white.svg'
+                alt='Vetpras'
+                width={40}
+                height={40}
+                className='h-9 sm:h-10 w-auto'
+              />
+              <span className='text-xl sm:text-2xl font-normal text-gray-50'>Vetpras</span>
+            </div>
+            <button
               onClick={() => setMobileMenuOpen(false)}
+              className='text-gray-50 hover:text-white transition-colors cursor-pointer'
+              aria-label='Close menu'
             >
-              Our Mission
-            </a>
-            <a
-              href="/blog"
-              className="hover:text-blue-600"
+              <XMarkIcon className='h-8 w-8' />
+            </button>
+          </div>
+
+          {/* Mobile Menu Content */}
+          <div className='flex flex-col py-8 px-6 gap-6'>
+            <Link
+              href='/blog'
+              className='text-gray-700 hover:text-gray-900 transition-colors text-lg font-medium py-3'
               onClick={() => setMobileMenuOpen(false)}
             >
               Blog
-            </a>
-            <a
-              href="/submit-bill"
-              className="hover:text-blue-600"
+            </Link>
+            <Link
+              href='/submit-bill'
+              className='text-gray-700 hover:text-gray-900 transition-colors text-lg font-medium py-3'
               onClick={() => setMobileMenuOpen(false)}
             >
-              Submit a Bill
-            </a>
+              Share a Bill
+            </Link>
+            <Link
+              href='/search'
+              className='rounded-lg bg-blue-500 px-6 py-4 text-white hover:bg-blue-600 transition-all duration-200 text-lg font-medium text-center mt-4'
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              Search
+            </Link>
           </div>
         </div>
       )}

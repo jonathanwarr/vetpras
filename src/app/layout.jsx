@@ -1,17 +1,15 @@
 // src/app/layout.jsx
 
 import '@/styles/tailwind.css';
-import { Inter } from 'next/font/google';
+import { Inter, Lora } from 'next/font/google';
 import { Analytics } from '@vercel/analytics/react';
-import Footer from '@/components/layout/footer';
-import Header from '@/components/layout/header';
-import ScrollToTop from '@/components/ui/scroll-to-top';
+import ConditionalLayout from '@/components/layout/conditional-layout';
 import Script from 'next/script';
 import SessionHandler from '@/components/system/session-handler';
 import SupabaseProvider from '@/components/system/supabase-provider';
-import ExitIntentModal from '@/components/ui/exit-intent-modal';
 
 const inter = Inter({ subsets: ['latin'] });
+const lora = Lora({ subsets: ['latin'], variable: '--font-lora' });
 
 export const metadata = {
   title: 'Vetpras | Transparent Vet Pricing',
@@ -25,7 +23,7 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className={inter.className}>
+    <html lang="en" className={`${inter.className} ${lora.variable}`}>
       <body className="bg-white text-gray-900 antialiased">
         {/* Google Analytics */}
         <Script
@@ -84,12 +82,10 @@ export default function RootLayout({ children }) {
         </noscript>
 
         <SupabaseProvider>
-          <Header />
           <SessionHandler />
-          <main className="min-h-screen">{children}</main>
-          <Footer />
-          <ScrollToTop />
-          <ExitIntentModal />
+          <ConditionalLayout>
+            <main className="min-h-screen">{children}</main>
+          </ConditionalLayout>
         </SupabaseProvider>
 
         <Analytics />

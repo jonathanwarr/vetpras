@@ -1,29 +1,23 @@
 'use client';
 
-import { useEffect, useState, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
+import Image from 'next/image';
 import Link from 'next/link';
-import ContainerConstrained from '@/components/layout/container-constrained';
-import TableClinic from '@/components/clinics/table-clinic';
-import DrawerClinic from '@/components/clinics/drawer-clinic';
-import Pagination from '@/components/clinics/pagination';
-import SearchBar from '@/components/search/search-bar';
-import SortFilterControls from '@/components/search/sort-filter-controls';
+import { XMarkIcon } from '@heroicons/react/24/outline';
+import VetprasSearch from '@/components/features/vetpras-search';
+import Footer from '@/components/layout/footer';
+import ContentCommunity from '@/components/features/landing-page/content-community';
+import ContentHowItWorks from '@/components/features/landing-page/content-how-it-works';
+import CtaSimple from '@/components/features/cta-simple';
+import FaqAccordion from '@/components/features/faq-accordion';
 
-export default function ClinicsPage() {
-  const [selectedClinic, setSelectedClinic] = useState(null);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [searchType, setSearchType] = useState('');
+export default function Home() {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [clinics, setClinics] = useState([]);
   const [services, setServices] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
-  const [totalResults, setTotalResults] = useState(0);
-  const [sortOption, setSortOption] = useState('clinic-asc');
-  const [activeFilters, setActiveFilters] = useState({ exam: [], vaccine: [], rating: [] });
 
-  const searchAreaRef = useRef(null);
-
+  // Fetch data for search functionality
   useEffect(() => {
     async function fetchData() {
       const [{ data: clinicList, error: clinicError }, { data: serviceList, error: serviceError }] =
@@ -51,118 +45,179 @@ export default function ClinicsPage() {
     fetchData();
   }, []);
 
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [searchQuery, searchType, sortOption, activeFilters]);
-
-  const handleCloseDrawer = () => setSelectedClinic(null);
-
-  const handleSearchChange = ({ query, type }) => {
-    setSearchQuery(query);
-    setSearchType(type);
-  };
-
-  const handleClearSearch = () => {
-    setSearchQuery('');
-    setSearchType('');
-  };
-
-  const scrollToSearchArea = () => {
-    if (searchAreaRef.current) {
-      searchAreaRef.current.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start',
-      });
-    }
-  };
-
-  const handlePaginationPrev = () => {
-    setCurrentPage(currentPage - 1);
-    scrollToSearchArea();
-  };
-
-  const handlePaginationNext = () => {
-    setCurrentPage(currentPage + 1);
-    scrollToSearchArea();
-  };
-
-  const handleSortChange = (newSort) => {
-    setSortOption(newSort);
-  };
-
-  const handleFilterChange = (filters) => {
-    setActiveFilters(filters);
-  };
-
   return (
-    <div className="pt-12 pb-20 sm:pt-24 sm:pb-12">
-      <ContainerConstrained>
-        <div className="mb-10">
-          <h2 className="mt-20 mb-2 flex justify-center font-serif text-4xl font-semibold tracking-tight text-slate-900 sm:text-5xl lg:text-balance">
-            Find a Vet
-          </h2>
-          <p className="flex justify-center space-y-5 text-center font-sans text-lg font-light text-slate-900">
-            Search for vets by clinic name, city or treatment.
-          </p>
-        </div>
+    <div className='min-h-screen font-[family-name:var(--font-lora)]'>
+      {/* Header/Nav */}
+      <header className='absolute top-0 left-0 right-0 z-10'>
+        <nav className='mx-auto max-w-7xl px-6 sm:px-8 lg:px-12'>
+          <div className='flex h-20 sm:h-24 items-center justify-between'>
+            {/* Logo */}
+            <div className='flex items-center gap-3'>
+              <Image
+                src='/images/vetpras-logo-white.svg'
+                alt='Vetpras'
+                width={40}
+                height={40}
+                className='h-9 sm:h-10 w-auto'
+              />
+              <span className='text-xl sm:text-2xl font-normal text-gray-50'>Vetpras</span>
+            </div>
 
-        {/* New Search Bar */}
-        <div ref={searchAreaRef} className="mb-6 flex justify-center pb-10">
-          <SearchBar clinics={clinics} services={services} onSearchChange={handleSearchChange} />
-        </div>
+            {/* Desktop Nav Links */}
+            <div className='hidden md:flex items-center gap-6 lg:gap-8'>
+              <Link href='/blog' className='text-white/90 hover:text-white transition-colors text-sm lg:text-base font-medium'>
+                Blog
+              </Link>
+              <Link href='/submit-bill' className='text-white/90 hover:text-white transition-colors text-sm lg:text-base font-medium'>
+                Share a Bill
+              </Link>
+              <Link href='/search' className='rounded-lg bg-white/10 backdrop-blur-sm border border-white/20 px-5 lg:px-6 py-2.5 text-white hover:bg-white/20 transition-all duration-200 text-sm lg:text-base font-medium'>
+                Search
+              </Link>
+            </div>
 
-        {/* Sort and Filter Controls */}
-        <div className="mb-6">
-          <SortFilterControls
-            clinics={clinics}
-            searchQuery={searchQuery}
-            searchType={searchType}
-            onSortChange={handleSortChange}
-            onFilterChange={handleFilterChange}
-            onClearSearch={handleClearSearch}
-          />
-        </div>
-      </ContainerConstrained>
-
-      <ContainerConstrained>
-        <TableClinic
-          onSelectClinic={setSelectedClinic}
-          searchQuery={searchQuery}
-          searchType={searchType}
-          sortOption={sortOption}
-          activeFilters={activeFilters}
-          currentPage={currentPage}
-          setCurrentPage={setCurrentPage}
-          onTotalPages={setTotalPages}
-          onTotalResults={setTotalResults}
-          clinics={clinics}
-          services={services}
-        />
-        <div className="mt-4">
-          <p className="text-xs text-gray-600 italic">
-            Cost estimates only. Actual prices may vary based on your pet's specific needs,
-            location, and clinic policies. See{' '}
-            <Link
-              href="/terms-and-conditions"
-              className="text-blue-600 underline hover:text-blue-700"
+            {/* Mobile Menu Button */}
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className='md:hidden flex flex-col gap-1.5 p-2 cursor-pointer'
+              aria-label='Toggle menu'
             >
-              Terms & Conditions
-            </Link>{' '}
-            for details.
-          </p>
-        </div>
-        <div className="mt-15">
-          <Pagination
-            current={currentPage}
-            total={totalResults}
-            perPage={15}
-            onPrev={handlePaginationPrev}
-            onNext={handlePaginationNext}
-          />
-        </div>
-      </ContainerConstrained>
+              <div className='w-8 h-1 bg-white rounded-full' />
+              <div className='w-8 h-1 bg-white rounded-full' />
+              <div className='w-8 h-1 bg-white rounded-full' />
+            </button>
+          </div>
+        </nav>
 
-      <DrawerClinic clinic={selectedClinic} onClose={handleCloseDrawer} services={services} />
+        {/* Mobile Menu - Full Screen Overlay */}
+        <div
+          className={`md:hidden fixed inset-0 bg-gray-50 z-50 transition-opacity duration-300 ${
+            mobileMenuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
+          }`}
+        >
+          {/* Mobile Menu Header */}
+          <div className='bg-gray-800 px-6 h-20 sm:h-24 flex items-center justify-between'>
+            <div className='flex items-center gap-3'>
+              <Image
+                src='/images/vetpras-logo-white.svg'
+                alt='Vetpras'
+                width={40}
+                height={40}
+                className='h-9 sm:h-10 w-auto'
+              />
+              <span className='text-xl sm:text-2xl font-normal text-gray-50'>Vetpras</span>
+            </div>
+            <button
+              onClick={() => setMobileMenuOpen(false)}
+              className='text-gray-50 hover:text-white transition-colors cursor-pointer'
+              aria-label='Close menu'
+            >
+              <XMarkIcon className='h-8 w-8' />
+            </button>
+          </div>
+
+          {/* Mobile Menu Content */}
+          <div className='flex flex-col h-full'>
+            <div className='flex-1 flex flex-col py-8 px-6 gap-6'>
+              <Link
+                href='/blog'
+                className='text-gray-700 hover:text-gray-900 transition-colors text-lg font-medium py-3'
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Blog
+              </Link>
+              <Link
+                href='/submit-bill'
+                className='text-gray-700 hover:text-gray-900 transition-colors text-lg font-medium py-3'
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Share a Bill
+              </Link>
+              <Link
+                href='/search'
+                className='rounded-lg bg-blue-500 px-6 py-4 text-white hover:bg-blue-600 transition-all duration-200 text-lg font-medium text-center mt-4'
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Search
+              </Link>
+            </div>
+
+            {/* Footer in Mobile Menu */}
+            <Footer />
+          </div>
+        </div>
+      </header>
+
+      {/* Hero Section */}
+      <div className='relative h-screen min-h-[700px] sm:min-h-[800px]'>
+        {/* Background Image */}
+        <div className='absolute inset-0'>
+          <Image
+            src='/images/vetpras-hero-image.png'
+            alt='Happy pet owner with dog'
+            fill
+            className='object-cover object-[65%_60%] sm:object-[center_65%] lg:object-[center_60%]'
+            priority
+          />
+          {/* Sophisticated gradient overlay */}
+          <div className='absolute inset-0 bg-gradient-to-br from-gray-900/75 via-gray-900/50 to-gray-900/30' />
+        </div>
+
+        {/* Hero Content */}
+        <div className='relative h-full flex flex-col'>
+          {/* Text Content - Vertically Centered */}
+          <div className='flex-1 flex items-center pt-20'>
+            <div className='w-full max-w-7xl mx-auto px-6 sm:px-8 lg:px-12'>
+              <div className='max-w-2xl lg:max-w-3xl'>
+                {/* Heading */}
+                <h1 className='hero-heading text-white mb-5 sm:mb-6 lg:mb-8'>
+                  Find & Compare Vet Costs Near You
+                </h1>
+
+                {/* Subheading */}
+                <p className='hero-subheading text-gray-100 max-w-xl'>
+                  Compare prices from local clinics and make informed decisions about your pet's health.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Search Section - Bottom Positioned */}
+          <div className='pb-16 sm:pb-4 min-[1440px]:pb-12 min-[1920px]:pb-20'>
+            <div className='w-full max-w-7xl mx-auto px-6 sm:px-8 lg:px-12'>
+              <div className='flex flex-col items-start sm:items-center w-full max-w-4xl mx-auto'>
+                {/* Beta Notice */}
+                <div className='mb-3 min-[1440px]:mb-5 min-[1920px]:mb-6 w-full max-w-4xl'>
+                  <p className='text-white/80 text-sm sm:text-base italic text-center sm:text-left'>
+                    Currently in beta — search limited to select areas in Greater Vancouver
+                  </p>
+                </div>
+
+                {/* Search Bar */}
+                <VetprasSearch clinics={clinics} services={services} className='w-full' />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Community Content Section */}
+      <ContentCommunity />
+
+      {/* CTA Section */}
+      <CtaSimple />
+
+      {/* How It Works Section */}
+      <ContentHowItWorks />
+
+      {/* FAQ Section */}
+      <FaqAccordion />
+
+      {/* Final CTA Section */}
+      <CtaSimple />
+
+      {/* Footer */}
+      <Footer />
     </div>
   );
 }
