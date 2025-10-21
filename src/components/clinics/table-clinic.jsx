@@ -267,7 +267,7 @@ export default function TableClinic({
               scope="col"
               className="w-56 px-3 py-[14px] pl-4 text-left text-sm font-bold text-white"
             >
-              Name
+              <span className="hidden sm:inline">Name</span>
             </th>
             <th
               scope="col"

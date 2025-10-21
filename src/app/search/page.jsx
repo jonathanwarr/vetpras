@@ -144,6 +144,9 @@ function SearchPageContent() {
       </ContainerConstrained>
 
       <ContainerConstrained>
+        <p className="mb-3 text-sm text-slate-600 italic lg:hidden">
+          Tap any clinic to view full details
+        </p>
         <TableClinic
           onSelectClinic={setSelectedClinic}
           searchQuery={searchQuery}
