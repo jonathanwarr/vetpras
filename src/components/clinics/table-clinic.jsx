@@ -260,55 +260,55 @@ export default function TableClinic({
 
   return (
     <div className="w-full">
-      <div className="w-full">
+      <div className="w-full shadow-lg rounded-lg overflow-hidden bg-white">
         <table className="w-full table-fixed">
-          <thead className="border-b border-gray-200">
+          <thead className="bg-gradient-to-br from-blue-500 to-blue-600">
             <tr>
               <th
                 scope="col"
-                className="text-table-header w-56 px-3 py-[14px] pl-4 text-left text-xs"
+                className="w-56 px-3 py-[14px] pl-4 text-left text-sm font-bold text-white"
               >
                 Name
               </th>
               <th
                 scope="col"
-                className="text-table-header hidden w-24 px-3 py-[14px] text-left text-xs sm:table-cell"
+                className="hidden w-24 px-3 py-[14px] text-left text-sm font-bold text-white sm:table-cell"
               >
                 City
               </th>
               <th
                 scope="col"
-                className="text-table-header hidden w-18 px-3 py-[14px] text-center text-xs sm:table-cell"
+                className="hidden w-18 px-3 py-[14px] text-center text-sm font-bold text-white sm:table-cell"
               >
                 Exam
               </th>
               <th
                 scope="col"
-                className="text-table-header hidden w-18 px-3 py-[14px] text-center text-xs sm:table-cell"
+                className="hidden w-18 px-3 py-[14px] text-center text-sm font-bold text-white sm:table-cell"
               >
                 Core Vaccine
               </th>
               <th
                 scope="col"
-                className="text-table-header hidden w-18 px-3 py-[14px] text-center text-xs sm:table-cell"
+                className="hidden w-18 px-3 py-[14px] text-center text-sm font-bold text-white sm:table-cell"
               >
                 Spay
               </th>
               <th
                 scope="col"
-                className="text-table-header hidden w-18 px-3 py-[14px] text-center text-xs sm:table-cell"
+                className="hidden w-18 px-3 py-[14px] text-center text-sm font-bold text-white sm:table-cell"
               >
                 Neuter
               </th>
               <th
                 scope="col"
-                className="text-table-header hidden w-20 px-3 py-[14px] text-center text-xs sm:table-cell"
+                className="hidden w-20 px-3 py-[14px] text-center text-sm font-bold text-white sm:table-cell"
               >
                 Rating
               </th>
               <th
                 scope="col"
-                className="text-table-header hidden w-16 px-3 py-[14px] text-center text-xs sm:table-cell"
+                className="hidden w-16 px-3 py-[14px] text-center text-sm font-bold text-white sm:table-cell"
               >
                 Website
               </th>
@@ -371,7 +371,7 @@ export default function TableClinic({
                           href={clinic.website}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center hover:underline"
+                          className="inline-flex items-center text-blue-500 hover:text-blue-600 hover:underline"
                           onClick={(e) => e.stopPropagation()}
                         >
                           Visit
@@ -416,7 +416,7 @@ export default function TableClinic({
                       href={clinic.website}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center hover:underline"
+                      className="inline-flex items-center text-blue-500 hover:text-blue-600 hover:underline"
                       onClick={(e) => e.stopPropagation()}
                     >
                       <ArrowTopRightOnSquareIcon className="h-4 w-4" aria-hidden="true" />

@@ -4,7 +4,15 @@ import { useState, useRef, useEffect, useMemo, useCallback } from 'react';
 import { ChevronDownIcon, ChevronUpIcon, XMarkIcon } from '@heroicons/react/20/solid';
 import RangeSlider from '@/components/ui/range-slider';
 
-export default function SortFilterControls({ onSortChange, onFilterChange, onClearSearch, searchQuery = '', searchType = '', clinics = [] }) {
+export default function SortFilterControls({
+  onSortChange,
+  onFilterChange,
+  onClearSearch,
+  searchQuery = '',
+  searchType = '',
+  clinics = [],
+  initialFilters = null
+}) {
   // Sort state
   const [sortOpen, setSortOpen] = useState(false);
   const [selectedSort, setSelectedSort] = useState('clinic-asc');
@@ -29,6 +37,60 @@ export default function SortFilterControls({ onSortChange, onFilterChange, onCle
   const [neuterRange, setNeuterRange] = useState(null);
   const [ratingRange, setRatingRange] = useState(null);
   const [cityFilters, setCityFilters] = useState([]);
+
+  // Track if filters have been initialized from NLP
+  const lastInitialFilters = useRef(null);
+
+  // Update internal state when initialFilters are provided (e.g., from NLP)
+  useEffect(() => {
+    // Only update if initialFilters have changed
+    if (initialFilters && JSON.stringify(initialFilters) !== JSON.stringify(lastInitialFilters.current)) {
+      lastInitialFilters.current = initialFilters;
+
+      // Update exam range
+      if (initialFilters.exam) {
+        setExamRange([initialFilters.exam.min, initialFilters.exam.max]);
+      } else {
+        setExamRange(null);
+      }
+      // Update vaccine range
+      if (initialFilters.vaccine) {
+        setVaccineRange([initialFilters.vaccine.min, initialFilters.vaccine.max]);
+      } else {
+        setVaccineRange(null);
+      }
+      // Update spay range
+      if (initialFilters.spay) {
+        setSpayRange([initialFilters.spay.min, initialFilters.spay.max]);
+      } else {
+        setSpayRange(null);
+      }
+      // Update neuter range
+      if (initialFilters.neuter) {
+        setNeuterRange([initialFilters.neuter.min, initialFilters.neuter.max]);
+      } else {
+        setNeuterRange(null);
+      }
+      // Update rating range
+      if (initialFilters.rating) {
+        setRatingRange([initialFilters.rating.min, initialFilters.rating.max]);
+      } else {
+        setRatingRange(null);
+      }
+      // Update city filters
+      if (initialFilters.city && initialFilters.city.length > 0) {
+        // Handle both string array and object array formats
+        const cities = initialFilters.city.map(c =>
+          typeof c === 'string' ? c : c.value
+        ).filter(Boolean);
+        // Remove duplicates using Set
+        const uniqueCities = [...new Set(cities)];
+        setCityFilters(uniqueCities);
+      } else {
+        setCityFilters([]);
+      }
+    }
+  }, [initialFilters]);
 
   const sortRef = useRef(null);
   const examRef = useRef(null);
@@ -239,8 +301,8 @@ export default function SortFilterControls({ onSortChange, onFilterChange, onCle
   }, []);
 
   const activeFilters = [
-    // Add search filter if present
-    ...(searchQuery?.trim() ? [{
+    // Add search filter if present (but NOT for NLP queries - those use specific filter pills)
+    ...(searchQuery?.trim() && searchType !== 'nlp' ? [{
       type: 'search',
       value: searchQuery,
       label: searchType === 'city' ? `${searchQuery} (City)` :
@@ -288,28 +350,30 @@ export default function SortFilterControls({ onSortChange, onFilterChange, onCle
 
   return (
     <div className="space-y-3">
-      {/* Active filters pills */}
-      {activeFilters.length > 0 && (
-        <div className="flex flex-wrap gap-2 border-b border-gray-200 pb-3">
-          <span className="text-sm font-medium" style={{ color: '#0F172B' }}>
-            Active Filters:
-          </span>
-          {activeFilters.map((filter, index) => (
-            <span
-              key={`${filter.type}-${filter.value}-${index}`}
-              className="inline-flex items-center gap-1 rounded-full bg-blue-500 px-2 py-1 text-xs text-white"
-            >
-              {filter.label}
-              <button
-                onClick={() => filter.isCityFilter ? removeCityFilter(filter.value) : removeFilter(filter.type)}
-                className="ml-1 hover:opacity-70"
-              >
-                <XMarkIcon className="h-3 w-3" />
-              </button>
+      {/* Active filters pills - Reserved space to prevent layout shift */}
+      <div className="min-h-[44px] flex flex-wrap gap-2 border-b border-gray-200 pb-3">
+        {activeFilters.length > 0 && (
+          <>
+            <span className="text-sm font-medium" style={{ color: '#0F172B' }}>
+              Active Filters:
             </span>
-          ))}
-        </div>
-      )}
+            {activeFilters.map((filter, index) => (
+              <span
+                key={`${filter.type}-${filter.value}-${index}`}
+                className="inline-flex items-center gap-1 rounded-lg bg-blue-500 px-3 py-1.5 text-xs font-bold text-white"
+              >
+                {filter.label}
+                <button
+                  onClick={() => filter.isCityFilter ? removeCityFilter(filter.value) : removeFilter(filter.type)}
+                  className="ml-1 hover:opacity-70"
+                >
+                  <XMarkIcon className="h-3 w-3" />
+                </button>
+              </span>
+            ))}
+          </>
+        )}
+      </div>
 
       {/* Desktop: Sort and Filter controls on same line */}
       <div className="hidden sm:flex sm:items-center sm:justify-between">
@@ -331,7 +395,7 @@ export default function SortFilterControls({ onSortChange, onFilterChange, onCle
 
           {sortOpen && (
             <div
-              className="absolute z-50 mt-1 w-48 rounded-md shadow-lg"
+              className="absolute z-50 mt-1 w-48 rounded-md shadow-lg animate-in fade-in slide-in-from-top-2 duration-200"
               style={{ backgroundColor: '#F1F5F9', border: '1px solid #CBD5E1' }}
             >
               {sortOptions.map((option, index) => (
@@ -379,7 +443,7 @@ export default function SortFilterControls({ onSortChange, onFilterChange, onCle
 
             {cityFilterOpen && (
               <div
-                className="absolute right-0 z-50 mt-1 max-h-64 w-56 overflow-auto rounded-md p-2 shadow-lg"
+                className="absolute right-0 z-50 mt-1 max-h-64 w-56 overflow-auto rounded-md p-2 shadow-lg animate-in fade-in slide-in-from-top-2 duration-200"
                 style={{ backgroundColor: '#F1F5F9', border: '1px solid #CBD5E1' }}
               >
                 {cityOptions.length === 0 ? (
@@ -421,7 +485,7 @@ export default function SortFilterControls({ onSortChange, onFilterChange, onCle
 
             {examFilterOpen && (
               <div
-                className="absolute right-0 z-50 mt-1 w-64 rounded-md p-4 shadow-lg"
+                className="absolute right-0 z-50 mt-1 w-64 rounded-md p-4 shadow-lg animate-in fade-in slide-in-from-top-2 duration-200"
                 style={{ backgroundColor: '#F1F5F9', border: '1px solid #CBD5E1' }}
               >
                 <RangeSlider
@@ -454,7 +518,7 @@ export default function SortFilterControls({ onSortChange, onFilterChange, onCle
 
             {vaccineFilterOpen && (
               <div
-                className="absolute right-0 z-50 mt-1 w-64 rounded-md p-4 shadow-lg"
+                className="absolute right-0 z-50 mt-1 w-64 rounded-md p-4 shadow-lg animate-in fade-in slide-in-from-top-2 duration-200"
                 style={{ backgroundColor: '#F1F5F9', border: '1px solid #CBD5E1' }}
               >
                 <RangeSlider
@@ -487,7 +551,7 @@ export default function SortFilterControls({ onSortChange, onFilterChange, onCle
 
             {spayFilterOpen && (
               <div
-                className="absolute right-0 z-50 mt-1 w-64 rounded-md p-4 shadow-lg"
+                className="absolute right-0 z-50 mt-1 w-64 rounded-md p-4 shadow-lg animate-in fade-in slide-in-from-top-2 duration-200"
                 style={{ backgroundColor: '#F1F5F9', border: '1px solid #CBD5E1' }}
               >
                 <RangeSlider
@@ -520,7 +584,7 @@ export default function SortFilterControls({ onSortChange, onFilterChange, onCle
 
             {neuterFilterOpen && (
               <div
-                className="absolute right-0 z-50 mt-1 w-64 rounded-md p-4 shadow-lg"
+                className="absolute right-0 z-50 mt-1 w-64 rounded-md p-4 shadow-lg animate-in fade-in slide-in-from-top-2 duration-200"
                 style={{ backgroundColor: '#F1F5F9', border: '1px solid #CBD5E1' }}
               >
                 <RangeSlider
@@ -553,7 +617,7 @@ export default function SortFilterControls({ onSortChange, onFilterChange, onCle
 
             {ratingFilterOpen && (
               <div
-                className="absolute right-0 z-50 mt-1 w-64 rounded-md p-4 shadow-lg"
+                className="absolute right-0 z-50 mt-1 w-64 rounded-md p-4 shadow-lg animate-in fade-in slide-in-from-top-2 duration-200"
                 style={{ backgroundColor: '#F1F5F9', border: '1px solid #CBD5E1' }}
               >
                 <RangeSlider
@@ -592,7 +656,7 @@ export default function SortFilterControls({ onSortChange, onFilterChange, onCle
 
             {sortOpen && (
               <div
-                className="absolute z-50 mt-1 w-48 rounded-md shadow-lg"
+                className="absolute z-50 mt-1 w-48 rounded-md shadow-lg animate-in fade-in slide-in-from-top-2 duration-200"
                 style={{ backgroundColor: '#F1F5F9', border: '1px solid #CBD5E1' }}
               >
                 {sortOptions.map((option, index) => (
@@ -638,7 +702,7 @@ export default function SortFilterControls({ onSortChange, onFilterChange, onCle
 
             {mobileFiltersOpen && (
               <div
-                className="absolute right-0 z-50 mt-1 w-80 rounded-md shadow-lg"
+                className="absolute right-0 z-50 mt-1 w-80 rounded-md shadow-lg animate-in fade-in slide-in-from-top-2 duration-200"
                 style={{ backgroundColor: '#F1F5F9', border: '1px solid #CBD5E1' }}
               >
                 {!mobileActiveFilter ? (
