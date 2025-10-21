@@ -172,7 +172,7 @@ export default function VetprasSearch({
       {/* Mobile: Stacked Layout */}
       <div className='sm:hidden flex flex-col gap-3 relative'>
         {/* Search Input Container */}
-        <div className='flex items-center bg-slate-50 rounded-2xl shadow-md border border-gray-400'>
+        <div className='flex items-center bg-slate-50 rounded-2xl shadow-lg border border-gray-200'>
           <div className='pl-6 pr-3'>
             <MagnifyingGlassIcon className='h-5 w-5 text-gray-600' />
           </div>
@@ -240,7 +240,7 @@ export default function VetprasSearch({
       </div>
 
       {/* Desktop: Horizontal Layout */}
-      <div className='hidden sm:flex items-center bg-slate-50 rounded-2xl shadow-md border border-gray-400 relative'>
+      <div className='hidden sm:flex items-center bg-slate-50 rounded-2xl shadow-lg border border-gray-200 relative'>
         <div className='flex items-center flex-1 min-w-0'>
           <div className='pl-8 pr-4'>
             <MagnifyingGlassIcon className='h-6 w-6 text-gray-600' />
