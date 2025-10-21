@@ -48,7 +48,7 @@ export default function Header() {
               <SparklesIcon className='h-4 w-4 lg:h-5 lg:w-5 text-blue-500' />
               Share a Bill
             </Link>
-            <Link href='/search' className='rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 px-5 lg:px-6 py-2.5 text-white hover:from-blue-700 hover:to-blue-700 transition-all duration-200 text-sm lg:text-base font-bold shadow-md shadow-blue-900/40'>
+            <Link href='/search' className='rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 px-5 lg:px-6 py-2.5 text-white hover:from-blue-700 hover:to-blue-700 transition-all duration-200 text-sm lg:text-base font-semibold shadow-md shadow-blue-900/40'>
               Find a Vet
             </Link>
           </div>
@@ -116,7 +116,7 @@ export default function Header() {
             </Link>
             <Link
               href='/search'
-              className='rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 px-6 py-4 text-white hover:from-blue-700 hover:to-blue-700 transition-all duration-200 text-lg font-bold text-center mt-4 shadow-md shadow-blue-900/40'
+              className='rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 px-6 py-4 text-white hover:from-blue-700 hover:to-blue-700 transition-all duration-200 text-lg font-semibold text-center mt-4 shadow-md shadow-blue-900/40'
               onClick={() => setMobileMenuOpen(false)}
             >
               Find a Vet

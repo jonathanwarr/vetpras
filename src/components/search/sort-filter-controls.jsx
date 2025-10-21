@@ -303,9 +303,9 @@ export default function SortFilterControls({ onSortChange, onFilterChange, onCle
               {filter.label}
                 <button
                   onClick={() => filter.isCityFilter ? removeCityFilter(filter.value) : removeFilter(filter.type)}
-                  className="ml-1 hover:opacity-70"
+                  className="ml-1 hover:opacity-70 cursor-pointer"
                 >
-                  <XMarkIcon className="h-3 w-3" />
+                  <XMarkIcon className="h-4 w-4 font-bold stroke-2" />
                 </button>
               </span>
             ))}
