@@ -110,43 +110,47 @@ export default function TableClinic({
   const filteredClinics = useMemo(() => {
     let result = [...searchFilteredClinics];
 
-    // Exam fee filters
-    if (activeFilters?.exam?.length) {
+    // Exam fee filter - now using min/max range
+    if (activeFilters?.exam && typeof activeFilters.exam === 'object' && activeFilters.exam.min !== undefined) {
       result = result.filter((clinic) => {
         if (clinic.exam_fee == null) return false;
-        return activeFilters.exam.some((f) => {
-          const [min, max] = toRange(f);
-          return clinic.exam_fee >= min && clinic.exam_fee <= max;
-        });
+        return clinic.exam_fee >= activeFilters.exam.min && clinic.exam_fee <= activeFilters.exam.max;
       });
     }
 
-    // Vaccine fee filters (core vaccine only)
-    if (activeFilters?.vaccine?.length) {
+    // Vaccine fee filter - now using min/max range
+    if (activeFilters?.vaccine && typeof activeFilters.vaccine === 'object' && activeFilters.vaccine.min !== undefined) {
       result = result.filter((clinic) => {
         if (clinic.da2pp_vaccine == null) return false;
-
-        const vaccinePrice = clinic.da2pp_vaccine;
-
-        return activeFilters.vaccine.some((f) => {
-          const [min, max] = toRange(f);
-          return vaccinePrice >= min && vaccinePrice <= max;
-        });
+        return clinic.da2pp_vaccine >= activeFilters.vaccine.min && clinic.da2pp_vaccine <= activeFilters.vaccine.max;
       });
     }
 
-    // Rating filters
-    if (activeFilters?.rating?.length) {
+    // Spay filter - now using min/max range
+    if (activeFilters?.spay && typeof activeFilters.spay === 'object' && activeFilters.spay.min !== undefined) {
+      result = result.filter((clinic) => {
+        if (clinic.spay == null) return false;
+        return clinic.spay >= activeFilters.spay.min && clinic.spay <= activeFilters.spay.max;
+      });
+    }
+
+    // Neuter filter - now using min/max range
+    if (activeFilters?.neuter && typeof activeFilters.neuter === 'object' && activeFilters.neuter.min !== undefined) {
+      result = result.filter((clinic) => {
+        if (clinic.neuter == null) return false;
+        return clinic.neuter >= activeFilters.neuter.min && clinic.neuter <= activeFilters.neuter.max;
+      });
+    }
+
+    // Rating filter - now using min/max range
+    if (activeFilters?.rating && typeof activeFilters.rating === 'object' && activeFilters.rating.min !== undefined) {
       result = result.filter((clinic) => {
         const rating = typeof clinic.rating === 'number' ? clinic.rating : 0;
-        return activeFilters.rating.some((f) => {
-          const [min, max] = toRange(f);
-          return rating >= min && rating <= max;
-        });
+        return rating >= activeFilters.rating.min && rating <= activeFilters.rating.max;
       });
     }
 
-    // City filters (new)
+    // City filters
     if (activeFilters?.city?.length) {
       const allowedCities = new Set(
         activeFilters.city
