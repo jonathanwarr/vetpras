@@ -292,7 +292,7 @@ export default function SortFilterControls({ onSortChange, onFilterChange, onCle
       <div className="min-h-[44px] flex flex-wrap gap-2 border-b border-gray-200 pb-3">
         {activeFilters.length > 0 && (
           <>
-            <span className="text-sm font-medium" style={{ color: '#0F172B' }}>
+            <span className="text-sm font-medium text-slate-700">
               Active Filters:
             </span>
             {activeFilters.map((filter, index) => (
@@ -320,14 +320,13 @@ export default function SortFilterControls({ onSortChange, onFilterChange, onCle
           <button
             onClick={() => setSortOpen(!sortOpen)}
             onKeyDown={handleSortKeyDown}
-            className="flex items-center gap-1 px-3 py-1.5 text-sm font-medium transition-colors"
-            style={{ color: '#0F172B' }}
+            className="flex items-center gap-1 px-3 py-1.5 text-sm font-medium transition-colors text-slate-700 cursor-pointer hover:text-slate-900"
           >
             <span>Sort</span>
             {sortOpen ? (
-              <ChevronUpIcon className="h-4 w-4" style={{ color: '#2C7FFF' }} />
+              <ChevronUpIcon className="h-4 w-4 text-blue-500" />
             ) : (
-              <ChevronDownIcon className="h-4 w-4" style={{ color: '#45556C' }} />
+              <ChevronDownIcon className="h-4 w-4 text-slate-600" />
             )}
           </button>
 
@@ -368,13 +367,12 @@ export default function SortFilterControls({ onSortChange, onFilterChange, onCle
           <div ref={cityRef} className="relative">
             <button
               onClick={() => setCityFilterOpen(!cityFilterOpen)}
-              className="flex items-center gap-1 px-3 py-1.5 text-sm font-medium transition-colors"
-              style={{ color: '#0F172B' }}
+              className="flex items-center gap-1 px-3 py-1.5 text-sm font-medium transition-colors text-slate-700 cursor-pointer hover:text-slate-900"
             >
               {cityFilterOpen ? (
-                <ChevronUpIcon className="h-4 w-4" style={{ color: '#2C7FFF' }} />
+                <ChevronUpIcon className="h-4 w-4 text-blue-500" />
               ) : (
-                <ChevronDownIcon className="h-4 w-4" style={{ color: '#45556C' }} />
+                <ChevronDownIcon className="h-4 w-4 text-slate-600" />
               )}
               <span>City</span>
             </button>
@@ -410,13 +408,12 @@ export default function SortFilterControls({ onSortChange, onFilterChange, onCle
           <div ref={examRef} className="relative">
             <button
               onClick={() => setExamFilterOpen(!examFilterOpen)}
-              className="flex items-center gap-1 px-3 py-1.5 text-sm font-medium transition-colors"
-              style={{ color: '#0F172B' }}
+              className="flex items-center gap-1 px-3 py-1.5 text-sm font-medium transition-colors text-slate-700 cursor-pointer hover:text-slate-900"
             >
               {examFilterOpen ? (
-                <ChevronUpIcon className="h-4 w-4" style={{ color: '#2C7FFF' }} />
+                <ChevronUpIcon className="h-4 w-4 text-blue-500" />
               ) : (
-                <ChevronDownIcon className="h-4 w-4" style={{ color: '#45556C' }} />
+                <ChevronDownIcon className="h-4 w-4 text-slate-600" />
               )}
               <span>Exam</span>
             </button>
@@ -443,13 +440,12 @@ export default function SortFilterControls({ onSortChange, onFilterChange, onCle
           <div ref={vaccineRef} className="relative">
             <button
               onClick={() => setVaccineFilterOpen(!vaccineFilterOpen)}
-              className="flex items-center gap-1 px-3 py-1.5 text-sm font-medium transition-colors"
-              style={{ color: '#0F172B' }}
+              className="flex items-center gap-1 px-3 py-1.5 text-sm font-medium transition-colors text-slate-700 cursor-pointer hover:text-slate-900"
             >
               {vaccineFilterOpen ? (
-                <ChevronUpIcon className="h-4 w-4" style={{ color: '#2C7FFF' }} />
+                <ChevronUpIcon className="h-4 w-4 text-blue-500" />
               ) : (
-                <ChevronDownIcon className="h-4 w-4" style={{ color: '#45556C' }} />
+                <ChevronDownIcon className="h-4 w-4 text-slate-600" />
               )}
               <span>Vaccine</span>
             </button>
@@ -476,13 +472,12 @@ export default function SortFilterControls({ onSortChange, onFilterChange, onCle
           <div ref={spayRef} className="relative">
             <button
               onClick={() => setSpayFilterOpen(!spayFilterOpen)}
-              className="flex items-center gap-1 px-3 py-1.5 text-sm font-medium transition-colors"
-              style={{ color: '#0F172B' }}
+              className="flex items-center gap-1 px-3 py-1.5 text-sm font-medium transition-colors text-slate-700 cursor-pointer hover:text-slate-900"
             >
               {spayFilterOpen ? (
-                <ChevronUpIcon className="h-4 w-4" style={{ color: '#2C7FFF' }} />
+                <ChevronUpIcon className="h-4 w-4 text-blue-500" />
               ) : (
-                <ChevronDownIcon className="h-4 w-4" style={{ color: '#45556C' }} />
+                <ChevronDownIcon className="h-4 w-4 text-slate-600" />
               )}
               <span>Spay</span>
             </button>
@@ -509,13 +504,12 @@ export default function SortFilterControls({ onSortChange, onFilterChange, onCle
           <div ref={neuterRef} className="relative">
             <button
               onClick={() => setNeuterFilterOpen(!neuterFilterOpen)}
-              className="flex items-center gap-1 px-3 py-1.5 text-sm font-medium transition-colors"
-              style={{ color: '#0F172B' }}
+              className="flex items-center gap-1 px-3 py-1.5 text-sm font-medium transition-colors text-slate-700 cursor-pointer hover:text-slate-900"
             >
               {neuterFilterOpen ? (
-                <ChevronUpIcon className="h-4 w-4" style={{ color: '#2C7FFF' }} />
+                <ChevronUpIcon className="h-4 w-4 text-blue-500" />
               ) : (
-                <ChevronDownIcon className="h-4 w-4" style={{ color: '#45556C' }} />
+                <ChevronDownIcon className="h-4 w-4 text-slate-600" />
               )}
               <span>Neuter</span>
             </button>
@@ -542,13 +536,12 @@ export default function SortFilterControls({ onSortChange, onFilterChange, onCle
           <div ref={ratingRef} className="relative">
             <button
               onClick={() => setRatingFilterOpen(!ratingFilterOpen)}
-              className="flex items-center gap-1 px-3 py-1.5 text-sm font-medium transition-colors"
-              style={{ color: '#0F172B' }}
+              className="flex items-center gap-1 px-3 py-1.5 text-sm font-medium transition-colors text-slate-700 cursor-pointer hover:text-slate-900"
             >
               {ratingFilterOpen ? (
-                <ChevronUpIcon className="h-4 w-4" style={{ color: '#2C7FFF' }} />
+                <ChevronUpIcon className="h-4 w-4 text-blue-500" />
               ) : (
-                <ChevronDownIcon className="h-4 w-4" style={{ color: '#45556C' }} />
+                <ChevronDownIcon className="h-4 w-4 text-slate-600" />
               )}
               <span>Rating</span>
             </button>
@@ -581,14 +574,13 @@ export default function SortFilterControls({ onSortChange, onFilterChange, onCle
             <button
               onClick={() => setSortOpen(!sortOpen)}
               onKeyDown={handleSortKeyDown}
-              className="flex items-center gap-1 px-3 py-1.5 text-sm font-medium transition-colors"
-              style={{ color: '#0F172B' }}
+              className="flex items-center gap-1 px-3 py-1.5 text-sm font-medium transition-colors text-slate-700 cursor-pointer hover:text-slate-900"
             >
               <span>Sort</span>
               {sortOpen ? (
-                <ChevronUpIcon className="h-4 w-4" style={{ color: '#2C7FFF' }} />
+                <ChevronUpIcon className="h-4 w-4 text-blue-500" />
               ) : (
-                <ChevronDownIcon className="h-4 w-4" style={{ color: '#45556C' }} />
+                <ChevronDownIcon className="h-4 w-4 text-slate-600" />
               )}
             </button>
 
@@ -627,14 +619,13 @@ export default function SortFilterControls({ onSortChange, onFilterChange, onCle
           <div ref={mobileFiltersRef} className="relative">
             <button
               onClick={() => setMobileFiltersOpen(!mobileFiltersOpen)}
-              className="flex items-center gap-1 px-3 py-1.5 text-sm font-medium transition-colors"
-              style={{ color: '#0F172B' }}
+              className="flex items-center gap-1 px-3 py-1.5 text-sm font-medium transition-colors text-slate-700 cursor-pointer hover:text-slate-900"
             >
               <span>Filters</span>
               {mobileFiltersOpen ? (
-                <ChevronUpIcon className="h-4 w-4" style={{ color: '#2C7FFF' }} />
+                <ChevronUpIcon className="h-4 w-4 text-blue-500" />
               ) : (
-                <ChevronDownIcon className="h-4 w-4" style={{ color: '#45556C' }} />
+                <ChevronDownIcon className="h-4 w-4 text-slate-600" />
               )}
             </button>
 

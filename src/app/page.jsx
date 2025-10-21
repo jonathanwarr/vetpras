@@ -206,7 +206,7 @@ export default function Home() {
                 </div>
 
                 {/* Search Bar */}
-                <VetprasSearch clinics={clinics} services={services} className='w-full' />
+                <VetprasSearch clinics={clinics} services={services} className='w-full' variant="hero" />
               </div>
             </div>
           </div>

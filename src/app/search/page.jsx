@@ -113,7 +113,7 @@ function SearchPageContent() {
   };
 
   return (
-    <div className="pt-32 pb-20 sm:pt-40 sm:pb-32 bg-white min-h-screen">
+    <div className="pt-32 pb-20 sm:pt-40 sm:pb-32 bg-slate-50 min-h-screen">
       {/* Search Section */}
       <ContainerConstrained>
         <div className="mx-auto max-w-4xl">
@@ -123,6 +123,7 @@ function SearchPageContent() {
               services={services}
               placeholder="City or clinic name"
               suggestionsDirection="down"
+              variant="default"
             />
           </div>
         </div>
