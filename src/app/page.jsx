@@ -54,7 +54,7 @@ export default function Home() {
             {/* Logo */}
             <div className='flex items-center gap-3'>
               <Image
-                src='/images/vetpras-logo-blue.png'
+                src='/images/vetpras-logo-blue-variant.png'
                 alt='Vetpras'
                 width={40}
                 height={40}
