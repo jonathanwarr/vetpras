@@ -84,7 +84,7 @@ export default function BlogPostLayout({
     },
     strong: ({ children }) => <strong className="font-semibold text-gray-900">{children}</strong>,
     table: ({ children }) => (
-      <div className="mt-8 overflow-x-auto shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+      <div className="mt-8 shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
         <table className="min-w-full divide-y divide-gray-300">{children}</table>
       </div>
     ),
@@ -96,12 +96,12 @@ export default function BlogPostLayout({
     ),
     tr: ({ children }) => <tr>{children}</tr>,
     th: ({ children }) => (
-      <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500">
+      <th className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 sm:px-6">
         {children}
       </th>
     ),
     td: ({ children }) => (
-      <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-900">{children}</td>
+      <td className="px-3 py-4 text-xs text-gray-900 sm:px-6 sm:text-sm">{children}</td>
     ),
   };
 
