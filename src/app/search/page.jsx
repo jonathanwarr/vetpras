@@ -113,7 +113,7 @@ function SearchPageContent() {
   };
 
   return (
-    <div className="pt-12 pb-20 sm:pt-24 sm:pb-12">
+    <div className="pt-12 pb-20 sm:pt-24 sm:pb-32">
       <ContainerConstrained>
         <div className="mb-10">
           <h2 className="mt-20 mb-2 flex justify-center font-serif text-4xl font-semibold tracking-tight text-slate-900 sm:text-5xl lg:text-balance">
