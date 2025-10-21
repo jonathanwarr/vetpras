@@ -1,54 +1,29 @@
 'use client';
 
 import { useState, useEffect, useRef, useMemo } from 'react';
-import { MagnifyingGlassIcon, SparklesIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 import { useRouter } from 'next/navigation';
-import { parseNaturalLanguageQuery, getExampleQueries } from '@/lib/natural-language-parser';
 
 export default function VetprasSearch({
   clinics = [],
   services = [],
-  placeholder = 'Try "exam under $80" or "4 star clinics in Vancouver"',
-  className = '',
-  suggestionsDirection = 'up', // 'up' for landing page, 'down' for search page
-  onNaturalLanguageSearch = null, // Callback for natural language search
+  placeholder = 'City or clinic name',
+  className = ''
 }) {
   const [searchTerm, setSearchTerm] = useState('');
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [highlightedIndex, setHighlightedIndex] = useState(0);
-  const [parsedQuery, setParsedQuery] = useState(null);
-  const [showExamples, setShowExamples] = useState(false);
   const inputRef = useRef(null);
   const suggestionsRef = useRef(null);
   const router = useRouter();
 
-  // Get example queries
-  const exampleQueries = useMemo(() => getExampleQueries(), []);
-
-  // Generate suggestions based on query (using existing search logic + NLP)
+  // Generate suggestions based on query (using existing search logic)
   const suggestions = useMemo(() => {
     if (!searchTerm.trim()) return [];
 
     const searchQuery = searchTerm.toLowerCase();
     const results = [];
     const seen = new Set();
-
-    // First, check for natural language patterns if query is long enough
-    if (searchTerm.trim().length > 3) {
-      const parsed = parseNaturalLanguageQuery(searchTerm);
-
-      // If we have meaningful filters, add them as the first suggestion
-      if (parsed && Object.keys(parsed.filters).length > 0 && parsed.interpretation) {
-        results.push({
-          type: 'filter',
-          value: searchTerm,
-          display: parsed.interpretation.replace('Showing clinics with ', ''),
-          priority: 0, // Highest priority
-          filters: parsed.filters,
-          confidence: parsed.confidence,
-        });
-      }
-    }
 
     // Search clinics by name
     clinics.forEach((clinic) => {
@@ -74,7 +49,7 @@ export default function VetprasSearch({
           results.push({
             type: 'city',
             value: clinic.city,
-            display: `${clinic.city}`,
+            display: `${clinic.city} (City)`,
             priority: clinic.city.toLowerCase().startsWith(searchQuery) ? 1 : 2,
           });
           seen.add(key);
@@ -96,46 +71,14 @@ export default function VetprasSearch({
     return suggestions;
   }, [suggestions]);
 
-  // Parse natural language when input changes
-  useEffect(() => {
-    if (searchTerm.trim().length > 3) {
-      const parsed = parseNaturalLanguageQuery(searchTerm);
-      setParsedQuery(parsed);
-    } else {
-      setParsedQuery(null);
-    }
-  }, [searchTerm]);
-
   const handleSearch = () => {
     if (searchTerm.trim()) {
-      // If we have a highlighted suggestion, select it
-      if (showSuggestions && suggestions[highlightedIndex]) {
-        selectSuggestion(suggestions[highlightedIndex]);
-        return;
-      }
-
-      // Check if we have a natural language query with filters
-      if (parsedQuery && Object.keys(parsedQuery.filters).length > 0) {
-        // Use natural language search
-        if (onNaturalLanguageSearch) {
-          onNaturalLanguageSearch(parsedQuery);
-        } else {
-          // Navigate to search page with filters encoded
-          const params = new URLSearchParams({
-            query: parsedQuery.searchText || '',
-            type: 'nlp',
-            filters: JSON.stringify(parsedQuery.filters)
-          });
-          router.push(`/search?${params.toString()}`);
-        }
-      } else {
-        // Regular text search
-        const params = new URLSearchParams({
-          query: searchTerm,
-          type: 'text'
-        });
-        router.push(`/search?${params.toString()}`);
-      }
+      // Navigate to search page with query params
+      const params = new URLSearchParams({
+        query: searchTerm,
+        type: 'text'
+      });
+      router.push(`/search?${params.toString()}`);
     }
   };
 
@@ -144,32 +87,12 @@ export default function VetprasSearch({
     setShowSuggestions(false);
     setHighlightedIndex(0);
 
-    // Handle filter suggestions differently
-    if (suggestion.type === 'filter' && suggestion.filters) {
-      if (onNaturalLanguageSearch) {
-        // Callback for search page
-        onNaturalLanguageSearch({
-          filters: suggestion.filters,
-          searchText: suggestion.filters.city ? suggestion.filters.city[0] : '',
-          interpretation: suggestion.display,
-        });
-      } else {
-        // Navigate to search page with filters
-        const params = new URLSearchParams({
-          query: suggestion.filters.city ? suggestion.filters.city[0] : '',
-          type: 'nlp',
-          filters: JSON.stringify(suggestion.filters)
-        });
-        router.push(`/search?${params.toString()}`);
-      }
-    } else {
-      // Regular city/clinic suggestion
-      const params = new URLSearchParams({
-        query: suggestion.value,
-        type: suggestion.type
-      });
-      router.push(`/search?${params.toString()}`);
-    }
+    // Navigate to search page with selected suggestion
+    const params = new URLSearchParams({
+      query: suggestion.value,
+      type: suggestion.type
+    });
+    router.push(`/search?${params.toString()}`);
   };
 
   const handleKeyPress = (e) => {
@@ -243,21 +166,12 @@ export default function VetprasSearch({
     }
   }, [highlightedIndex]);
 
-  const handleExampleClick = (example) => {
-    setSearchTerm(example);
-    setShowExamples(false);
-    // Trigger search after a small delay to allow state update
-    setTimeout(() => {
-      handleSearch();
-    }, 100);
-  };
-
   return (
     <div className={className}>
       {/* Mobile: Stacked Layout */}
       <div className='sm:hidden flex flex-col gap-3 relative'>
         {/* Search Input Container */}
-        <div className='flex items-center bg-slate-50 rounded-2xl shadow-sm border border-gray-400'>
+        <div className='flex items-center bg-white/60 backdrop-blur-lg rounded-2xl shadow-2xl shadow-black/10 border border-white/20'>
           <div className='pl-6 pr-3'>
             <MagnifyingGlassIcon className='h-5 w-5 text-gray-600' />
           </div>
@@ -278,9 +192,7 @@ export default function VetprasSearch({
         {showSuggestions && (
           <ul
             ref={suggestionsRef}
-            className={`absolute z-50 w-full overflow-y-auto rounded-xl shadow-lg bg-white border border-gray-200 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent ${
-              suggestionsDirection === 'up' ? 'bottom-full mb-3' : 'top-full mt-3'
-            }`}
+            className="absolute z-50 bottom-full mb-3 w-full overflow-y-auto rounded-xl shadow-lg bg-white border border-gray-200 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent"
             style={{
               maxHeight: '300px',
               scrollbarWidth: 'thin',
@@ -300,10 +212,9 @@ export default function VetprasSearch({
                   onMouseEnter={() => setHighlightedIndex(index)}
                 >
                   <div className="flex items-center justify-between">
-                    <span className="font-medium">{suggestion.display || suggestion.value}</span>
+                    <span className="font-medium">{suggestion.value}</span>
                     <span className="ml-2 text-xs text-gray-400">
-                      {suggestion.type === 'filter' ? 'Filter' :
-                       suggestion.type === 'clinic' ? 'Clinic' : 'City'}
+                      {suggestion.type === 'clinic' ? 'Clinic' : 'City'}
                     </span>
                   </div>
                 </li>
@@ -323,37 +234,10 @@ export default function VetprasSearch({
         >
           Search
         </button>
-
-        {/* Example Queries Button */}
-        <button
-          onClick={() => setShowExamples(!showExamples)}
-          className='text-sm text-gray-600 hover:text-blue-600 transition-colors flex items-center gap-1 mx-auto'
-        >
-          <SparklesIcon className='h-4 w-4' />
-          Try example searches
-        </button>
-
-        {/* Example Queries Dropdown */}
-        {showExamples && (
-          <div className='absolute z-40 w-full mt-1 p-3 bg-white rounded-lg shadow-lg border border-gray-200'>
-            <p className='text-xs font-medium text-gray-700 mb-2'>Example searches:</p>
-            <div className='space-y-1'>
-              {exampleQueries.slice(0, 4).map((example, index) => (
-                <button
-                  key={index}
-                  onClick={() => handleExampleClick(example)}
-                  className='w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-blue-50 rounded transition-colors'
-                >
-                  "{example}"
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
       </div>
 
       {/* Desktop: Horizontal Layout */}
-      <div className='hidden sm:flex items-center bg-slate-50 rounded-2xl shadow-sm border border-gray-400 relative'>
+      <div className='hidden sm:flex items-center bg-white/60 backdrop-blur-lg rounded-2xl shadow-2xl shadow-black/10 border border-white/20 relative'>
         <div className='flex items-center flex-1 min-w-0'>
           <div className='pl-8 pr-4'>
             <MagnifyingGlassIcon className='h-6 w-6 text-gray-600' />
@@ -375,9 +259,7 @@ export default function VetprasSearch({
         {showSuggestions && (
           <ul
             ref={suggestionsRef}
-            className={`absolute left-0 right-0 z-50 overflow-y-auto rounded-xl shadow-lg bg-white border border-gray-200 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent ${
-              suggestionsDirection === 'up' ? 'bottom-full mb-2' : 'top-full mt-2'
-            }`}
+            className="absolute bottom-full left-0 right-0 z-50 mb-2 overflow-y-auto rounded-xl shadow-lg bg-white border border-gray-200 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent"
             style={{
               maxHeight: '300px',
               scrollbarWidth: 'thin',
@@ -397,10 +279,9 @@ export default function VetprasSearch({
                   onMouseEnter={() => setHighlightedIndex(index)}
                 >
                   <div className="flex items-center justify-between">
-                    <span className="font-medium">{suggestion.display || suggestion.value}</span>
+                    <span className="font-medium">{suggestion.value}</span>
                     <span className="ml-2 text-sm text-gray-400">
-                      {suggestion.type === 'filter' ? 'Filter' :
-                       suggestion.type === 'clinic' ? 'Clinic' : 'City'}
+                      {suggestion.type === 'clinic' ? 'Clinic' : 'City'}
                     </span>
                   </div>
                 </li>
@@ -424,35 +305,6 @@ export default function VetprasSearch({
           Search
         </button>
       </div>
-
-      {/* Example Queries for Desktop */}
-      <div className='hidden sm:flex items-center justify-center mt-3'>
-        <button
-          onClick={() => setShowExamples(!showExamples)}
-          className='text-sm text-gray-600 hover:text-blue-600 transition-colors flex items-center gap-1'
-        >
-          <SparklesIcon className='h-4 w-4' />
-          Try example searches
-        </button>
-      </div>
-
-      {/* Example Queries Dropdown - Desktop */}
-      {showExamples && (
-        <div className='hidden sm:block absolute z-40 left-1/2 transform -translate-x-1/2 mt-1 p-4 bg-white rounded-lg shadow-lg border border-gray-200' style={{ top: '100%', minWidth: '400px' }}>
-          <p className='text-sm font-medium text-gray-700 mb-3'>Example searches you can try:</p>
-          <div className='grid grid-cols-2 gap-2'>
-            {exampleQueries.map((example, index) => (
-              <button
-                key={index}
-                onClick={() => handleExampleClick(example)}
-                className='text-left px-3 py-2 text-sm text-gray-700 hover:bg-blue-50 rounded transition-colors'
-              >
-                "{example}"
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
     </div>
   );
 }

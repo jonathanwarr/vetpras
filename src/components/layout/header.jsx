@@ -19,7 +19,7 @@ export default function Header() {
   return (
     <header
       className={`fixed top-0 z-50 w-full transition-all duration-300 ${
-        isSticky ? 'bg-white/60 shadow-sm backdrop-blur-lg' : 'bg-transparent'
+        isSticky ? 'bg-white/60 shadow-sm backdrop-blur-lg' : 'bg-white'
       }`}
     >
       <nav className='mx-auto max-w-7xl px-6 sm:px-8 lg:px-12'>
