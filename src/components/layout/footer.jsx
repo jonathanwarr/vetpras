@@ -2,6 +2,7 @@ import clsx from 'clsx';
 
 const navigation = {
   main: [
+    { name: 'Home', href: '/' },
     { name: 'Blog', href: '/blog' },
     { name: 'Share a Bill', href: '/submit-bill' },
     { name: 'Search', href: '/search' },

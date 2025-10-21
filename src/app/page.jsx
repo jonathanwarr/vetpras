@@ -65,6 +65,9 @@ export default function Home() {
 
             {/* Desktop Nav Links */}
             <div className='hidden md:flex items-center gap-6 lg:gap-8'>
+              <Link href='/' className='text-white/90 hover:text-white transition-colors text-sm lg:text-base font-medium'>
+                Home
+              </Link>
               <Link href='/blog' className='text-white/90 hover:text-white transition-colors text-sm lg:text-base font-medium'>
                 Blog
               </Link>
@@ -119,6 +122,13 @@ export default function Home() {
           {/* Mobile Menu Content */}
           <div className='flex flex-col h-full'>
             <div className='flex-1 flex flex-col py-8 px-6 gap-6'>
+              <Link
+                href='/'
+                className='text-gray-700 hover:text-gray-900 transition-colors text-lg font-medium py-3'
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Home
+              </Link>
               <Link
                 href='/blog'
                 className='text-gray-700 hover:text-gray-900 transition-colors text-lg font-medium py-3'
@@ -183,7 +193,7 @@ export default function Home() {
           </div>
 
           {/* Search Section - Bottom Positioned */}
-          <div className='pb-24 sm:pb-4 min-[1440px]:pb-12 min-[1920px]:pb-20'>
+          <div className='pb-28 sm:pb-4 min-[1440px]:pb-12 min-[1920px]:pb-20'>
             <div className='w-full max-w-7xl mx-auto px-6 sm:px-8 lg:px-12'>
               <div className='flex flex-col items-start sm:items-center w-full max-w-4xl mx-auto'>
                 {/* Beta Notice */}
