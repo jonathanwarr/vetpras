@@ -80,6 +80,9 @@ export default function VetprasSearch({
         type: 'text'
       });
       router.push(`/search?${params.toString()}`);
+    } else {
+      // Navigate to search page without filters if empty
+      router.push('/search');
     }
   };
 

@@ -197,8 +197,8 @@ export default function Home() {
             <div className='w-full max-w-7xl mx-auto px-6 sm:px-8 lg:px-12'>
               <div className='flex flex-col items-start sm:items-center w-full max-w-4xl mx-auto'>
                 {/* Beta Notice */}
-                <div className='mb-3 min-[1440px]:mb-5 min-[1920px]:mb-6 w-full max-w-4xl'>
-                  <p className='text-white/80 text-sm sm:text-base italic text-center sm:text-left'>
+                <div className='mb-3 min-[1440px]:mb-5 min-[1920px]:mb-6 w-full max-w-4xl pl-6 sm:pl-8'>
+                  <p className='text-white/80 text-sm sm:text-base italic text-left'>
                     Currently in beta — search limited to select areas in Greater Vancouver
                   </p>
                 </div>
