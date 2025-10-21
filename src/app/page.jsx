@@ -54,28 +54,28 @@ export default function Home() {
             {/* Logo */}
             <div className='flex items-center gap-3'>
               <Image
-                src='/images/vetpras-logo-blue-variant.png'
+                src='/images/vetpras-landing-logo.png'
                 alt='Vetpras'
                 width={40}
                 height={40}
                 className='h-9 sm:h-10 w-auto'
               />
-              <span className='text-xl sm:text-2xl font-normal text-gray-50'>Vetpras</span>
+              <span className='text-xl sm:text-2xl font-normal text-slate-50'>Vetpras</span>
             </div>
 
             {/* Desktop Nav Links */}
             <div className='hidden md:flex items-center gap-6 lg:gap-8'>
-              <Link href='/' className='text-white/90 hover:text-white transition-colors text-sm lg:text-base font-medium'>
+              <Link href='/' className='text-slate-50/90 hover:text-slate-50 transition-colors text-sm lg:text-base font-medium'>
                 Home
               </Link>
-              <Link href='/blog' className='text-white/90 hover:text-white transition-colors text-sm lg:text-base font-medium'>
+              <Link href='/blog' className='text-slate-50/90 hover:text-slate-50 transition-colors text-sm lg:text-base font-medium'>
                 Blog
               </Link>
-              <Link href='/submit-bill' className='text-white/90 hover:text-white transition-colors text-sm lg:text-base font-medium flex items-center gap-1.5'>
+              <Link href='/submit-bill' className='text-slate-50/90 hover:text-slate-50 transition-colors text-sm lg:text-base font-medium flex items-center gap-1.5'>
                 <SparklesIcon className='h-4 w-4 lg:h-5 lg:w-5 text-blue-500' />
                 Share a Bill
               </Link>
-              <Link href='/search' className='rounded-lg bg-white/10 backdrop-blur-sm border border-white/20 px-5 lg:px-6 py-2.5 text-white hover:bg-white/20 transition-all duration-200 text-sm lg:text-base font-medium'>
+              <Link href='/search' className='rounded-lg bg-white/10 backdrop-blur-sm border border-white/20 px-5 lg:px-6 py-2.5 text-slate-50 hover:bg-white/20 transition-all duration-200 text-sm lg:text-base font-medium'>
                 Find a Vet
               </Link>
             </div>
@@ -195,7 +195,7 @@ export default function Home() {
           </div>
 
           {/* Search Section - Bottom Positioned */}
-          <div className='pb-28 sm:pb-4 min-[1440px]:pb-12 min-[1920px]:pb-20'>
+          <div className='pb-20 sm:pb-16 md:pb-20 lg:pb-24 xl:pb-28'>
             <div className='w-full max-w-7xl mx-auto px-6 sm:px-8 lg:px-12'>
               <div className='flex flex-col items-start sm:items-center w-full max-w-4xl mx-auto'>
                 {/* Beta Notice */}
