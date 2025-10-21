@@ -38,6 +38,9 @@ export default function Header() {
 
           {/* Desktop Nav Links */}
           <div className='hidden md:flex items-center gap-6 lg:gap-8'>
+            <Link href='/' className='text-slate-900/90 hover:text-slate-900 transition-colors text-sm lg:text-base font-medium'>
+              Home
+            </Link>
             <Link href='/blog' className='text-slate-900/90 hover:text-slate-900 transition-colors text-sm lg:text-base font-medium'>
               Blog
             </Link>
@@ -88,6 +91,13 @@ export default function Header() {
 
           {/* Mobile Menu Content */}
           <div className='flex flex-col py-8 px-6 gap-6'>
+            <Link
+              href='/'
+              className='text-gray-700 hover:text-gray-900 transition-colors text-lg font-medium py-3'
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              Home
+            </Link>
             <Link
               href='/blog'
               className='text-gray-700 hover:text-gray-900 transition-colors text-lg font-medium py-3'
