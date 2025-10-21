@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import Link from 'next/link';
@@ -11,7 +11,7 @@ import Pagination from '@/components/clinics/pagination';
 import SearchBar from '@/components/search/search-bar';
 import SortFilterControls from '@/components/search/sort-filter-controls';
 
-export default function SearchPage() {
+function SearchPageContent() {
   const searchParams = useSearchParams();
   const [selectedClinic, setSelectedClinic] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
@@ -177,5 +177,13 @@ export default function SearchPage() {
 
       <DrawerClinic clinic={selectedClinic} onClose={handleCloseDrawer} services={services} />
     </div>
+  );
+}
+
+export default function SearchPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+      <SearchPageContent />
+    </Suspense>
   );
 }
