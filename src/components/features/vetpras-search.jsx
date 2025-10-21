@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef, useMemo } from 'react';
-import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
+import { MagnifyingGlassIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { useRouter } from 'next/navigation';
 
 export default function VetprasSearch({
@@ -99,6 +99,12 @@ export default function VetprasSearch({
     router.push(`/search?${params.toString()}`);
   };
 
+  const handleClear = () => {
+    setSearchTerm('');
+    setShowSuggestions(false);
+    inputRef.current?.focus();
+  };
+
   const handleKeyPress = (e) => {
     if (!showSuggestions || suggestions.length === 0) {
       if (e.key === 'Enter') {
@@ -188,8 +194,17 @@ export default function VetprasSearch({
             onKeyDown={handleKeyPress}
             onFocus={handleFocus}
             onBlur={handleBlur}
-            className='flex-1 bg-transparent py-5 pr-6 text-base text-gray-800 placeholder-gray-500 focus:outline-none'
+            className='flex-1 bg-transparent py-5 text-base text-gray-800 placeholder-gray-500 focus:outline-none'
           />
+          {searchTerm && (
+            <button
+              onClick={handleClear}
+              className='pr-6 text-gray-400 hover:text-gray-600 transition-colors cursor-pointer'
+              aria-label='Clear search'
+            >
+              <XMarkIcon className='h-5 w-5' />
+            </button>
+          )}
         </div>
 
         {/* Suggestions dropdown - Mobile */}
@@ -259,6 +274,15 @@ export default function VetprasSearch({
             onBlur={handleBlur}
             className='flex-1 bg-transparent py-6 text-lg text-gray-800 placeholder-gray-500 focus:outline-none min-w-0'
           />
+          {searchTerm && (
+            <button
+              onClick={handleClear}
+              className='px-4 text-gray-400 hover:text-gray-600 transition-colors cursor-pointer'
+              aria-label='Clear search'
+            >
+              <XMarkIcon className='h-6 w-6' />
+            </button>
+          )}
         </div>
 
         {/* Suggestions dropdown - Desktop */}
