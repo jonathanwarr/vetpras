@@ -183,7 +183,7 @@ export default function Home() {
           </div>
 
           {/* Search Section - Bottom Positioned */}
-          <div className='pb-16 sm:pb-4 min-[1440px]:pb-12 min-[1920px]:pb-20'>
+          <div className='pb-24 sm:pb-4 min-[1440px]:pb-12 min-[1920px]:pb-20'>
             <div className='w-full max-w-7xl mx-auto px-6 sm:px-8 lg:px-12'>
               <div className='flex flex-col items-start sm:items-center w-full max-w-4xl mx-auto'>
                 {/* Beta Notice */}

@@ -63,8 +63,13 @@ export default function VetprasSearch({
       return a.display.localeCompare(b.display);
     });
 
-    return results.slice(0, 10);
+    return results;
   }, [searchTerm, clinics, services]);
+
+  // Limit suggestions based on screen size
+  const limitedSuggestions = useMemo(() => {
+    return suggestions;
+  }, [suggestions]);
 
   const handleSearch = () => {
     if (searchTerm.trim()) {
@@ -194,8 +199,8 @@ export default function VetprasSearch({
               scrollbarColor: 'rgba(156, 163, 175, 0.3) transparent'
             }}
           >
-            {suggestions.length > 0 ? (
-              suggestions.map((suggestion, index) => (
+            {suggestions.slice(0, 3).length > 0 ? (
+              suggestions.slice(0, 3).map((suggestion, index) => (
                 <li
                   key={`${suggestion.type}-${suggestion.value}`}
                   onClick={() => selectSuggestion(suggestion)}
