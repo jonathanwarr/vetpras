@@ -31,7 +31,7 @@ export default function TermsAndConditionsPage() {
               Vetpras is a pricing transparency platform that helps Canadian pet owners compare veterinary costs. All pricing information is for informational purposes only and should not replace professional veterinary consultation.
             </p>
             <p>
-              <strong>Pricing Estimates:</strong> All costs shown are estimates based on user-submitted data. Actual prices may vary based on your pet's health, location, clinic policies, and treatment complexity. Always confirm pricing directly with the veterinary clinic before booking.
+              <strong>Pricing Estimates:</strong> All costs shown are estimates based on a combination of user-submitted estimates, bills, and receipts. Actual prices may vary based on your pet's health, location, clinic policies, and treatment complexity. Always confirm pricing directly with the veterinary clinic before booking.
             </p>
             <p>
               <strong>Not Medical Advice:</strong> Vetpras provides pricing information only. We do not diagnose, treat, or advise on pet health. For pet health emergencies, contact your veterinarian immediately regardless of cost.
@@ -70,7 +70,7 @@ export default function TermsAndConditionsPage() {
               <strong>Bill Submission Consent:</strong> By submitting veterinary bills to Vetpras, you consent to us using your data to improve pricing prediction models, publish anonymized pricing information, include your data in aggregated statistics, and share anonymized data with veterinary industry stakeholders for research purposes.
             </p>
             <p>
-              <strong>Anonymization:</strong> All submitted bills are anonymized by removing personal identifying information (names, addresses, phone numbers), pet identifying information, account numbers, payment information, and any other personally identifiable data.
+              <strong>Anonymization:</strong> When you upload a bill, we only review and display the service names and prices. We do not collect, store, or display any personal information such as pet names, owner names, addresses, or contact details. Submitted receipts are stored securely, used for validation, and are never made public or shared. We recommend blurring or covering any sensitive information before uploading.
             </p>
             <p>
               <strong>Voluntary:</strong> Bill submission is entirely voluntary. You may use Vetpras without submitting bills.
@@ -88,7 +88,7 @@ export default function TermsAndConditionsPage() {
           </h2>
           <div className="space-y-4 text-sm text-gray-700">
             <p>
-              <strong>Our Intellectual Property:</strong> All pricing data compilations, website design, software algorithms, and content are owned by Vetpras and protected under Canadian law. You may view and use information for personal use only. Commercial use, reproduction, or redistribution is prohibited without written permission.
+              <strong>Our Intellectual Property:</strong> All pricing data compilations, website design, software algorithms, and content are owned by Pawcker Technology Inc. and protected under Canadian law. You may view and use information for personal use only. Commercial use, reproduction, or redistribution is prohibited without written permission.
             </p>
             <p>
               <strong>Third-Party Links:</strong> Our site may link to veterinary clinics or other third-party services. We are not responsible for the accuracy, availability, or privacy practices of external sites. Verify all information directly with service providers.

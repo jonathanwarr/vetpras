@@ -8,59 +8,84 @@ export default function PrivacyPolicyPage() {
           Privacy Policy
         </h1>
 
+        <div className="mb-6 text-sm text-gray-600">
+          <p>
+            <strong>Effective Date:</strong> January 20, 2025
+          </p>
+        </div>
+
         <div className="space-y-8 text-sm text-gray-700">
           <section>
             <h2 className="mb-4 text-lg font-bold text-slate-900">
-              How We Handle Your Information
+              How We Use Cookies and Analytics
             </h2>
             <p>
-              When you visit Vetpras.com, our servers automatically record technical information
-              about your visit. This may include your device’s IP address, browser type, time and
-              date of access, and referring webpage.
+              We use cookies and similar technologies to improve your experience and understand how
+              visitors interact with Vetpras.com. Specifically:
             </p>
-            <br></br>
-            <p>
-              We use your IP address to help determine your approximate location so that we can show
-              you nearby veterinary clinics and improve your browsing experience.
-            </p>
-            <br></br>
-            <p>
-              Your IP address is considered personal information under Canadian law. We only use
-              this information for the legitimate business purpose of providing location-based
-              services. We do not use your IP address to personally identify you, nor do we share it
-              with third parties except as required to deliver our services or if mandated by law.
+            <ul className="mt-4 list-inside list-disc space-y-2">
+              <li>
+                <strong>Google Analytics:</strong> Tracks aggregate user engagement. We have IP
+                anonymization enabled to protect individual privacy.
+              </li>
+              <li>
+                <strong>Meta Pixel:</strong> Helps us measure the effectiveness of our advertising
+                on Meta (Facebook/Instagram) platforms.
+              </li>
+              <li>
+                <strong>Hotjar:</strong> Provides anonymized heatmaps and session recordings to help
+                us understand how visitors use our site—no personal information is recorded.
+              </li>
+            </ul>
+            <p className="mt-4">
+              You can manage your cookie preferences at any time through our cookie consent banner
+              or in your browser settings.
             </p>
           </section>
 
           <section>
             <h2 className="mb-4 text-lg font-bold text-slate-900">Bill Submissions</h2>
-            <p>When you upload a vet bill:</p>
-            <ul className="mt-2 list-inside list-disc space-y-2">
-              <li>
-                We <strong>only</strong> review the service names and associated prices.
-              </li>
-              <li>
-                We <strong>do not</strong> collect or store any personal information, such as pet
-                names, owner names, addresses, or contact details.
-              </li>
-              <li>
-                Your email (if provided) is used <strong>solely</strong> for the monthly draw
-              </li>
-            </ul>
-            <p className="mt-4">Submitted receipts are:</p>
-            <ul className="mt-2 list-inside list-disc space-y-2">
-              <li>Stored securely</li>
-              <li>Reviewed only for validation</li>
-              <li>
-                <strong>Never made public</strong>
-              </li>
-              <li>
-                <strong>Never shared</strong> with third parties
-              </li>
-            </ul>
+            <p>When you upload a bill, we only review and display the service names and prices.</p>
+            <p className="mt-4">
+              We <strong>do not</strong> collect, store, or display any personal information such as
+              pet names, owner names, addresses, or contact details.
+            </p>
+            <p className="mt-4">
+              Your email (if provided, e.g., for the monthly draw) is used only for that purpose and
+              deleted after each draw is completed.
+            </p>
+            <p className="mt-4">
+              Submitted receipts are stored securely, used for validation, and are{' '}
+              <strong>never made public or shared</strong>.
+            </p>
             <p className="mt-4">
               We recommend <strong>blurring or covering</strong> any sensitive information before
               uploading.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="mb-4 text-lg font-bold text-slate-900">Data Use and Sharing</h2>
+            <p>
+              We do not sell, rent, or share any personally identifiable information with third
+              parties, except as required by law.
+            </p>
+            <p className="mt-4">
+              All data is stored in secure Canadian data centers.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="mb-4 text-lg font-bold text-slate-900">Contact Information</h2>
+            <p>
+              <strong>Address:</strong> 138 Esplanade E Ave, North Vancouver, BC, Canada V7L 4X9
+            </p>
+            <p className="mt-2">
+              <strong>Email:</strong> info@vetpras.com
+            </p>
+            <p className="mt-4">
+              If you have questions about this Privacy Policy, please contact us at
+              info@vetpras.com.
             </p>
           </section>
         </div>
