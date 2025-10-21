@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { XMarkIcon } from '@heroicons/react/24/outline';
+import { XMarkIcon, DocumentTextIcon } from '@heroicons/react/24/outline';
 
 export default function Header() {
   const [isSticky, setSticky] = useState(false);
@@ -44,11 +44,12 @@ export default function Header() {
             <Link href='/blog' className='text-slate-900/90 hover:text-slate-900 transition-colors text-sm lg:text-base font-medium'>
               Blog
             </Link>
-            <Link href='/submit-bill' className='text-slate-900/90 hover:text-slate-900 transition-colors text-sm lg:text-base font-medium'>
+            <Link href='/submit-bill' className='text-blue-600 hover:text-blue-700 transition-colors text-sm lg:text-base font-medium flex items-center gap-1.5'>
+              <DocumentTextIcon className='h-4 w-4 lg:h-5 lg:w-5' />
               Share a Bill
             </Link>
-            <Link href='/search' className='rounded-lg bg-blue-500 px-5 lg:px-6 py-2.5 text-white hover:bg-blue-600 transition-all duration-200 text-sm lg:text-base font-medium'>
-              Search
+            <Link href='/search' className='rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 px-5 lg:px-6 py-2.5 text-white hover:from-blue-700 hover:to-blue-700 transition-all duration-200 text-sm lg:text-base font-bold shadow-md shadow-blue-900/40'>
+              Find a Vet
             </Link>
           </div>
 
@@ -107,17 +108,18 @@ export default function Header() {
             </Link>
             <Link
               href='/submit-bill'
-              className='text-gray-700 hover:text-gray-900 transition-colors text-lg font-medium py-3'
+              className='text-blue-600 hover:text-blue-700 transition-colors text-lg font-medium py-3 flex items-center gap-2'
               onClick={() => setMobileMenuOpen(false)}
             >
+              <DocumentTextIcon className='h-5 w-5' />
               Share a Bill
             </Link>
             <Link
               href='/search'
-              className='rounded-lg bg-blue-500 px-6 py-4 text-white hover:bg-blue-600 transition-all duration-200 text-lg font-medium text-center mt-4'
+              className='rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 px-6 py-4 text-white hover:from-blue-700 hover:to-blue-700 transition-all duration-200 text-lg font-bold text-center mt-4 shadow-md shadow-blue-900/40'
               onClick={() => setMobileMenuOpen(false)}
             >
-              Search
+              Find a Vet
             </Link>
           </div>
         </div>
