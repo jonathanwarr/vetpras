@@ -8,6 +8,7 @@ import Script from 'next/script';
 import SessionHandler from '@/components/system/session-handler';
 import SupabaseProvider from '@/components/system/supabase-provider';
 import ScrollToTop from '@/components/ui/scroll-to-top';
+import CookieBanner from '@/components/ui/cookie-banner';
 
 const inter = Inter({ subsets: ['latin'] });
 const lora = Lora({ subsets: ['latin'], variable: '--font-lora' });
@@ -26,7 +27,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" className={`${inter.className} ${lora.variable}`}>
       <body className="bg-white text-gray-900 antialiased">
-        {/* Google Analytics */}
+        {/* Google Analytics - with consent mode */}
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-4YY2JG7YNQ"
           strategy="afterInteractive"
@@ -35,8 +36,17 @@ export default function RootLayout({ children }) {
           {`
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
+
+            // Set default consent to denied
+            gtag('consent', 'default', {
+              'analytics_storage': 'denied',
+              'ad_storage': 'denied'
+            });
+
             gtag('js', new Date());
-            gtag('config', 'G-4YY2JG7YNQ');
+            gtag('config', 'G-4YY2JG7YNQ', {
+              'anonymize_ip': true
+            });
           `}
         </Script>
 
@@ -55,7 +65,7 @@ export default function RootLayout({ children }) {
           `}
         </Script>
 
-        {/* Facebook Pixel */}
+        {/* Facebook Pixel - with consent mode */}
         <Script id="facebook-pixel" strategy="afterInteractive">
           {`
             !function(f,b,e,v,n,t,s)
@@ -67,7 +77,9 @@ export default function RootLayout({ children }) {
             s.parentNode.insertBefore(t,s)}(window, document,'script',
             'https://connect.facebook.net/en_US/fbevents.js');
             fbq('init', '630248853222534');
-            fbq('track', 'PageView');
+
+            // Revoke consent by default
+            fbq('consent', 'revoke');
           `}
         </Script>
 
@@ -88,6 +100,7 @@ export default function RootLayout({ children }) {
             <main className="min-h-screen">{children}</main>
           </ConditionalLayout>
           <ScrollToTop />
+          <CookieBanner />
         </SupabaseProvider>
 
         <Analytics />
