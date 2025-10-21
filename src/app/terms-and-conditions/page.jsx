@@ -1,10 +1,10 @@
 // File: src/app/terms-and-conditions/page.jsx
-// Vetpras Terms and Conditions & Monthly Draw Rules
+// Vetpras Terms and Conditions
 
 export const metadata = {
   title: 'Terms and Conditions | Vetpras',
   description:
-    'Vetpras Terms and Conditions, including Monthly Draw Official Rules (Canada, excluding Quebec unless a full French version is published).',
+    'Vetpras Terms and Conditions for Canadian pet owners using our veterinary pricing transparency platform.',
 };
 
 export default function TermsAndConditionsPage() {
@@ -17,468 +17,163 @@ export default function TermsAndConditionsPage() {
 
         <div className="mb-6 text-sm text-gray-600">
           <p>
-            <strong>Effective Date:</strong> September 11, 2025
+            <strong>Effective Date:</strong> January 20, 2025
           </p>
         </div>
 
-        {/* PRICING INFORMATION DISCLAIMER */}
+        {/* WHAT VETPRAS IS */}
         <section className="mb-12">
           <h2 className="mb-6 text-2xl font-bold text-slate-900">
-            1. Pricing Information Disclaimer
+            1. What Vetpras Is
           </h2>
           <div className="space-y-4 text-sm text-gray-700">
             <p>
-              All veterinary costs shown on Vetpras are estimates only. Actual prices may vary
-              significantly based on:
-            </p>
-            <ul className="ml-6 list-disc space-y-1">
-              <li>Your pet's specific health condition</li>
-              <li>Geographic location</li>
-              <li>Individual clinic policies</li>
-              <li>Treatment complexity</li>
-              <li>Emergency vs. routine care</li>
-            </ul>
-            <p>
-              <strong>Important:</strong> Always confirm pricing directly with the veterinary clinic
-              before booking or treatment. Vetpras updates pricing data regularly but cannot
-              guarantee real-time accuracy.
+              Vetpras is a pricing transparency platform that helps Canadian pet owners compare veterinary costs. All pricing information is for informational purposes only and should not replace professional veterinary consultation.
             </p>
             <p>
-              <strong>No Medical Advice:</strong> Vetpras provides pricing information only. We do
-              not provide veterinary or medical advice. For pet health emergencies, contact your
-              veterinarian immediately regardless of cost considerations.
+              <strong>Pricing Estimates:</strong> All costs shown are estimates based on user-submitted data. Actual prices may vary based on your pet's health, location, clinic policies, and treatment complexity. Always confirm pricing directly with the veterinary clinic before booking.
+            </p>
+            <p>
+              <strong>Not Medical Advice:</strong> Vetpras provides pricing information only. We do not diagnose, treat, or advise on pet health. For pet health emergencies, contact your veterinarian immediately regardless of cost.
             </p>
           </div>
         </section>
 
-        {/* ACCOUNT CREATION */}
+        {/* WHO CAN USE VETPRAS */}
         <section className="mb-12">
           <h2 className="mb-6 text-2xl font-bold text-slate-900">
-            2. Account Creation and User Registration
+            2. Who Can Use Vetpras
           </h2>
           <div className="space-y-4 text-sm text-gray-700">
-            <div>
-              <h3 className="mb-2 text-base font-semibold text-slate-900">Account Requirements:</h3>
-              <ul className="ml-6 list-disc space-y-1">
-                <li>Must be 18+ years old (age of majority in your province)</li>
-                <li>Provide accurate contact information</li>
-                <li>Maintain secure login credentials</li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="mb-2 text-base font-semibold text-slate-900">
-                Your Responsibilities:
-              </h3>
-              <ul className="ml-6 list-disc space-y-1">
-                <li>Keep account information current</li>
-                <li>Protect your password</li>
-                <li>Notify us of unauthorized access immediately</li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="mb-2 text-base font-semibold text-slate-900">Account Termination:</h3>
-              <p>
-                We may suspend or terminate accounts for terms violations, fraudulent activity, or
-                misuse of pricing data.
-              </p>
-            </div>
+            <p>
+              <strong>Eligibility:</strong> You must be 18 years old or the age of majority in your province to use Vetpras. Users must provide accurate contact information and maintain secure login credentials.
+            </p>
+            <p>
+              <strong>Acceptable Use:</strong> You may use Vetpras to compare veterinary prices for personal pet care decisions, research treatment costs, and find local veterinary clinics.
+            </p>
+            <p>
+              <strong>Prohibited Activities:</strong> You may not scrape or download pricing data for commercial use, submit false information, manipulate pricing displays, spam veterinary clinics, interfere with website functionality, or circumvent data access restrictions.
+            </p>
+            <p>
+              <strong>Account Termination:</strong> We may suspend or terminate accounts for violations of these terms, fraudulent activity, misuse of pricing data, or at our discretion with notice where possible.
+            </p>
           </div>
         </section>
 
-        {/* INTELLECTUAL PROPERTY */}
+        {/* YOUR DATA AND PRIVACY */}
         <section className="mb-12">
           <h2 className="mb-6 text-2xl font-bold text-slate-900">
-            3. Intellectual Property Rights
+            3. Your Data and Privacy
           </h2>
           <div className="space-y-4 text-sm text-gray-700">
-            <div>
-              <h3 className="mb-2 text-base font-semibold text-slate-900">Our Property:</h3>
-              <ul className="ml-6 list-disc space-y-1">
-                <li>All pricing data compilations</li>
-                <li>Website design and functionality</li>
-                <li>Software algorithms</li>
-                <li>Content and graphics</li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="mb-2 text-base font-semibold text-slate-900">Your Rights:</h3>
-              <p>
-                You may view and use information for personal pet care decisions only. Commercial
-                use, reproduction, or redistribution is prohibited without written permission.
-              </p>
-            </div>
-            <div>
-              <h3 className="mb-2 text-base font-semibold text-slate-900">Database Protection:</h3>
-              <p>
-                Our pricing database is protected under Canadian law. Unauthorized extraction or
-                systematic copying is prohibited.
-              </p>
-            </div>
+            <p>
+              <strong>Bill Submission Consent:</strong> By submitting veterinary bills to Vetpras, you consent to us using your data to improve pricing prediction models, publish anonymized pricing information, include your data in aggregated statistics, and share anonymized data with veterinary industry stakeholders for research purposes.
+            </p>
+            <p>
+              <strong>Anonymization:</strong> All submitted bills are anonymized by removing personal identifying information (names, addresses, phone numbers), pet identifying information, account numbers, payment information, and any other personally identifiable data.
+            </p>
+            <p>
+              <strong>Voluntary:</strong> Bill submission is entirely voluntary. You may use Vetpras without submitting bills.
+            </p>
+            <p>
+              For more details, see our Privacy Policy.
+            </p>
           </div>
         </section>
 
-        {/* USER CONDUCT */}
+        {/* YOUR RIGHTS AND OURS */}
         <section className="mb-12">
           <h2 className="mb-6 text-2xl font-bold text-slate-900">
-            4. User Conduct and Prohibited Activities
+            4. Your Rights and Ours
           </h2>
           <div className="space-y-4 text-sm text-gray-700">
-            <div>
-              <h3 className="mb-2 text-base font-semibold text-slate-900">Allowed Uses:</h3>
-              <ul className="ml-6 list-disc space-y-1">
-                <li>Compare veterinary prices for your pets</li>
-                <li>Research treatment costs</li>
-                <li>Find local veterinary clinics</li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="mb-2 text-base font-semibold text-slate-900">
-                Prohibited Activities:
-              </h3>
-              <ul className="ml-6 list-disc space-y-1">
-                <li>Scraping or downloading pricing data for commercial use</li>
-                <li>Submitting false veterinary information</li>
-                <li>Attempting to manipulate pricing displays</li>
-                <li>Spamming veterinary clinics through our platform</li>
-                <li>Interfering with website functionality</li>
-                <li>Circumventing data access restrictions</li>
-              </ul>
-            </div>
+            <p>
+              <strong>Our Intellectual Property:</strong> All pricing data compilations, website design, software algorithms, and content are owned by Vetpras and protected under Canadian law. You may view and use information for personal use only. Commercial use, reproduction, or redistribution is prohibited without written permission.
+            </p>
+            <p>
+              <strong>Third-Party Links:</strong> Our site may link to veterinary clinics or other third-party services. We are not responsible for the accuracy, availability, or privacy practices of external sites. Verify all information directly with service providers.
+            </p>
           </div>
         </section>
 
-        {/* BILL SUBMISSION AND DATA USE */}
+        {/* LIMITATIONS OF LIABILITY */}
         <section className="mb-12">
           <h2 className="mb-6 text-2xl font-bold text-slate-900">
-            5. Bill Submission and Data Use Consent
+            5. Limitations of Liability
           </h2>
           <div className="space-y-4 text-sm text-gray-700">
-            <div>
-              <h3 className="mb-2 text-base font-semibold text-slate-900">
-                Consent to Data Use:
-              </h3>
-              <p>
-                By submitting veterinary bills or receipts to Vetpras, you provide explicit consent for us to:
-              </p>
-              <ul className="ml-6 list-disc space-y-1">
-                <li>Use your submitted bill data to train and improve our pricing prediction models</li>
-                <li>Publish anonymized pricing information derived from your submission</li>
-                <li>Include your data in aggregated pricing statistics and analysis</li>
-                <li>Share anonymized data with veterinary industry stakeholders for research purposes</li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="mb-2 text-base font-semibold text-slate-900">Data Anonymization:</h3>
-              <p>
-                We take privacy seriously. All submitted bills are anonymized by removing:
-              </p>
-              <ul className="ml-6 list-disc space-y-1">
-                <li>Personal identifying information (names, addresses, phone numbers)</li>
-                <li>Pet identifying information (names, microchip numbers)</li>
-                <li>Account numbers and payment information</li>
-                <li>Any other personally identifiable data</li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="mb-2 text-base font-semibold text-slate-900">Purpose and Benefits:</h3>
-              <p>
-                Your contribution helps build a comprehensive database of veterinary pricing that benefits all pet owners by:
-              </p>
-              <ul className="ml-6 list-disc space-y-1">
-                <li>Improving price transparency in veterinary care</li>
-                <li>Enabling better cost prediction accuracy</li>
-                <li>Supporting informed decision-making for pet owners</li>
-                <li>Contributing to veterinary industry research and analysis</li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="mb-2 text-base font-semibold text-slate-900">Voluntary Submission:</h3>
-              <p>
-                Bill submission is entirely voluntary. You may use Vetpras services without submitting bills, though doing so helps improve our platform for everyone.
-              </p>
-            </div>
-          </div>
-        </section>
-
-        {/* LIMITATION OF LIABILITY */}
-        <section className="mb-12">
-          <h2 className="mb-6 text-2xl font-bold text-slate-900">6. Limitation of Liability</h2>
-          <div className="space-y-4 text-sm text-gray-700">
-            <div>
-              <h3 className="mb-2 text-base font-semibold text-slate-900">
-                Service Provided "As Is":
-              </h3>
-              <p>
-                Vetpras is provided without warranties about accuracy, completeness, or
-                availability.
-              </p>
-            </div>
-            <div>
-              <h3 className="mb-2 text-base font-semibold text-slate-900">Liability Limits:</h3>
-              <p>To the maximum extent permitted by Canadian law:</p>
-              <ul className="ml-6 list-disc space-y-1">
-                <li>We are not liable for indirect, consequential, or special damages</li>
-                <li>Our total liability is limited to $100 CAD</li>
-                <li>We do not guarantee uninterrupted service</li>
-                <li>Price information may contain errors or omissions</li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="mb-2 text-base font-semibold text-slate-900">Your Decisions:</h3>
-              <p>
-                You are solely responsible for veterinary care decisions and their consequences.
-              </p>
-            </div>
-          </div>
-        </section>
-
-        {/* INDEMNIFICATION */}
-        <section className="mb-12">
-          <h2 className="mb-6 text-2xl font-bold text-slate-900">7. Indemnification</h2>
-          <div className="space-y-4 text-sm text-gray-700">
-            <p>You agree to protect Vetpras from claims arising from:</p>
-            <ul className="ml-6 list-disc space-y-1">
-              <li>Your violation of these terms</li>
-              <li>Misuse of our platform</li>
-              <li>Decisions made based on pricing information</li>
-              <li>Disputes with veterinary clinics</li>
-            </ul>
-            <p>This includes covering our legal fees and damages from such claims.</p>
-          </div>
-        </section>
-
-        {/* TERMINATION */}
-        <section className="mb-12">
-          <h2 className="mb-6 text-2xl font-bold text-slate-900">8. Termination and Suspension</h2>
-          <div className="space-y-4 text-sm text-gray-700">
-            <div>
-              <h3 className="mb-2 text-base font-semibold text-slate-900">
-                Grounds for Termination:
-              </h3>
-              <ul className="ml-6 list-disc space-y-1">
-                <li>Terms violations</li>
-                <li>Fraudulent activity</li>
-                <li>Misuse of pricing data</li>
-                <li>At our discretion with reasonable notice</li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="mb-2 text-base font-semibold text-slate-900">Process:</h3>
-              <ul className="ml-6 list-disc space-y-1">
-                <li>We will provide notice when possible</li>
-                <li>Account access ends immediately</li>
-                <li>User data may be retained per our Privacy Policy</li>
-              </ul>
-            </div>
-          </div>
-        </section>
-
-        {/* THIRD-PARTY LINKS */}
-        <section className="mb-12">
-          <h2 className="mb-6 text-2xl font-bold text-slate-900">
-            9. Third-Party Links and Services
-          </h2>
-          <div className="space-y-4 text-sm text-gray-700">
-            <div>
-              <h3 className="mb-2 text-base font-semibold text-slate-900">External Links:</h3>
-              <p>
-                Our site may link to veterinary clinics, booking systems, or other third-party
-                services.
-              </p>
-            </div>
-            <div>
-              <h3 className="mb-2 text-base font-semibold text-slate-900">Disclaimer:</h3>
-              <p>We are not responsible for:</p>
-              <ul className="ml-6 list-disc space-y-1">
-                <li>Accuracy of third-party content</li>
-                <li>Availability of external services</li>
-                <li>Privacy practices of other sites</li>
-                <li>Your interactions with veterinary clinics</li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="mb-2 text-base font-semibold text-slate-900">Use at Your Own Risk:</h3>
-              <p>Verify all information directly with service providers.</p>
-            </div>
+            <p>
+              <strong>Service Provided "As Is":</strong> Vetpras is provided without warranties about accuracy, completeness, or availability. To the maximum extent permitted by Canadian law, we are not liable for indirect, consequential, or special damages. Our total liability is limited to $100 CAD. We do not guarantee uninterrupted service, and price information may contain errors.
+            </p>
+            <p>
+              <strong>Your Responsibility:</strong> You are solely responsible for veterinary care decisions and their consequences.
+            </p>
+            <p>
+              <strong>Indemnification:</strong> You agree to indemnify Vetpras from claims arising from your violation of these terms, misuse of our platform, decisions made based on pricing information, or disputes with veterinary clinics.
+            </p>
           </div>
         </section>
 
         {/* GOVERNING LAW */}
         <section className="mb-12">
           <h2 className="mb-6 text-2xl font-bold text-slate-900">
-            10. Governing Law and Jurisdiction
+            6. Governing Law and Disputes
           </h2>
-          <div className="space-y-4 text-sm text-gray-700">
-            <div>
-              <h3 className="mb-2 text-base font-semibold text-slate-900">Applicable Law:</h3>
-              <p>
-                These terms are governed by Canadian federal law and the laws of British Columbia.
-              </p>
-            </div>
-            <div>
-              <h3 className="mb-2 text-base font-semibold text-slate-900">Dispute Resolution:</h3>
-              <p>
-                Any legal disputes must be resolved in Canadian courts in British Columbia. You
-                cannot sue us in foreign jurisdictions.
-              </p>
-            </div>
-          </div>
-        </section>
-
-        {/* HEALTH DISCLAIMERS */}
-        <section className="mb-12">
-          <h2 className="mb-6 text-2xl font-bold text-slate-900">
-            11. Health Information Disclaimers
-          </h2>
-          <div className="space-y-4 text-sm text-gray-700">
-            <div>
-              <h3 className="mb-2 text-base font-semibold text-slate-900">Not Medical Advice:</h3>
-              <ul className="ml-6 list-disc space-y-1">
-                <li>Vetpras provides pricing information only</li>
-                <li>We do not diagnose, treat, or advise on pet health</li>
-                <li>Always consult qualified veterinarians for medical decisions</li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="mb-2 text-base font-semibold text-slate-900">Emergency Situations:</h3>
-              <p>
-                Seek immediate veterinary attention for pet emergencies regardless of cost
-                considerations.
-              </p>
-            </div>
-            <div>
-              <h3 className="mb-2 text-base font-semibold text-slate-900">
-                Professional Consultation Required:
-              </h3>
-              <p>Pricing information should never replace professional veterinary consultation.</p>
-            </div>
-          </div>
-        </section>
-
-        {/* FORCE MAJEURE */}
-        <section className="mb-12">
-          <h2 className="mb-6 text-2xl font-bold text-slate-900">12. Force Majeure</h2>
           <div className="space-y-4 text-sm text-gray-700">
             <p>
-              We are not liable for service disruptions caused by circumstances beyond our control,
-              including:
+              <strong>Applicable Law:</strong> These terms are governed by Canadian federal law and the laws of British Columbia. Any legal disputes must be resolved in Canadian courts in British Columbia.
             </p>
-            <ul className="ml-6 list-disc space-y-1">
-              <li>Natural disasters</li>
-              <li>Pandemics</li>
-              <li>Government actions</li>
-              <li>Internet outages</li>
-              <li>Other extraordinary events</li>
-            </ul>
+            <p>
+              <strong>Dispute Resolution:</strong> Please contact us first to resolve issues informally before pursuing legal action.
+            </p>
+            <p>
+              <strong>Regulatory Compliance:</strong> We reserve the right to modify services to comply with provincial veterinary regulations, healthcare transparency requirements, and animal health information handling laws.
+            </p>
           </div>
         </section>
 
-        {/* SEVERABILITY */}
+        {/* CHANGES TO TERMS */}
         <section className="mb-12">
           <h2 className="mb-6 text-2xl font-bold text-slate-900">
-            13. Severability and Entire Agreement
+            7. Changes to Terms
           </h2>
           <div className="space-y-4 text-sm text-gray-700">
-            <div>
-              <h3 className="mb-2 text-base font-semibold text-slate-900">Severability:</h3>
-              <p>If any part of these terms is found unenforceable, the rest remains valid.</p>
-            </div>
-            <div>
-              <h3 className="mb-2 text-base font-semibold text-slate-900">Complete Agreement:</h3>
-              <p>
-                These terms constitute our entire agreement. Previous negotiations or
-                representations do not apply.
-              </p>
-            </div>
+            <p>
+              We may update these terms at any time. Changes will be posted on our website with the new effective date. Continued use of Vetpras after changes means you accept the new terms.
+            </p>
           </div>
         </section>
 
-        {/* AMENDMENTS */}
-        <section className="mb-12">
-          <h2 className="mb-6 text-2xl font-bold text-slate-900">14. Amendment Procedures</h2>
-          <div className="space-y-4 text-sm text-gray-700">
-            <div>
-              <h3 className="mb-2 text-base font-semibold text-slate-900">Updates:</h3>
-              <p>We may update these terms at any time.</p>
-            </div>
-            <div>
-              <h3 className="mb-2 text-base font-semibold text-slate-900">Notice:</h3>
-              <p>Changes will be posted on our website with the new effective date.</p>
-            </div>
-            <div>
-              <h3 className="mb-2 text-base font-semibold text-slate-900">Acceptance:</h3>
-              <p>Continued use of Vetpras after changes means you accept the new terms.</p>
-            </div>
-          </div>
-        </section>
-
-        {/* CONTACT INFO */}
+        {/* CONTACT INFORMATION */}
         <section className="mb-12">
           <h2 className="mb-6 text-2xl font-bold text-slate-900">
-            15. Contact Information and Disputes
+            8. Contact Information
           </h2>
           <div className="space-y-4 text-sm text-gray-700">
-            <div>
-              <h3 className="mb-2 text-base font-semibold text-slate-900">Legal Notices:</h3>
-              <p>138 Esplanade E Ave, North Vancouver, BC, Canada V7L 4X9</p>
-              <p>Email: info@vetpras.com</p>
-            </div>
-            <div>
-              <h3 className="mb-2 text-base font-semibold text-slate-900">Dispute Resolution:</h3>
-              <p>Contact us first to resolve issues informally before pursuing legal action.</p>
-            </div>
-            <div>
-              <h3 className="mb-2 text-base font-semibold text-slate-900">Questions:</h3>
-              <p>Email info@vetpras.com for general inquiries.</p>
-            </div>
+            <p>
+              <strong>Address:</strong> 138 Esplanade E Ave, North Vancouver, BC, Canada V7L 4X9
+            </p>
+            <p>
+              <strong>Email:</strong> info@vetpras.com
+            </p>
           </div>
         </section>
 
-        {/* REGULATORY COMPLIANCE */}
+        {/* GENERAL PROVISIONS */}
         <section className="mb-12">
           <h2 className="mb-6 text-2xl font-bold text-slate-900">
-            16. Compliance with Canadian Healthcare Regulations
+            9. General Provisions
           </h2>
           <div className="space-y-4 text-sm text-gray-700">
-            <div>
-              <h3 className="mb-2 text-base font-semibold text-slate-900">
-                Regulatory Compliance:
-              </h3>
-              <p>We reserve the right to modify services to comply with:</p>
-              <ul className="ml-6 list-disc space-y-1">
-                <li>Provincial veterinary regulations</li>
-                <li>Healthcare transparency requirements</li>
-                <li>Animal health information handling laws</li>
-                <li>Future regulatory changes</li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="mb-2 text-base font-semibold text-slate-900">
-                Service Modifications:
-              </h3>
-              <p>Changes may be made without notice to ensure regulatory compliance.</p>
-            </div>
-          </div>
-        </section>
-
-        {/* AGE RESTRICTIONS */}
-        <section className="mb-12">
-          <h2 className="mb-6 text-2xl font-bold text-slate-900">17. Age Restrictions</h2>
-          <div className="space-y-4 text-sm text-gray-700">
-            <div>
-              <h3 className="mb-2 text-base font-semibold text-slate-900">Minimum Age:</h3>
-              <p>
-                You must be 18 years old or the age of majority in your province to use Vetpras.
-              </p>
-            </div>
-            <div>
-              <h3 className="mb-2 text-base font-semibold text-slate-900">Capacity:</h3>
-              <p>Users must have legal capacity to make veterinary care decisions.</p>
-            </div>
-            <div>
-              <h3 className="mb-2 text-base font-semibold text-slate-900">Parental Supervision:</h3>
-              <p>Minors should use this service only with parental guidance.</p>
-            </div>
+            <p>
+              <strong>Severability:</strong> If any part of these terms is found unenforceable, the rest remains valid.
+            </p>
+            <p>
+              <strong>Entire Agreement:</strong> These terms constitute our entire agreement with you.
+            </p>
+            <p>
+              <strong>Force Majeure:</strong> We are not liable for service disruptions caused by circumstances beyond our control, including natural disasters, pandemics, government actions, or internet outages.
+            </p>
           </div>
         </section>
 
@@ -486,7 +181,7 @@ export default function TermsAndConditionsPage() {
         <div className="border-t border-gray-200 pt-8">
           <div className="text-center text-sm text-gray-600">
             <p>
-              <strong>Last Updated:</strong> September 11, 2025
+              <strong>Last Updated:</strong> January 20, 2025
             </p>
             <p>
               <strong>Questions?</strong> Contact us at info@vetpras.com
@@ -498,6 +193,6 @@ export default function TermsAndConditionsPage() {
         </div>
       </div>
     </div>
-    
+
   );
 }
