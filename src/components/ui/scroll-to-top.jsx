@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
-import { ChevronUpIcon } from '@heroicons/react/24/outline';
+import { ChevronUpIcon } from '@heroicons/react/24/solid';
 
 export default function ScrollToTop() {
   const pathname = usePathname();
@@ -30,10 +30,10 @@ export default function ScrollToTop() {
       {visible && (
         <button
           onClick={scrollToTop}
-          className="fixed right-6 bottom-6 z-50 rounded-full bg-white p-2 shadow-md ring-1 ring-gray-300 transition hover:bg-gray-50"
+          className="fixed right-6 bottom-6 z-50 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 backdrop-blur-lg p-3 shadow-lg transition hover:from-blue-600 hover:to-blue-700"
           aria-label="Scroll to top"
         >
-          <ChevronUpIcon className="h-5 w-5 text-gray-700" />
+          <ChevronUpIcon className="h-6 w-6 text-white font-bold" />
         </button>
       )}
     </>

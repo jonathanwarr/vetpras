@@ -370,7 +370,7 @@ export default function TableClinic({
                         href={clinic.website}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center hover:underline"
+                        className="inline-flex items-center hover:underline text-blue-500 hover:text-blue-600"
                         onClick={(e) => e.stopPropagation()}
                       >
                         Visit
