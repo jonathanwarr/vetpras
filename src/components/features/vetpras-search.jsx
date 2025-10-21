@@ -9,7 +9,7 @@ export default function VetprasSearch({
   services = [],
   placeholder = 'City or clinic name',
   className = '',
-  suggestionsDirection = 'up' // 'up' for landing page, 'down' for search page
+  suggestionsDirection = 'up', // 'up' for landing page, 'down' for search page
 }) {
   const [searchTerm, setSearchTerm] = useState('');
   const [showSuggestions, setShowSuggestions] = useState(false);
@@ -77,7 +77,7 @@ export default function VetprasSearch({
       // Navigate to search page with query params
       const params = new URLSearchParams({
         query: searchTerm,
-        type: 'text'
+        type: 'text',
       });
       router.push(`/search?${params.toString()}`);
     } else {
@@ -94,7 +94,7 @@ export default function VetprasSearch({
     // Navigate to search page with selected suggestion
     const params = new URLSearchParams({
       query: suggestion.value,
-      type: suggestion.type
+      type: suggestion.type,
     });
     router.push(`/search?${params.toString()}`);
   };
@@ -179,30 +179,30 @@ export default function VetprasSearch({
   return (
     <div className={className}>
       {/* Mobile: Stacked Layout */}
-      <div className='sm:hidden flex flex-col gap-3 relative'>
+      <div className="relative flex flex-col gap-3 sm:hidden">
         {/* Search Input Container */}
-        <div className='flex items-center bg-slate-50 rounded-2xl shadow-lg border border-gray-200'>
-          <div className='pl-6 pr-3'>
-            <MagnifyingGlassIcon className='h-5 w-5 text-gray-600' />
+        <div className="flex items-center rounded-2xl border border-white/20 bg-white/10 shadow-lg backdrop-blur-sm">
+          <div className="pr-3 pl-6">
+            <MagnifyingGlassIcon className="h-5 w-5 text-white/80" />
           </div>
           <input
             ref={inputRef}
-            type='text'
+            type="text"
             placeholder={placeholder}
             value={searchTerm}
             onChange={handleInputChange}
             onKeyDown={handleKeyPress}
             onFocus={handleFocus}
             onBlur={handleBlur}
-            className='flex-1 bg-transparent py-5 text-base text-gray-800 placeholder-gray-500 focus:outline-none'
+            className="flex-1 bg-transparent py-5 text-base text-white placeholder-white/60 focus:outline-none"
           />
           {searchTerm && (
             <button
               onClick={handleClear}
-              className='pr-6 text-gray-400 hover:text-gray-600 transition-colors cursor-pointer'
-              aria-label='Clear search'
+              className="cursor-pointer pr-6 text-white/60 transition-colors hover:text-white/90"
+              aria-label="Clear search"
             >
-              <XMarkIcon className='h-5 w-5' />
+              <XMarkIcon className="h-5 w-5" />
             </button>
           )}
         </div>
@@ -211,13 +211,13 @@ export default function VetprasSearch({
         {showSuggestions && (
           <ul
             ref={suggestionsRef}
-            className={`absolute z-50 w-full overflow-y-auto rounded-xl shadow-lg bg-white border border-gray-200 ${
+            className={`absolute z-50 w-full overflow-y-auto rounded-xl border border-white/20 bg-white/95 shadow-lg backdrop-blur-md ${
               suggestionsDirection === 'up' ? 'bottom-full mb-3' : 'top-full mt-3'
             }`}
             style={{
               maxHeight: '300px',
               scrollbarWidth: 'thin',
-              scrollbarColor: 'rgba(156, 163, 175, 0.3) transparent'
+              scrollbarColor: 'rgba(156, 163, 175, 0.3) transparent',
             }}
           >
             {suggestions.slice(0, 3).length > 0 ? (
@@ -241,7 +241,7 @@ export default function VetprasSearch({
                 </li>
               ))
             ) : (
-              <li className="px-4 py-3 text-sm text-gray-500 text-center italic">
+              <li className="px-4 py-3 text-center text-sm text-gray-500 italic">
                 No results found. Try searching for a city or clinic name in Greater Vancouver.
               </li>
             )}
@@ -251,36 +251,36 @@ export default function VetprasSearch({
         {/* Search Button - Full Width */}
         <button
           onClick={handleSearch}
-          className='w-full rounded-2xl bg-gradient-to-r from-blue-600 to-blue-500 px-8 py-4 text-white hover:from-blue-700 hover:to-blue-600 transition-all duration-200 font-medium text-base cursor-pointer'
+          className="w-full cursor-pointer rounded-2xl bg-gradient-to-r from-blue-600 to-blue-500 px-8 py-4 text-base font-medium text-white transition-all duration-200 hover:from-blue-700 hover:to-blue-600"
         >
           Search
         </button>
       </div>
 
       {/* Desktop: Horizontal Layout */}
-      <div className='hidden sm:flex items-center bg-slate-50 rounded-2xl shadow-lg border border-gray-200 relative'>
-        <div className='flex items-center flex-1 min-w-0'>
-          <div className='pl-8 pr-4'>
-            <MagnifyingGlassIcon className='h-6 w-6 text-gray-600' />
+      <div className="relative hidden items-center rounded-2xl border border-white/20 bg-white/10 shadow-lg backdrop-blur-sm sm:flex">
+        <div className="flex min-w-0 flex-1 items-center">
+          <div className="pr-4 pl-8">
+            <MagnifyingGlassIcon className="h-6 w-6 text-white/80" />
           </div>
           <input
             ref={inputRef}
-            type='text'
+            type="text"
             placeholder={placeholder}
             value={searchTerm}
             onChange={handleInputChange}
             onKeyDown={handleKeyPress}
             onFocus={handleFocus}
             onBlur={handleBlur}
-            className='flex-1 bg-transparent py-6 text-lg text-gray-800 placeholder-gray-500 focus:outline-none min-w-0'
+            className="min-w-0 flex-1 bg-transparent py-6 text-lg text-white placeholder-white/60 focus:outline-none"
           />
           {searchTerm && (
             <button
               onClick={handleClear}
-              className='px-4 text-gray-400 hover:text-gray-600 transition-colors cursor-pointer'
-              aria-label='Clear search'
+              className="cursor-pointer px-4 text-white/60 transition-colors hover:text-white/90"
+              aria-label="Clear search"
             >
-              <XMarkIcon className='h-6 w-6' />
+              <XMarkIcon className="h-6 w-6" />
             </button>
           )}
         </div>
@@ -289,13 +289,13 @@ export default function VetprasSearch({
         {showSuggestions && (
           <ul
             ref={suggestionsRef}
-            className={`absolute left-0 right-0 z-50 overflow-y-auto rounded-xl shadow-lg bg-white border border-gray-200 ${
+            className={`absolute right-0 left-0 z-50 overflow-y-auto rounded-xl border border-white/20 bg-white/95 shadow-lg backdrop-blur-md ${
               suggestionsDirection === 'up' ? 'bottom-full mb-2' : 'top-full mt-2'
             }`}
             style={{
               maxHeight: '300px',
               scrollbarWidth: 'thin',
-              scrollbarColor: 'rgba(156, 163, 175, 0.3) transparent'
+              scrollbarColor: 'rgba(156, 163, 175, 0.3) transparent',
             }}
           >
             {suggestions.length > 0 ? (
@@ -319,7 +319,7 @@ export default function VetprasSearch({
                 </li>
               ))
             ) : (
-              <li className="px-6 py-3 text-base text-gray-500 text-center italic">
+              <li className="px-6 py-3 text-center text-base text-gray-500 italic">
                 No results found. Try searching for a city or clinic name in Greater Vancouver.
               </li>
             )}
@@ -327,12 +327,12 @@ export default function VetprasSearch({
         )}
 
         {/* Vertical Divider */}
-        <div className='h-12 w-0.5 bg-gray-700 mx-4 lg:mx-6' />
+        <div className="mx-4 h-12 w-0.5 bg-gray-700 lg:mx-6" />
 
         {/* Search Button */}
         <button
           onClick={handleSearch}
-          className='mr-3 rounded-lg bg-gradient-to-r from-blue-600 to-blue-500 px-10 lg:px-12 py-4 text-white hover:from-blue-700 hover:to-blue-600 transition-all duration-200 font-medium text-base cursor-pointer'
+          className="mr-3 cursor-pointer rounded-lg bg-gradient-to-r from-blue-600 to-blue-500 px-10 py-4 text-base font-medium text-white transition-all duration-200 hover:from-blue-700 hover:to-blue-600 lg:px-12"
         >
           Search
         </button>
