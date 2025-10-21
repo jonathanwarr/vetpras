@@ -163,7 +163,7 @@ export default function Home() {
         {/* Background Image */}
         <div className='absolute inset-0'>
           <Image
-            src='/images/vetpras-hero.png'
+            src='/images/vetpras-hero-image.png'
             alt='Happy pet owner with dog'
             fill
             className='object-cover object-[65%_60%] sm:object-[center_65%] lg:object-[center_60%]'
