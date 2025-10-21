@@ -314,122 +314,121 @@ export default function TableClinic({
           </tr>
         </thead>
 
-          <tbody>
-            {paginatedClinics.map((clinic) => (
-              <tr
-                key={clinic.clinic_id}
-                className="group cursor-pointer text-slate-800 transition-colors odd:bg-gray-50 even:bg-white hover:bg-slate-200 active:bg-slate-200"
+        <tbody>
+          {paginatedClinics.map((clinic) => (
+            <tr
+              key={clinic.clinic_id}
+              className="group cursor-pointer text-slate-800 transition-colors odd:bg-gray-50 even:bg-white hover:bg-slate-200 active:bg-slate-200"
+            >
+              {/* Name + mobile stacked labels */}
+              <td
+                onClick={() => onSelectClinic(clinic)}
+                className="w-56 py-4 pr-3 pl-4 text-left font-sans text-xs font-medium sm:w-auto"
+                style={{ wordBreak: 'break-word' }}
               >
-                {/* Name + mobile stacked labels */}
-                <td
-                  onClick={() => onSelectClinic(clinic)}
-                  className="w-56 py-4 pr-3 pl-4 text-left font-sans text-xs font-medium sm:w-auto"
-                  style={{ wordBreak: 'break-word' }}
-                >
-                  <span className="font-semibold sm:hidden">Name: </span>
-                  <span className="group-hover:text-blue-500 group-active:text-blue-500">
-                    {clinic.clinic_name}
+                <span className="font-semibold sm:hidden">Name: </span>
+                <span className="group-hover:text-blue-500 group-active:text-blue-500">
+                  {clinic.clinic_name}
+                </span>
+
+                {/* Mobile stacked details */}
+                <div className="mt-2 grid grid-cols-2 gap-x-2 gap-y-1 text-xs text-slate-800 sm:hidden">
+                  <span className="font-semibold">City:</span>
+                  <span className="truncate">{clinic.city || '—'}</span>
+
+                  <span className="font-semibold">Exam:</span>
+                  <span>
+                    {Number.isFinite(clinic.exam_fee) ? `$${clinic.exam_fee.toFixed(0)}` : '—'}
                   </span>
 
-                  {/* Mobile stacked details */}
-                  <div className="mt-2 grid grid-cols-2 gap-x-2 gap-y-1 text-xs text-slate-800 sm:hidden">
-                    <span className="font-semibold">City:</span>
-                    <span className="truncate">{clinic.city || '—'}</span>
+                  <span className="font-semibold">Core Vaccine:</span>
+                  <span>
+                    {Number.isFinite(clinic.da2pp_vaccine)
+                      ? `$${clinic.da2pp_vaccine.toFixed(0)}`
+                      : '—'}
+                  </span>
 
-                    <span className="font-semibold">Exam:</span>
-                    <span>
-                      {Number.isFinite(clinic.exam_fee) ? `$${clinic.exam_fee.toFixed(0)}` : '—'}
-                    </span>
+                  <span className="font-semibold">Spay:</span>
+                  <span>{Number.isFinite(clinic.spay) ? `$${clinic.spay.toFixed(0)}` : '—'}</span>
 
-                    <span className="font-semibold">Core Vaccine:</span>
-                    <span>
-                      {Number.isFinite(clinic.da2pp_vaccine)
-                        ? `$${clinic.da2pp_vaccine.toFixed(0)}`
-                        : '—'}
-                    </span>
+                  <span className="font-semibold">Neuter:</span>
+                  <span>
+                    {Number.isFinite(clinic.neuter) ? `$${clinic.neuter.toFixed(0)}` : '—'}
+                  </span>
 
-                    <span className="font-semibold">Spay:</span>
-                    <span>{Number.isFinite(clinic.spay) ? `$${clinic.spay.toFixed(0)}` : '—'}</span>
+                  <span className="font-semibold">Rating:</span>
+                  <span>
+                    {Number.isFinite(clinic.rating)
+                      ? `${clinic.rating.toFixed(1)} (${clinic.total_reviews || 0})`
+                      : '—'}
+                  </span>
 
-                    <span className="font-semibold">Neuter:</span>
-                    <span>
-                      {Number.isFinite(clinic.neuter) ? `$${clinic.neuter.toFixed(0)}` : '—'}
-                    </span>
+                  <span className="font-semibold">Website:</span>
+                  <span>
+                    {clinic.website ? (
+                      <a
+                        href={clinic.website}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center hover:underline"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        Visit
+                        <ArrowTopRightOnSquareIcon
+                          className="ml-1 h-3.5 w-3.5"
+                          aria-hidden="true"
+                        />
+                      </a>
+                    ) : (
+                      '—'
+                    )}
+                  </span>
+                </div>
+              </td>
 
-                    <span className="font-semibold">Rating:</span>
-                    <span>
-                      {Number.isFinite(clinic.rating)
-                        ? `${clinic.rating.toFixed(1)} (${clinic.total_reviews || 0})`
-                        : '—'}
-                    </span>
-
-                    <span className="font-semibold">Website:</span>
-                    <span>
-                      {clinic.website ? (
-                        <a
-                          href={clinic.website}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center hover:underline"
-                          onClick={(e) => e.stopPropagation()}
-                        >
-                          Visit
-                          <ArrowTopRightOnSquareIcon
-                            className="ml-1 h-3.5 w-3.5"
-                            aria-hidden="true"
-                          />
-                        </a>
-                      ) : (
-                        '—'
-                      )}
-                    </span>
-                  </div>
-                </td>
-
-                {/* Desktop-only cells */}
-                <td className="hidden w-24 text-left font-sans text-xs font-medium whitespace-nowrap sm:table-cell">
-                  {clinic.city || '—'}
-                </td>
-                <td className="hidden w-18 text-center font-sans text-xs font-medium whitespace-nowrap sm:table-cell">
-                  {Number.isFinite(clinic.exam_fee) ? `$${clinic.exam_fee.toFixed(0)}` : '—'}
-                </td>
-                <td className="hidden w-18 text-center font-sans text-xs font-medium whitespace-nowrap sm:table-cell">
-                  {Number.isFinite(clinic.da2pp_vaccine)
-                    ? `$${clinic.da2pp_vaccine.toFixed(0)}`
-                    : '—'}
-                </td>
-                <td className="hidden w-18 text-center font-sans text-xs font-medium whitespace-nowrap sm:table-cell">
-                  {Number.isFinite(clinic.spay) ? `$${clinic.spay.toFixed(0)}` : '—'}
-                </td>
-                <td className="hidden w-18 text-center font-sans text-xs font-medium whitespace-nowrap sm:table-cell">
-                  {Number.isFinite(clinic.neuter) ? `$${clinic.neuter.toFixed(0)}` : '—'}
-                </td>
-                <td className="hidden w-20 text-center font-sans text-xs font-medium whitespace-nowrap sm:table-cell">
-                  {Number.isFinite(clinic.rating)
-                    ? `${clinic.rating.toFixed(1)} (${clinic.total_reviews || 0})`
-                    : '—'}
-                </td>
-                <td className="hidden w-16 text-center font-sans text-xs font-medium whitespace-nowrap sm:table-cell">
-                  {clinic.website ? (
-                    <a
-                      href={clinic.website}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center hover:underline"
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      <ArrowTopRightOnSquareIcon className="h-4 w-4 text-blue-500 hover:text-blue-600" aria-hidden="true" />
-                      <span className="sr-only">Visit website</span>
-                    </a>
-                  ) : (
-                    '—'
-                  )}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+              {/* Desktop-only cells */}
+              <td className="hidden w-24 text-left font-sans text-xs font-medium whitespace-nowrap sm:table-cell">
+                {clinic.city || '—'}
+              </td>
+              <td className="hidden w-18 text-center font-sans text-xs font-medium whitespace-nowrap sm:table-cell">
+                {Number.isFinite(clinic.exam_fee) ? `$${clinic.exam_fee.toFixed(0)}` : '—'}
+              </td>
+              <td className="hidden w-18 text-center font-sans text-xs font-medium whitespace-nowrap sm:table-cell">
+                {Number.isFinite(clinic.da2pp_vaccine)
+                  ? `$${clinic.da2pp_vaccine.toFixed(0)}`
+                  : '—'}
+              </td>
+              <td className="hidden w-18 text-center font-sans text-xs font-medium whitespace-nowrap sm:table-cell">
+                {Number.isFinite(clinic.spay) ? `$${clinic.spay.toFixed(0)}` : '—'}
+              </td>
+              <td className="hidden w-18 text-center font-sans text-xs font-medium whitespace-nowrap sm:table-cell">
+                {Number.isFinite(clinic.neuter) ? `$${clinic.neuter.toFixed(0)}` : '—'}
+              </td>
+              <td className="hidden w-20 text-center font-sans text-xs font-medium whitespace-nowrap sm:table-cell">
+                {Number.isFinite(clinic.rating)
+                  ? `${clinic.rating.toFixed(1)} (${clinic.total_reviews || 0})`
+                  : '—'}
+              </td>
+              <td className="hidden w-16 text-center font-sans text-xs font-medium whitespace-nowrap sm:table-cell">
+                {clinic.website ? (
+                  <a
+                    href={clinic.website}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center hover:underline"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <ArrowTopRightOnSquareIcon className="h-4 w-4 text-blue-500 hover:text-blue-600" aria-hidden="true" />
+                    <span className="sr-only">Visit website</span>
+                  </a>
+                ) : (
+                  '—'
+                )}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 }
