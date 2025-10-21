@@ -8,7 +8,8 @@ export default function VetprasSearch({
   clinics = [],
   services = [],
   placeholder = 'City or clinic name',
-  className = ''
+  className = '',
+  suggestionsDirection = 'up' // 'up' for landing page, 'down' for search page
 }) {
   const [searchTerm, setSearchTerm] = useState('');
   const [showSuggestions, setShowSuggestions] = useState(false);
@@ -171,7 +172,7 @@ export default function VetprasSearch({
       {/* Mobile: Stacked Layout */}
       <div className='sm:hidden flex flex-col gap-3 relative'>
         {/* Search Input Container */}
-        <div className='flex items-center bg-white/60 backdrop-blur-lg rounded-2xl shadow-2xl shadow-black/10 border border-white/20'>
+        <div className='flex items-center bg-slate-50 rounded-2xl shadow-md border border-gray-400'>
           <div className='pl-6 pr-3'>
             <MagnifyingGlassIcon className='h-5 w-5 text-gray-600' />
           </div>
@@ -192,7 +193,9 @@ export default function VetprasSearch({
         {showSuggestions && (
           <ul
             ref={suggestionsRef}
-            className="absolute z-50 bottom-full mb-3 w-full overflow-y-auto rounded-xl shadow-lg bg-white border border-gray-200 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent"
+            className={`absolute z-50 w-full overflow-y-auto rounded-xl shadow-lg bg-white border border-gray-200 ${
+              suggestionsDirection === 'up' ? 'bottom-full mb-3' : 'top-full mt-3'
+            }`}
             style={{
               maxHeight: '300px',
               scrollbarWidth: 'thin',
@@ -237,7 +240,7 @@ export default function VetprasSearch({
       </div>
 
       {/* Desktop: Horizontal Layout */}
-      <div className='hidden sm:flex items-center bg-white/60 backdrop-blur-lg rounded-2xl shadow-2xl shadow-black/10 border border-white/20 relative'>
+      <div className='hidden sm:flex items-center bg-slate-50 rounded-2xl shadow-md border border-gray-400 relative'>
         <div className='flex items-center flex-1 min-w-0'>
           <div className='pl-8 pr-4'>
             <MagnifyingGlassIcon className='h-6 w-6 text-gray-600' />
@@ -259,7 +262,9 @@ export default function VetprasSearch({
         {showSuggestions && (
           <ul
             ref={suggestionsRef}
-            className="absolute bottom-full left-0 right-0 z-50 mb-2 overflow-y-auto rounded-xl shadow-lg bg-white border border-gray-200 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent"
+            className={`absolute left-0 right-0 z-50 overflow-y-auto rounded-xl shadow-lg bg-white border border-gray-200 ${
+              suggestionsDirection === 'up' ? 'bottom-full mb-2' : 'top-full mt-2'
+            }`}
             style={{
               maxHeight: '300px',
               scrollbarWidth: 'thin',

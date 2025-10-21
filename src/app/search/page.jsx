@@ -8,7 +8,7 @@ import ContainerConstrained from '@/components/layout/container-constrained';
 import TableClinic from '@/components/clinics/table-clinic';
 import DrawerClinic from '@/components/clinics/drawer-clinic';
 import Pagination from '@/components/clinics/pagination';
-import SearchBar from '@/components/search/search-bar';
+import VetprasSearch from '@/components/features/vetpras-search';
 import SortFilterControls from '@/components/search/sort-filter-controls';
 
 function SearchPageContent() {
@@ -113,24 +113,24 @@ function SearchPageContent() {
   };
 
   return (
-    <div className="pt-12 pb-20 sm:pt-24 sm:pb-32">
+    <div className="pt-32 pb-20 sm:pt-40 sm:pb-32 bg-white min-h-screen">
+      {/* Search Section */}
       <ContainerConstrained>
-        <div className="mb-10">
-          <h2 className="mt-20 mb-2 flex justify-center font-serif text-4xl font-semibold tracking-tight text-slate-900 sm:text-5xl lg:text-balance">
-            Find a Vet
-          </h2>
-          <p className="flex justify-center space-y-5 text-center font-sans text-lg font-light text-slate-900">
-            Search for vets by clinic name, city or treatment.
-          </p>
+        <div className="mx-auto max-w-4xl">
+          <div ref={searchAreaRef}>
+            <VetprasSearch
+              clinics={clinics}
+              services={services}
+              placeholder="City or clinic name"
+              suggestionsDirection="down"
+            />
+          </div>
         </div>
+      </ContainerConstrained>
 
-        {/* Search Bar */}
-        <div ref={searchAreaRef} className="mb-6 flex justify-center pb-10">
-          <SearchBar clinics={clinics} services={services} onSearchChange={handleSearchChange} />
-        </div>
-
-        {/* Sort and Filter Controls */}
-        <div className="mb-6">
+      {/* Sort and Filter Controls */}
+      <ContainerConstrained>
+        <div className="mt-8 mb-6">
           <SortFilterControls
             clinics={clinics}
             searchQuery={searchQuery}
@@ -158,7 +158,7 @@ function SearchPageContent() {
         />
         <div className="mt-4">
           <p className="text-xs text-gray-600 italic">
-            Cost estimates only. Actual prices may vary based on your pet's specific needs,
+            Cost <strong className="font-bold">estimates</strong> only from aggregated bill and quote submissions. Actual prices may vary based on your pet's specific needs,
             location, and clinic policies. See{' '}
             <Link
               href="/terms-and-conditions"

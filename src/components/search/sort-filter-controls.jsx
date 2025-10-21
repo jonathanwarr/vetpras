@@ -289,27 +289,29 @@ export default function SortFilterControls({ onSortChange, onFilterChange, onCle
   return (
     <div className="space-y-3">
       {/* Active filters pills */}
-      {activeFilters.length > 0 && (
-        <div className="flex flex-wrap gap-2 border-b border-gray-200 pb-3">
-          <span className="text-sm font-medium" style={{ color: '#0F172B' }}>
-            Active Filters:
-          </span>
-          {activeFilters.map((filter, index) => (
-            <span
-              key={`${filter.type}-${filter.value}-${index}`}
-              className="inline-flex items-center gap-1 rounded-full bg-blue-500 px-2 py-1 text-xs text-white"
-            >
-              {filter.label}
-              <button
-                onClick={() => filter.isCityFilter ? removeCityFilter(filter.value) : removeFilter(filter.type)}
-                className="ml-1 hover:opacity-70"
-              >
-                <XMarkIcon className="h-3 w-3" />
-              </button>
+      <div className="min-h-[44px] flex flex-wrap gap-2 border-b border-gray-200 pb-3">
+        {activeFilters.length > 0 && (
+          <>
+            <span className="text-sm font-medium" style={{ color: '#0F172B' }}>
+              Active Filters:
             </span>
-          ))}
-        </div>
-      )}
+            {activeFilters.map((filter, index) => (
+              <span
+                key={`${filter.type}-${filter.value}-${index}`}
+                className="inline-flex items-center gap-1 rounded-lg bg-blue-500 px-3 py-1.5 text-xs font-bold text-white"
+              >
+              {filter.label}
+                <button
+                  onClick={() => filter.isCityFilter ? removeCityFilter(filter.value) : removeFilter(filter.type)}
+                  className="ml-1 hover:opacity-70"
+                >
+                  <XMarkIcon className="h-3 w-3" />
+                </button>
+              </span>
+            ))}
+          </>
+        )}
+      </div>
 
       {/* Desktop: Sort and Filter controls on same line */}
       <div className="hidden sm:flex sm:items-center sm:justify-between">
@@ -331,7 +333,7 @@ export default function SortFilterControls({ onSortChange, onFilterChange, onCle
 
           {sortOpen && (
             <div
-              className="absolute z-50 mt-1 w-48 rounded-md shadow-lg"
+              className="absolute z-50 mt-1 w-48 rounded-md shadow-lg animate-in fade-in slide-in-from-top-2 duration-150"
               style={{ backgroundColor: '#F1F5F9', border: '1px solid #CBD5E1' }}
             >
               {sortOptions.map((option, index) => (
@@ -379,7 +381,7 @@ export default function SortFilterControls({ onSortChange, onFilterChange, onCle
 
             {cityFilterOpen && (
               <div
-                className="absolute right-0 z-50 mt-1 max-h-64 w-56 overflow-auto rounded-md p-2 shadow-lg"
+                className="absolute right-0 z-50 mt-1 max-h-64 w-56 overflow-auto rounded-md p-2 shadow-lg animate-in fade-in slide-in-from-top-2 duration-150"
                 style={{ backgroundColor: '#F1F5F9', border: '1px solid #CBD5E1' }}
               >
                 {cityOptions.length === 0 ? (
@@ -421,7 +423,7 @@ export default function SortFilterControls({ onSortChange, onFilterChange, onCle
 
             {examFilterOpen && (
               <div
-                className="absolute right-0 z-50 mt-1 w-64 rounded-md p-4 shadow-lg"
+                className="absolute right-0 z-50 mt-1 w-64 rounded-md p-4 shadow-lg animate-in fade-in slide-in-from-top-2 duration-150"
                 style={{ backgroundColor: '#F1F5F9', border: '1px solid #CBD5E1' }}
               >
                 <RangeSlider
@@ -454,7 +456,7 @@ export default function SortFilterControls({ onSortChange, onFilterChange, onCle
 
             {vaccineFilterOpen && (
               <div
-                className="absolute right-0 z-50 mt-1 w-64 rounded-md p-4 shadow-lg"
+                className="absolute right-0 z-50 mt-1 w-64 rounded-md p-4 shadow-lg animate-in fade-in slide-in-from-top-2 duration-150"
                 style={{ backgroundColor: '#F1F5F9', border: '1px solid #CBD5E1' }}
               >
                 <RangeSlider
@@ -487,7 +489,7 @@ export default function SortFilterControls({ onSortChange, onFilterChange, onCle
 
             {spayFilterOpen && (
               <div
-                className="absolute right-0 z-50 mt-1 w-64 rounded-md p-4 shadow-lg"
+                className="absolute right-0 z-50 mt-1 w-64 rounded-md p-4 shadow-lg animate-in fade-in slide-in-from-top-2 duration-150"
                 style={{ backgroundColor: '#F1F5F9', border: '1px solid #CBD5E1' }}
               >
                 <RangeSlider
@@ -520,7 +522,7 @@ export default function SortFilterControls({ onSortChange, onFilterChange, onCle
 
             {neuterFilterOpen && (
               <div
-                className="absolute right-0 z-50 mt-1 w-64 rounded-md p-4 shadow-lg"
+                className="absolute right-0 z-50 mt-1 w-64 rounded-md p-4 shadow-lg animate-in fade-in slide-in-from-top-2 duration-150"
                 style={{ backgroundColor: '#F1F5F9', border: '1px solid #CBD5E1' }}
               >
                 <RangeSlider
@@ -553,7 +555,7 @@ export default function SortFilterControls({ onSortChange, onFilterChange, onCle
 
             {ratingFilterOpen && (
               <div
-                className="absolute right-0 z-50 mt-1 w-64 rounded-md p-4 shadow-lg"
+                className="absolute right-0 z-50 mt-1 w-64 rounded-md p-4 shadow-lg animate-in fade-in slide-in-from-top-2 duration-150"
                 style={{ backgroundColor: '#F1F5F9', border: '1px solid #CBD5E1' }}
               >
                 <RangeSlider
@@ -592,7 +594,7 @@ export default function SortFilterControls({ onSortChange, onFilterChange, onCle
 
             {sortOpen && (
               <div
-                className="absolute z-50 mt-1 w-48 rounded-md shadow-lg"
+                className="absolute z-50 mt-1 w-48 rounded-md shadow-lg animate-in fade-in slide-in-from-top-2 duration-150"
                 style={{ backgroundColor: '#F1F5F9', border: '1px solid #CBD5E1' }}
               >
                 {sortOptions.map((option, index) => (
@@ -638,7 +640,7 @@ export default function SortFilterControls({ onSortChange, onFilterChange, onCle
 
             {mobileFiltersOpen && (
               <div
-                className="absolute right-0 z-50 mt-1 w-80 rounded-md shadow-lg"
+                className="absolute right-0 z-50 mt-1 w-80 rounded-md shadow-lg animate-in fade-in slide-in-from-top-2 duration-150"
                 style={{ backgroundColor: '#F1F5F9', border: '1px solid #CBD5E1' }}
               >
                 {!mobileActiveFilter ? (
