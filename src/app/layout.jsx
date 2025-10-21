@@ -7,6 +7,7 @@ import ConditionalLayout from '@/components/layout/conditional-layout';
 import Script from 'next/script';
 import SessionHandler from '@/components/system/session-handler';
 import SupabaseProvider from '@/components/system/supabase-provider';
+import ScrollToTop from '@/components/ui/scroll-to-top';
 
 const inter = Inter({ subsets: ['latin'] });
 const lora = Lora({ subsets: ['latin'], variable: '--font-lora' });
@@ -86,6 +87,7 @@ export default function RootLayout({ children }) {
           <ConditionalLayout>
             <main className="min-h-screen">{children}</main>
           </ConditionalLayout>
+          <ScrollToTop />
         </SupabaseProvider>
 
         <Analytics />
