@@ -82,21 +82,26 @@ function SearchPageContent() {
 
   const scrollToSearchArea = () => {
     if (searchAreaRef.current) {
-      searchAreaRef.current.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start',
+      // Use requestAnimationFrame to ensure DOM has updated
+      requestAnimationFrame(() => {
+        searchAreaRef.current.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start',
+        });
       });
     }
   };
 
   const handlePaginationPrev = () => {
     setCurrentPage(currentPage - 1);
-    scrollToSearchArea();
+    // Delay scroll slightly to allow table to update
+    setTimeout(scrollToSearchArea, 100);
   };
 
   const handlePaginationNext = () => {
     setCurrentPage(currentPage + 1);
-    scrollToSearchArea();
+    // Delay scroll slightly to allow table to update
+    setTimeout(scrollToSearchArea, 100);
   };
 
   const handleSortChange = (newSort) => {
